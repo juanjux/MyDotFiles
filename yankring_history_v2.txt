@@ -1,5 +1,39 @@
-, else: relative,v
+ficheros,v
+    " ESPACIO y...,V
+<div id="page">    <div class="logo"></div>    <ul id="navigation">        <li><a href=""></a></li>        <li><a href=""></a></li>        <li><a href=""></a></li>        <li><a href=""></a></li>        <li><a href=""></a></li>    </ul>    <img src="http://git-scm.com/images/logo@2x.png" alt="" width="220" height="92"></div>,V
+Sit pariatur perspiciatis ab facere nobis minima. Minima eius eos magnam placeat ratione. Assumenda iste expedita dolore voluptas nobis quam. Labore nihil delectus necessitatibus et sequi dolorum ea! Rem minima.,V
+import std.stdio;uint main(){    writeln("Hola mundo");},V
+pre,v
+<?xml version="1.0"?>,V
 ,V
+<blockquote class="quote"><a href="http://github.com">GitHub · Build software better, together.</a><br><p>Use at least one lowercase letter, one numeral, and seven characters. Sign up for GitHub By clicking...</p><cite>http://github.com</cite></blockquote>,v
+" <,V
+<a href="http://google.com">Google</a>,V
+(only in insert mode),v
+<div id="page">    <div class="logo"></div>    <ul id="navigation">        <li><a href=""></a></li>        <li><a href=""></a></li>        <li><a href=""></a></li>        <li><a href=""></a></li>        <li><a href=""></a></li>    </ul>    <img src="http://git-scm.com/images/logo@2x.png" alt="" width="220" height="92">,V
+    <ul id="navigation">        <li><a href=""></a></li>        <li><a href=""></a></li>        <li><a href=""></a></li>        <li><a href=""></a></li>        <li><a href=""></a></li>,V
+bla,v
+    <ul id="navigation">                <li><a href=""></a></li>        <li><a href=""></a></li>        <li><a href=""></a></li>        <li><a href=""></a></li>,V
+    <ul id="navigation">        <li><a href=""></a></li>        <li><a href=""></a></li>        <li><a href=""></a></li>        <li><a href=""></a></li>        <li><a href=""></a></li>    </ul>,V
+        <li><a href=""></a></li>        <li><a href=""></a></li>        <li><a href=""></a></li>        <li><a href=""></a></li>        <li><a href=""></a></li>,V
+",v
+ ,v
+http://polompos.com/image.png,v
+" <c-y>, to expand abbreviations like div#page>div.logo+ul#navigation>li*5>a,V
+,,v
+" <c-y>n jump to next edit point,V
+",V
+t,v
+u,v
+o,v
+a,V
+b,V
+c,V
+abc,V
+" (if we've some lines selected it will wrap wathever is s,V
+<ul><li>    test1    test2     test3</li></ul>,v
+test1test2 test3,V
+, else: relative,v
 un ,v
 check ,v
     " g,V
@@ -64,37 +98,3 @@ colores, fuentes y gui =,v
     " ,sp ,snp pone el modo paste para pegar, f11 lo quita,V
     " ,cs Carga la Sesion,V
     " ,gs Guarda la Sesion,V
-    " (podemos sacarla con :help),V
-    " desactivar la ayuda con f1 para no darle cuando nos confundimos con esc,V
-s,v
- ,v
-some ,v
-muestra los buffers de yankring,v
-    " coma + space limpia los resultados de busqueda,V
-llmy fat fingers,v
-para no equivocarnos y escribir :W en lugar de :w,v
-    " ,x para abrir una ventana del explorer en el directorio del fichero    " actual. Util para abrir nuevos ficheros,V
-    " Que las flechas funcionen en Windows siempre,V
-para hacer fold/unfold,v
-    " Spanish spellcheck (z= to see suggestions,V
-    " Dis,V
-    " English spellcheck,V
-    " ,ss/,se para pasar corrector ortografico    " zg añadir palabra    " ]s mover siguiente    " z= sugerencias    " :set nospell para desactivar,V
-    " cadena o un programa llena el buffer de mierda,V
-reset para cuando el coloreado de sintaxis se queda munieco y pone todo como,v
-the ,v
-d$el .vimrc,v
-Recargar ,v
-eliminar espacio en blanco tras final de lineas (todo el buffer),v
-OTROS ,v
-    nnoremap <leader>v <c-v>,V
-    ",v visual block,V
-    " ,p para pegar debajo de la linea actual,V
-    " Además, pega por defecto detrás de la posición del cursor,V
-    " al clipboard en modo visual, control-v pegar),V
-    " Para que juegue bonito con el clipboard del sistema (control-c para copiar,V
-PEGAR ,v
-Y ,v
-COPIAR ,v
-abrir todos los buffers en tabs,v
-cambiar de pestaña,v

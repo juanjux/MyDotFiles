@@ -321,6 +321,23 @@ highlight Pmenu guibg=brown gui=bold
         let g:yankring_history_dir="/home/juanjux/.vim"
     endif
 
+" Emmet:
+" <c-y>, to expand abbreviations like div#page>div.logo+ul#navigation>li*5>a
+" <c-y>n jump to next editable point
+" <c-y>N jump to previous editable point
+" <c-y>k remove current tag
+" <c-y>/ comment tag 
+" <c-y>a convert URL to <a> tag (needs correct URL with http://)
+" <c-y>A convert URL to quote with the page title and description
+" <c-y>c convert code to prettified code with css classes by type
+" <c-y>, with some selection to wrap inside tags (it will ask for the tag)
+" <c-y>d select the tag surrounding the cursor position, hit multiple times to expand
+" <c-y>D select the next inside tag or the next tag if there is none inside the current one
+" <c-y>i update image size, it loads urls or files and check the real size
+" <c-y>j join/separate block => <div></div> => <div/>
+" <c-y>, if you write 'lorem' it will expand to a lorem ipsum
+
+
 " VimWiki:
     " ,ww: index
     " ,wt: index on new tab
@@ -372,11 +389,10 @@ highlight Pmenu guibg=brown gui=bold
     nmap <leader>e <Plug>(easymotion-bd-w)
 
 " Unite:
-    " ESPACIO y...
     " <space> and...
         " another <space> to search in buffers and recent files
         " g: grep
-        " f:ficheros
+        " f: files
         " b:buffers
         " m: mru
         " t: tags
