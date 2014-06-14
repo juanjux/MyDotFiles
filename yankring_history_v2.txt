@@ -1,0 +1,100 @@
+, else: relative,v
+,V
+un ,v
+check ,v
+    " g,V
+    " OTRO ESPACIO buscar en buffers y recientes,V
+    endif,V
+          let g:airline#extensions#tabline#enabled = 1,V
+    if !has("gui"),V
+    " En consola mostrar buffers como pestanias,V
+" Airline:,V
+para ver la ventana de errores,v
+descripcion,v
+Con ,v
+    " citas: indentadas por cuatro espacios,V
+ bloque multilinea de texto preformateado ,v
+codigo,v
+tachado,v
+cursiva_,v
+negrita,v
+    " (en tabla) alt+felcha: mover columna,V
+columnas files : crea una tabla, TAB para cambiar entre celdas,v
+    " Para insertar simbolos especiales como texto (*, #, -, 1.) se hace gl[letra],V
+    " + para decorar links (modo comando); convertir URL en link, palabra en wikilink. Funciona en comando y visual,V
+    " # para listas ordenadas,V
+    " * para crear listas no ordenadas (tab para anidar),V
+    " = para crear headers (= es h1, == es h2, etc). Si se ponen espacios antes del = lo centra,V
+(edición): para crear un checklist, Control+Space para activar/desactivar,v
+    " alt+abajo/arriba para saltar entre links,V
+página actual,v
+borrar ,v
+renombrar página actual (también cambia todos los links!),v
+    " Borrar : ir a la página anterior,V
+    " Control+Intro para crear/saltar en división vertial,V
+    " Intro sobre una palabra o selección visual para crear subpáginas o saltar si ya existe,V
+    " :VimwikiAll2HTML : convierte todas las páginas a HTML,V
+idem y abrir en el navegador,v
+    " ,wh: convert to HTML,V
+convertir wiki a HTML,v
+    " ,w,i (estando en el diario, ,wi): actualizar lista de entredas (borrar, insertar),V
+    " ,w,w: nueva nota para hoy en el diario,V
+    " ,wi: abrir index del diario,V
+abrir index en pestaña nueva,v
+abrir index del wiki,v
+" VimWiki:,V
+    " su home donde guarda lo copiado para tener un clipboard permanente,V
+" Project: para que espere a los comandos mas tiempo,V
+    " nuestros valores por defecto para el plugin project,V
+    " gana foco al abrirla,V
+    " poner el frame en la derecha que el project ya lo pone a la izquierda,V
+    " suponer por defecto que es xhtml (para que cierre algunos tags),V
+" Plugin_xml:,V
+opciones de plugins =,v
+" que el color del menu de completado no sea rosa infernal,V
+" saca el menu del omni aunque solo haya una entrada, y no completa automaticamente con la primera,V
+" compilado contra las librerías de python para funcionar),V
+" configuración del autocompletado inteligente (el de python necesita un vim,V
+autocompletado ,v
+    " incluir barra de herramientas,V
+    " opciones graficas de gvim: lo copiado en visual va al clipboard; usar icono,V
+colores, fuentes y gui =,v
+    " ,sy SyntasticCheck para los que estan en modo manual (como D),V
+    nmap <leader>sy :SyntasticCheck<cr>,V
+    " ,sp ,snp pone el modo paste para pegar, f11 lo quita,V
+    " ,cs Carga la Sesion,V
+    " ,gs Guarda la Sesion,V
+    " (podemos sacarla con :help),V
+    " desactivar la ayuda con f1 para no darle cuando nos confundimos con esc,V
+s,v
+ ,v
+some ,v
+muestra los buffers de yankring,v
+    " coma + space limpia los resultados de busqueda,V
+llmy fat fingers,v
+para no equivocarnos y escribir :W en lugar de :w,v
+    " ,x para abrir una ventana del explorer en el directorio del fichero    " actual. Util para abrir nuevos ficheros,V
+    " Que las flechas funcionen en Windows siempre,V
+para hacer fold/unfold,v
+    " Spanish spellcheck (z= to see suggestions,V
+    " Dis,V
+    " English spellcheck,V
+    " ,ss/,se para pasar corrector ortografico    " zg añadir palabra    " ]s mover siguiente    " z= sugerencias    " :set nospell para desactivar,V
+    " cadena o un programa llena el buffer de mierda,V
+reset para cuando el coloreado de sintaxis se queda munieco y pone todo como,v
+the ,v
+d$el .vimrc,v
+Recargar ,v
+eliminar espacio en blanco tras final de lineas (todo el buffer),v
+OTROS ,v
+    nnoremap <leader>v <c-v>,V
+    ",v visual block,V
+    " ,p para pegar debajo de la linea actual,V
+    " Además, pega por defecto detrás de la posición del cursor,V
+    " al clipboard en modo visual, control-v pegar),V
+    " Para que juegue bonito con el clipboard del sistema (control-c para copiar,V
+PEGAR ,v
+Y ,v
+COPIAR ,v
+abrir todos los buffers en tabs,v
+cambiar de pestaña,v
