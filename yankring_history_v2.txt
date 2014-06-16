@@ -1,100 +1,100 @@
-ficheros,v
-    " ESPACIO y...,V
-<div id="page">    <div class="logo"></div>    <ul id="navigation">        <li><a href=""></a></li>        <li><a href=""></a></li>        <li><a href=""></a></li>        <li><a href=""></a></li>        <li><a href=""></a></li>    </ul>    <img src="http://git-scm.com/images/logo@2x.png" alt="" width="220" height="92"></div>,V
-Sit pariatur perspiciatis ab facere nobis minima. Minima eius eos magnam placeat ratione. Assumenda iste expedita dolore voluptas nobis quam. Labore nihil delectus necessitatibus et sequi dolorum ea! Rem minima.,V
-import std.stdio;uint main(){    writeln("Hola mundo");},V
-pre,v
-<?xml version="1.0"?>,V
+textP,v
 ,V
-<blockquote class="quote"><a href="http://github.com">GitHub · Build software better, together.</a><br><p>Use at least one lowercase letter, one numeral, and seven characters. Sign up for GitHub By clicking...</p><cite>http://github.com</cite></blockquote>,v
-" <,V
-<a href="http://google.com">Google</a>,V
-(only in insert mode),v
-<div id="page">    <div class="logo"></div>    <ul id="navigation">        <li><a href=""></a></li>        <li><a href=""></a></li>        <li><a href=""></a></li>        <li><a href=""></a></li>        <li><a href=""></a></li>    </ul>    <img src="http://git-scm.com/images/logo@2x.png" alt="" width="220" height="92">,V
-    <ul id="navigation">        <li><a href=""></a></li>        <li><a href=""></a></li>        <li><a href=""></a></li>        <li><a href=""></a></li>        <li><a href=""></a></li>,V
-bla,v
-    <ul id="navigation">                <li><a href=""></a></li>        <li><a href=""></a></li>        <li><a href=""></a></li>        <li><a href=""></a></li>,V
-    <ul id="navigation">        <li><a href=""></a></li>        <li><a href=""></a></li>        <li><a href=""></a></li>        <li><a href=""></a></li>        <li><a href=""></a></li>    </ul>,V
-        <li><a href=""></a></li>        <li><a href=""></a></li>        <li><a href=""></a></li>        <li><a href=""></a></li>        <li><a href=""></a></li>,V
-",v
+    foreach,V
+jsonFieldName,v
+    string textPartsJsonStr, attachmentsJsonStr;,V
  ,v
-http://polompos.com/image.png,v
-" <c-y>, to expand abbreviations like div#page>div.logo+ul#navigation>li*5>a,V
 ,,v
-" <c-y>n jump to next edit point,V
-",V
-t,v
-u,v
-o,v
-a,V
-b,V
-c,V
-abc,V
-" (if we've some lines selected it will wrap wathever is s,V
-<ul><li>    test1    test2     test3</li></ul>,v
-test1test2 test3,V
-, else: relative,v
-un ,v
-check ,v
-    " g,V
-    " OTRO ESPACIO buscar en buffers y recientes,V
-    endif,V
-          let g:airline#extensions#tabline#enabled = 1,V
-    if !has("gui"),V
-    " En consola mostrar buffers como pestanias,V
-" Airline:,V
-para ver la ventana de errores,v
-descripcion,v
-Con ,v
-    " citas: indentadas por cuatro espacios,V
- bloque multilinea de texto preformateado ,v
-codigo,v
-tachado,v
-cursiva_,v
-negrita,v
-    " (en tabla) alt+felcha: mover columna,V
-columnas files : crea una tabla, TAB para cambiar entre celdas,v
-    " Para insertar simbolos especiales como texto (*, #, -, 1.) se hace gl[letra],V
-    " + para decorar links (modo comando); convertir URL en link, palabra en wikilink. Funciona en comando y visual,V
-    " # para listas ordenadas,V
-    " * para crear listas no ordenadas (tab para anidar),V
-    " = para crear headers (= es h1, == es h2, etc). Si se ponen espacios antes del = lo centra,V
-(edición): para crear un checklist, Control+Space para activar/desactivar,v
-    " alt+abajo/arriba para saltar entre links,V
-página actual,v
-borrar ,v
-renombrar página actual (también cambia todos los links!),v
-    " Borrar : ir a la página anterior,V
-    " Control+Intro para crear/saltar en división vertial,V
-    " Intro sobre una palabra o selección visual para crear subpáginas o saltar si ya existe,V
-    " :VimwikiAll2HTML : convierte todas las páginas a HTML,V
-idem y abrir en el navegador,v
-    " ,wh: convert to HTML,V
-convertir wiki a HTML,v
-    " ,w,i (estando en el diario, ,wi): actualizar lista de entredas (borrar, insertar),V
-    " ,w,w: nueva nota para hoy en el diario,V
-    " ,wi: abrir index del diario,V
-abrir index en pestaña nueva,v
-abrir index del wiki,v
-" VimWiki:,V
-    " su home donde guarda lo copiado para tener un clipboard permanente,V
-" Project: para que espere a los comandos mas tiempo,V
-    " nuestros valores por defecto para el plugin project,V
-    " gana foco al abrirla,V
-    " poner el frame en la derecha que el project ya lo pone a la izquierda,V
-    " suponer por defecto que es xhtml (para que cierre algunos tags),V
-" Plugin_xml:,V
-opciones de plugins =,v
-" que el color del menu de completado no sea rosa infernal,V
-" saca el menu del omni aunque solo haya una entrada, y no completa automaticamente con la primera,V
-" compilado contra las librerías de python para funcionar),V
-" configuración del autocompletado inteligente (el de python necesita un vim,V
-autocompletado ,v
-    " incluir barra de herramientas,V
-    " opciones graficas de gvim: lo copiado en visual va al clipboard; usar icono,V
-colores, fuentes y gui =,v
-    " ,sy SyntasticCheck para los que estan en modo manual (como D),V
-    nmap <leader>sy :SyntasticCheck<cr>,V
-    " ,sp ,snp pone el modo paste para pegar, f11 lo quita,V
-    " ,cs Carga la Sesion,V
-    " ,gs Guarda la Sesion,V
+"Bcc",v
+"Cc",v
+"References",v
+References,v
+, string jsonFieldName),v
+string headerName, string jsonFieldName,v
+        auto jsonFieldName = toLower,V
+        saveEnvelopeToDb(mail, ,V
+    // small kludge, the only way I know of unittesting an inner function    version(dbtest)    struct _    {        unittest        {            assert(Json(`my name is "blas", sí`).toString() == `my name is \"blas\", sí`);            assert(Json(`                    }    },V
+            writeln("ConComillas: ", Json(`me llamo "blas", sí`).toString());,V
+    // small kludge, the only way I know of unittesting an inner function    version(dbtest)    struct _    {        unittest        {            writeln("ConComillas: ", Json(`me llamo "blas", sí`).toString());                    }    },v
+            writeln("HOLA MUNDO");,V
+v,v
+    },V
+    {,V
+unittest,v
+// XXX probar con comillas y barras a ver si las escapa bienstring jsonizeField(string headerName, string jsonFieldName){    if (headerName in email.headers && email.headers[headerName].rawValue.length)        return format("%s: \"%s\",", jsonFieldName, Json(email.headers[headerName].rawValue).toString());    return "";},v
+ referencesJsonStr, ccJsonStr, bccJsonStr, ,v
+    if ("References" in email.headers && email.headers["References"].rawValue.length)        referencesJsonStr = format("references: \"%s\",",                                    Json(email.headers["References"].rawValue).toString());    if (,v
+    a,V
+    string referencesJsonStr = "References" in email.header? email.header["References"].rawValue:"";,V
+import retriever.,V
+            "References" in email.headers? email.headers["References"].rawValue: "",,V
+            references: "%s",,V
+            %s,V
+headerS,v
+D,v
+r,v
+e,v
+erDate: "%s",,v
+head,v
+headerT,v
+F,v
+d,v
+a,v
+h,v
+            },,V
+            header:             {,v
+            body:            {,v
+            messageId: "%s",            references: "%s",,v
+,V
+        );,V
+            // cc y bcc,V
+            // from,V
+            references: %s,,V
+RecipientEmail,v
+            headerCc:            {                content: "%s",                addresses: %s            },            headerBcc:            {                content: "%s",                addresses: %s            },,v
+            headerDate: "%s",            headerSubject: "%s",,v
+                    ,V
+    auto ,V
+envelopeFor,v
+        do,V
+        textParts: %s,        attachments: %s,,v
+_,v
+C,v
+            header_cc:            {                content: "%s",                addresses: %s            },,v
+            header_cc,V
+	"subconfiguration": {"smtp": "ssl"},,V
+void processMailForAddress(string destination, IncomingEmail mail){    auto envelope = Envelope(mail, destination);    envelope.tags["inbox"] = true;    if ("X-Spam-SetSpamTag" in mail.headers)        envelope.tags["spam"] = true;    auto userFilters = getAddressFilters(destination);    foreach(filter; userFilters)         filter.apply(envelope);    try    {        saveEmailToDb(mail, envelope);         // XXX index the message    } catch (Exception e)     {        auto savedPath = saveRejectedEmail(mail);        string exceptionReport = "Mail failed to save on DB because of exception:\n" ~ e.msg;        auto f = File(savedPath, "a");        f.writeln(exceptionReport);        logError(exceptionReport);        // XXX rebound the message using the output route    }},V
+// XXX add unittest when I've the testing dBstring[] localReceivers(IncomingEmail email){    string[] allAddresses;    string[] localAddresses;    foreach(headerName; ["To", "Cc", "Bcc", "Delivered-To"])    {        if (headerName in email.headers)            allAddresses ~= email.headers[headerName].addresses;    }    // Check for a defaultUser ("catch-all") for this domain    foreach(addr; allAddresses)        if (addressIsLocal(addr))            localAddresses ~= addr;    return localAddresses;},v
+string[] removeDups(string[] inputarray){    bool[string] checker;    string[] res;    foreach(input; inputarray)    {        if (input in checker)            continue;        checker[input] = true;        res ~= input;    }    return res;},v
+void saveAndLogRejectedMail(IncomingEmail mail, bool isValid, bool tooBig, string[] localReceivers){    auto failedMailPath = saveRejectedEmail(mail);    auto f = File(failedMailPath, "a");    f.writeln("\n\n===NOT DELIVERY BECAUSE OF===", !isValid?"\nInvalid headers":"",                                                   !localReceivers.length?"\nInvalid destination":"",                                                   tooBig? "\nMessage too big":"");    logInfo(format("Mesage denied from SMTP. ValidHeaders:%s #localReceivers:%s SizeTooBig:%s. " ~                     "Message copy stored at %s", isValid, localReceivers.length, tooBig, failedMailPath));},v
+// XXX test: validity of the tooBig/isValid/localReceivers checksversion(not_maintest)int main(){    auto config = getConfig();    setLogFile(buildPath(config.mainDir, "backend", "log", "retriever.log"), LogLevel.info);    auto mail = new IncomingEmail(config.rawMailStore, config.attachmentStore);    mail.loadFromFile(std.stdio.stdin);    bool isValid        = mail.isValid;    auto localReceivers = removeDups(localReceivers(mail));    bool tooBig         = mail.computeSize() > config.incomingMessageLimit;    if (!tooBig && isValid && localReceivers.length)        foreach(destination; localReceivers)            processMailForAddress(destination, mail);    else    {        saveAndLogRejectedMail(mail, isValid, tooBig, localReceivers);        // XXX rebound the message using the output route    }    return 0; // return != 0 == Postfix rebound the message. Avoid},v
+failedMailPath,v
+return ,v
+    return 0;,V
+    // XXX index,V
+        f.writeln(to!string(e));,V
+        auto f = File(failedMailPath, "a");,V
+void ,v
+    auto config = getConfig();    auto failedMailDir = buildPath(config.mainDir, "backend", "log", "failed_mails");    if (!failedMailDir.exists)        mkdir(failedMailDir);    // Save a copy of the denied mail in failedMailPath and log the event    auto failedMailPath = buildPath(failedMailDir, baseName(mail.rawMailPath));    copy(mail.rawMailPath, failedMailPath);    remove(mail.rawMailPath);,v
+    // XXX continue here, insert in DB, get and set the conversationId, index,V
+recipientemail,v
+recipientEmail,v
+RecipientEmail ,v
+envelop ,v
+    hi link EasyMotionTarget2Second ,V
+ e,v
+Functio,v
+n,v
+Constant,v
+Number,v
+ TypeDef,v
+Statement,v
+ Operator,v
+Keyword,v
+MatchParen,v
+" EasyMotion colors"hi EasyMotionTarget ctermbg=none ctermfg=red"hi EasyMotionShade  ctermbg=none ctermfg=red"hi EasyMotionTarget2First ctermbg=none ctermfg=red"hi EasyMotionTarget2Second ctermbg=none ctermfg=lightred,v
+blue,v
+" Plugins used:" Pathogen: easy plugin installation/removal, just do a git clone on ~/.vim/bundle" Yankring: register buffer, also allows to copy and paste between different vim instances using an external file" Project: project manager, (,p to open, \C to create new, \R to refresh)" Pythoncomplete: better Python completion, needs a Vim with Python support" Tohtml: converts the buffer to HTML with syntax coloring (:tohtml)" ZipPlugin: to open zip files" NERD_commenter: ',c<space>' to togggle comment code" NERD_tree: file manager (,nt to toggle)" Gzip: open gzip files" Matchparen++: show the matching parenthesis/bracket/etc" CSApprox: use GVim colors schemes in console Vim if the console allows for more than 256 colors" Airline: Cool status bar (need laststatus set to 2)" Tagbar: tag lists (method, var, classes, etc), ',tb' to toggle" Vimwiki: personal wiki (see cheatsheet inside)" Vimmultiplecursors: select the same work several times with ctrl-n, v to edit, great for" renaming vars" Syntastic: validates the code on writing (disabled for D, use ',sy' there) and shows the errors" Easy Motion: jump quickly to any word in the window, ',e' to activate" Unite: fuzzy search on buffers/files/tags/recent files/etc, <space><space> (needs vimproc)" Matchit: improves on the Vim % command to understant more things" Matchtagalways: highlight matching HTML tags" Tabular: align things, ':Tabularize /:' would align by the ':' character, useful to pretify code" Emmet: para escribir html rápido: puede expandir cosas en etiquetas y poner etiquetas (con" varios posible niveles) rodeando una selección, por ejemplo si tenemos" varias lineas seleccionadas y ponemos de tag ul>li*>span>a hará lo" imaginable. Tecla: Contro y, (coma al final)." Emmet: quickly write HTML, using '<c-y>,' in insert mode can expand things like 'div.bla+div#pok.bla2>ul>li*3>span>a' (see cheatsheet below)" YouCompleteMe: real time completion, needs Python and Vimproc, doesnt work on Windows" VimColorschemes: lots of colorschemes" ========================================================" === BASIC CONFIGURATION  ===============================" ========================================================" PaThogenexecute pathogen#infect()set nocompatiblebehave xtermsyntax onfiletype plugin onset novb                       " no beels pleaseset noerrorbells               " idemset switchbuf=usetab,newtab    " switch to a buffer opened on a tab switchs to that tabset history=50set viminfo='50,\"50set undofileset undolevels=1000set undoreload=10000set backspace=start,indent,eolset encoding=utf-8set scrolloff=5set showcmdset rulerset hidden                     " allow to change buffers even if current is unsavedset showmodeset showtabline=2set wildmenuset nobackupset nowritebackupset noswapfileset ignorecaseset smartcaseset hlsearch                   " highlight search resultsset showmatchset gdefault                   " default to global substitution, without having to put the /g at the endset mouse=                     " no mouse (so I can copy easier when running inside putty)set t_Co=256                   " more colorsset number                     " show line numbersset virtualedit=block          " can select anything inside visual block mode (v + ctrl-v)set laststatus=2               " needed for powerline/airlineautocmd BufReadPost * " when opening a buffer, jump to the last known position    \ if line("'\"") > 1 && line("'\"") <= line("$") |    \ exe "normal! g`\"" |    \ endif" settings by OSif has("win64") || has("win32")    set undodir="C:\\installs\\vim\\undodir"    let $PYTHONPATH="C:\\python27\\lib"    set wildignore+=.git\*,.hg\*,.svn\*,.bzr\*else    set undodir="$VIMRUNTIME\\undodir"    set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*/.bzr/*endif" =========================================================" === TABS, INDENTATION AND FORMATTING ====================" =========================================================" 4 space tabs, anything else is wrongset expandtabset tabstop=4set softtabstop=4set shiftwidth=4set autoindentau BufNewFile,BufRead *.txt,*.me,*.ME,.article*,.followup,.letter*,mutt*  set tw=82 " 82 chars indentation for text filesautocmd FileType html set formatoptions+=lset nowrapset wh=12" justify comments inside code; start the next line after a comment as a comment;" automatic formatting of paragraphs, simple foldingset formatoptions=qrnset copyindent " copy the indentation of the previous lineset foldmethod=indent " fold by indentationset foldnestmax=2 " ...but not more than two levels (class and method)set foldlevel=99 " start with everything unfolder"autocmd FileType python,html,javascript,css,c,d,cpp,java,xhtml,htmldjango,ruby,lua,make,markdown,mel,perl,perl6,php,samba,xml set foldlevel=0" =========================================================" === SHORTCUTS ===========================================" =========================================================" === BASiC ===    let mapleader = ","    " I use a spanish keyboard but still want to use these keys without pressing shift    map - /" === TAGS ===    nmap <leader>tg :set tags=tags<cr>    ",ta jump to tag (also the default C-])    nnoremap <leader>ta <C-]>    ",cdt (Create D Tags) regenerate tags for a D project, it needs:    "https://github.com/snosov1/ctags-d y modificar tagbar.d with:    "http://blog.adamdklein.com/?p=28 (see Marenz's comment)    nmap <leader>cdt :!ctags -R /home/juanjux/webmail/backend/source  > tags<cr>:set tags=tags<cr>" === TABS AND WINDOWS ===    " ,tn (Tab New)    nmap <leader>tn <esc>:tabnew<cr>    " c-h/c-l change to previous/next tab    nmap <c-h> :tabp<cr>    nmap <c-l> :tabn<cr>    " ,bt (buffer tabs) open all buffers as tabs    nnoremap <leader>bt :tab sball<cr>    ",tl moves the tab one position to the left    nnoremap <leader>tl :tabm -1<cr>    ",tr moves the tab one position to the right    nnoremap <leader>tr :tabm +1<cr>" === COPY/PASTE ===    " Obvious shortcuts so I don't mess with C-V, C-C when using Vim along other    " programs that use these shortcuts for copy/paste (these copy/paste to the    " system clipboard)    nmap <C-V> "+gp    imap <C-V> <ESC><C-V>i    vmap <C-C> "+y    " ,p paste AFTER current line, useful when you're pasting several lines    nnoremap <leader>p :pu<cr>" === OTHER ===    " ,ct Clear Trailing : remove trailing whitespace after the end of line    nnoremap <leader>ct :%s/\s\+$//<cr>    " c-j c-k pagedown/up, I find these more 'vimish' than c-d/c-u    nnoremap <c-j> <c-d>    nnoremap <c-k> <c-u>    " ,sv reload .vimrc    nmap <leader>sv :so $MYVIMRC<cr>    " ,rr: sometimes syntax highlighting fails and put everything as string, this reset it    nmap <leader>rr :syntax off<cr>:syntax on<cr>    " Spellchecking:    " ,ss Spanish    " ,se English    " ,sn Disable    " z= to see suggestions    " ]s / [s jump to next/prev misspelled word    " zg add word to the spellfile    nmap <leader>ss :setlocal spell spelllang=es_es<cr>    nmap <leader>se :setlocal spell spelllang=en_en<cr>    nmap <leader>sn :set nospell<cr>    " ,f toggle fold/unfold    nmap <leader>ff zA    " Make arrow keys work in Windows gvim    if has("win64") || has("win32")        vnoremap <Left> h        vnoremap <Right> l        vnoremap <Up> k        vnoremap <Down> j    endif    ",x open a GUI file explorer    if has("win64") || has("win32")        nmap <leader>x :!start explorer %:p:h:gs?\/?\\\\\\?<CR>    else        nmap <leader>x :silent! !dolphin %:p:h& &> /dev/null<CR>:syntax off<CR>:syntax on<CR>    endif    " some aliases for stupid fingers    nmap :W :w    nmap :q1 :q!    nmap :Q :q    nmap :Q! :q!    nmap :Q1 :q!    nmap :Qa :qa    nmap :QA :qa    " ,<space> to clean search results    nmap <leader><space> :noh<cr>    " ,yy show yanking registers    nnoremap <leader>yy :YRShow<cr>    " disable help with f1, I hit it alot instead of ESC    inoremap <f1> <ESC>    nnoremap <f1> <ESC>    vnoremap <f1> <ESC>    " Nerdtree, Tagbar and Project toggles    nmap <leader>nt :NERDTreeToggle<cr>    nmap <leader>tb :TagbarToggle<cr>	nmap <silent> <leader>P <Plug>ToggleProject    " ,gs (Guarda Sesion) save vim session, ,css (Carga Sesion), load it    if has("win64") || has("win32")        nmap <leader>gs :mksession! c:\sesiones\vim_session <cr>        nmap <leader>css :source c:\sesiones\vim_session" <cr>    else        nmap <leader>gs :mksession! ~/vim_session <cr>        nmap <leader>css :source ~/vim_session <cr>    endif    " ,sp, ,snp set paste, set no paste modes    nmap <leader>sp :set paste<cr>    nmap <leader>np :set nopaste<cr>    " Manual SyntasticCheck for the languages where I've the check-on-write disabled (like D)    nmap <leader>sy :SyntasticCheck<cr>    " =========================================================    " === COLORS, FONTS AND GUI ===============================    " =========================================================    "colors summerfruit    "colors molokai    colors professional    " Font    if has("win64") || has("win32")        "set guifont=monaco:h10:cansi        "set guifont=meslo\ lg\ l\ dz:h11:cansi        "set guifont=droid\ sans\ mono:h11:cansi        set guifont=Droid\ Sans\ Mono\ Slashed\ for\ Pow:h10.5:cANSI    else        set guifont=Ubuntu\ Mono\ 10.5    endif    " GVIM options: copied registers go to system clipboard too; use icon; include toolbar    set guioptions-=Tai    set guioptions=egmrt" =========================================================" === AUTOCOMPLETE ========================================" =========================================================" By languageau BufNewFile,BufRead,BufEnter *.d  setf dautocmd filetype python set omnifunc=pythoncomplete#Completeautocmd filetype javascript set omnifunc=javascriptcomplete#CompleteJSautocmd filetype html set omnifunc=htmlcomplete#CompleteTagsautocmd filetype css set omnifunc=csscomplete#CompleteCSSautocmd filetype d set omnifunc=dcomplete#Complete" show omni menu even when there is only a single entry and dont autocomplete with the first oneset completeopt=longest,menuone" not infernal-pink color for the complete menuhighlight Pmenu guibg=brown gui=bold" =============================================" === PLUGIN's OPTIONS ========================" =============================================" XML Plugin:    let xml_use_xhtml = 1" Tagbar:    " right side frame (left one is used for Project)    let Tlist_Use_Right_Window = 1    " tamaño mínimo de frame de tags    " minimun size for tags    let Tlist_WinWidth = 40    " get focus when opening    let Tlist_GainFocus_On_ToggleOpen = 1" Project:    " default flags    let g:proj_flags="imstvcg"    " wait a little longer for commands    set timeout timeoutlen=5000 ttimeoutlen=100" Yankring:    " default file    if has("win64") || has("win32")        let g:yankring_history_dir="c:\\installs\\vim"    else        let g:yankring_history_dir="/home/juanjux/.vim"    endif" Emmet:" <c-y>, to expand abbreviations like div#page>div.logo+ul#navigation>li*5>a" <c-y>n jump to next editable point" <c-y>N jump to previous editable point" <c-y>k remove current tag" <c-y>/ comment tag " <c-y>a convert URL to <a> tag (needs correct URL with http://)" <c-y>A convert URL to quote with the page title and description" <c-y>c convert code to prettified code with css classes by type" <c-y>, with some selection to wrap inside tags (it will ask for the tag)" <c-y>d select the tag surrounding the cursor position, hit multiple times to expand" <c-y>D select the next inside tag or the next tag if there is none inside the current one" <c-y>i update image size, it loads urls or files and check the real size" <c-y>j join/separate block => <div></div> => <div/>" <c-y>, if you write 'lorem' it will expand to a lorem ipsum" VimWiki:    " ,ww: index    " ,wt: index on new tab    " ,whh: convert to HTML and open in browser    " <enter> with something selected will create a new wiki page, over an already    " linked page the same key will jump to its page    " ,wr: rename current wiki page    " ,wd: delete current wiki page    " alt-up/down to jump between links    "    " FORMAT:    " [ ] create a checklist enter, <c-space> to enable/disable    " = for headers (= is h1, == is h2, etc). Spaces before the = will center the tittle    " * for unnumbered lists    " # for numbered lists    " + 'decorates' links: converts URL to link, word to wikilink    " gl[symbol] to insert symbols uses by vimwiki as *, #, -, 1, etc    " :VimwikiTable rows/colums: create a table, TAB to change between cells, alt+arrow to move a colum    " *bold*    " _italitc__    " ~~striked~~    " `code`    " super^script    " sub,,script,,    " {{{ preformatted multiline text}}}    " quotes indented by 4 spaces    " ----- is an <hr>    " [[link]]    " [[link|with description]]    "    if has("win64") || has("win32")        let g:vimwiki_list = [{'path': 'c:\\Program Files\\ilionData\Users\\juanjo.alvarez\\My Documents\\My Dropbox\\Wiki',                               \ 'path_html': 'c:\\Program Files\\ilionData\Users\\juanjo.alvarez\\My Documents\\My Dropbox\\Wiki\html'}]    else        let g:vimwiki_list = [{'path': '~/Dropbox/Wiki',                               \ 'path_html': '~/Dropbox/wiki/html'}]    endif" Syntastic: :Error to show the error listing windows    let g:syntastic_error_symbol = '>>'    let g:syntastic_warning_symbol = 'W>'    let g:syntastic_d_check_header = 0    let g:syntastic_d_compiler = "$HOME/bin/dub-syntastic"    let g:syntastic_mode_map = { 'mode': 'active', 'passive_filetypes': ['d'] }" EasyMotion:    nmap <leader>e <Plug>(easymotion-bd-w)" Unite:    " <space> and...        " another <space> to search in buffers and recent files        " g: grep        " f: files        " b:buffers        " m: mru        " t: tags        " y yank history    call unite#filters#matcher_default#use(['matcher_fuzzy'])    call unite#filters#sorter_default#use(['sorter_rank'])    let g:unite_source_history_yank_enable = 1    let g:unite_force_overwrite_statusline = 0    if executable('ag')      let g:unite_source_grep_command = 'ag'      let g:unite_source_grep_default_opts = '--nogroup --nocolor --column'      let g:unite_source_grep_recursive_opt = ''    endif    call unite#custom_source('file_rec,file_rec/async,file_mru,file,buffer,grep',      \ 'ignore_pattern', join([      \ '\.git/',      \ '\.sass-cache/',      \ '\vendor/',      \ '\node_modules/',      \ ], '\|'))    " Custom mappings for the unite buffer    autocmd FileType unite call s:unite_settings()    function! s:unite_settings()      let b:SuperTabDisabled=1      imap <buffer> <c-a> <Plug>(unite_choose_action)      imap <silent><buffer><expr> <C-s> unite#do_action('split')      imap <silent><buffer><expr> <C-v> unite#do_action('vsplit')      imap <silent><buffer><expr> <C-t> unite#do_action('tabopen')      nmap <buffer> <ESC> <Plug>(unite_exit)    endfunction    " The prefix key    nnoremap [unite] <Nop>    nmap <space> [unite]    " General purpose    nnoremap [unite]<space> :Unite -start-insert buffer tab file_mru<cr>    nnoremap [unite]b :Unite -start-insert buffer<cr>    nnoremap [unite]m :Unite -start-insert file_mru<cr>    nnoremap [unite]f :Unite -start-insert file_rec/async<cr>    nnoremap [unite]g :Unite grep:.<cr>    nnoremap [unite]d :Unite grep:.:-s:\(TODO\|FIXME\)<cr>    nnoremap [unite]t :Unite -start-insert -auto-preview tag<cr>    nnoremap [unite]o :Unite -start-insert -auto-preview outline<cr>    nnoremap [unite]l :Unite -start-insert line<cr>    nnoremap [unite]y :Unite history/yank<cr>,V
+#,v
+ #eval `/usr/bin/dircolors ~/.dircolors`,V
+b,v

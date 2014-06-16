@@ -120,7 +120,10 @@ set foldlevel=99 " start with everything unfolder
 " === SHORTCUTS ===========================================
 " =========================================================
 
-let mapleader = ","
+" === BASiC ===
+    let mapleader = ","
+    " I use a spanish keyboard but still want to use these keys without pressing shift
+    map - /
 
 " === TAGS ===
     nmap <leader>tg :set tags=tags<cr>
@@ -254,6 +257,13 @@ let mapleader = ","
     "colors summerfruit
     "colors molokai
     colors professional
+
+    " EasyMotion Colors
+    hi link EasyMotionTarget ErrorMsg
+    hi link EasyMotionShade  Comment
+    hi link EasyMotionTarget2First ErrorMsg
+    hi link EasyMotionTarget2Second Define
+
 
     " Font
     if has("win64") || has("win32")
