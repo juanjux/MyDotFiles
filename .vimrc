@@ -29,7 +29,6 @@
 " YouCompleteMe: real time completion, needs Python and Vimproc, doesnt work on Windows
 " VimColorschemes: lots of colorschemes
 
-
 " ========================================================
 " === BASIC CONFIGURATION  ===============================
 " ========================================================
@@ -120,7 +119,10 @@ set foldlevel=99 " start with everything unfolder
 " === SHORTCUTS ===========================================
 " =========================================================
 
-" === BASiC ===
+" Reminders:
+" <c-o> and <c-i> jump between the history of cursor positions
+
+" === BASIC ===
     let mapleader = ","
     " I use a spanish keyboard but still want to use these keys without pressing shift
     map - /
@@ -136,8 +138,13 @@ set foldlevel=99 " start with everything unfolder
 
 
 " === TABS AND WINDOWS ===
+    " ,v (vsplit)
+    nmap <leader>v :vspl<cr>
+    " ,cv (close other vertical split)
+    nmap <leader>cv <c-w><c-w>:q<cr>
+
     " ,tn (Tab New)
-    nmap <leader>tn <esc>:tabnew<cr>
+    nmap <leader>tn :tabnew<cr>
 
     " c-h/c-l change to previous/next tab
     nmap <c-h> :tabp<cr>
@@ -264,16 +271,9 @@ set foldlevel=99 " start with everything unfolder
     hi link EasyMotionTarget2First ErrorMsg
     hi link EasyMotionTarget2Second Define
 
-
     " Font
-    if has("win64") || has("win32")
-        "set guifont=monaco:h10:cansi
-        "set guifont=meslo\ lg\ l\ dz:h11:cansi
-        "set guifont=droid\ sans\ mono:h11:cansi
-        set guifont=Droid\ Sans\ Mono\ Slashed\ for\ Pow:h10.5:cANSI
-    else
-        set guifont=Ubuntu\ Mono\ 10.5
-    endif
+    let g:fontman_font = "Monaco"
+    let g:fontman_size = 10
 
     " GVIM options: copied registers go to system clipboard too; use icon; include toolbar
     set guioptions-=Tai
