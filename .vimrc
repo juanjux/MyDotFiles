@@ -104,7 +104,7 @@ else
     set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*/.bzr/*
 endif
 
-" Dont drop back one character when existing insert mode
+" Dont drop back one character when exiting insert mode
 let CursorColumnI = 0 "the cursor column position in INSERT
 autocmd InsertEnter * let CursorColumnI = col('.')
 autocmd CursorMovedI * let CursorColumnI = col('.')
