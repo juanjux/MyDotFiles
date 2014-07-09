@@ -1,12 +1,13 @@
 " Plugins used:
 " Pathogen: easy plugin installation/removal, just do a git clone on ~/.vim/bundle
-" Yankring: register buffer, also allows to copy and paste between different vim instances using an external file
+" Yankring: register buffer, also allows to copy and paste between different vim instances
+" using an external file. ",yy" for seeing the ring, control-p alfter pasting
+" to cycle between previous yanks
 " Project: project manager, (,p to open, \C to create new, \R to refresh)
 " Pythoncomplete: better Python completion, needs a Vim with Python support
 " Tohtml: converts the buffer to HTML with syntax coloring (:tohtml)
 " ZipPlugin: to open zip files
 " NERD_commenter: ',c<space>' to togggle comment code
-" NERD_tree: file manager (,nt to toggle)
 " Gzip: open gzip files
 " Matchparen++: show the matching parenthesis/bracket/etc
 " CSApprox: use GVim colors schemes in console Vim if the console allows for more than 256 colors
@@ -21,13 +22,21 @@
 " Matchit: improves on the Vim % command to understant more things
 " Matchtagalways: highlight matching HTML tags
 " Tabular: align things, ':Tabularize /:' would align by the ':' character, useful to pretify code
-" Emmet: para escribir html rápido: puede expandir cosas en etiquetas y poner etiquetas (con
-" varios posible niveles) rodeando una selección, por ejemplo si tenemos
-" varias lineas seleccionadas y ponemos de tag ul>li*>span>a hará lo
-" imaginable. Tecla: Contro y, (coma al final).
-" Emmet: quickly write HTML, using '<c-y>,' in insert mode can expand things like 'div.bla+div#pok.bla2>ul>li*3>span>a' (see cheatsheet below)
+" Emmet: quickly write HTML, using '<c-y>,' in insert mode can expand things like
+" 'div.bla+div#pok.bla2>ul>li*3>span>a' (see cheatsheet below)
 " YouCompleteMe: real time completion, needs Python and Vimproc, doesnt work on Windows
 " VimColorschemes: lots of colorschemes
+" Surround:
+"   ys[object][delim] to add delimiter, like ysiw" for " around inner word
+"   S[delim] add delimiter around visual selection
+"   yss
+"   cs[old][new] change delimiters surrounding: cs'" => ' to ", cs"t => " to html tag
+"   ds[delim]: to remove " delimiters
+" Jdaddy: json objects (aj), prettyfication (gqaj), pretty pasting (gwaj)
+" Gtfo: gof for opening a file manager on the buffer's directory, got for a
+"   terminal
+" Ack: Ack [search] [directory]
+
 
 " ========================================================
 " === BASIC CONFIGURATION  ===============================
@@ -42,6 +51,7 @@ filetype plugin on
 set novb                       " no beels please
 set noerrorbells               " idem
 set switchbuf=usetab,newtab    " switch to a buffer opened on a tab switchs to that tab
+filetype plugin indent on
 set history=50
 set viminfo='50,\"50
 set undofile
@@ -49,7 +59,7 @@ set undolevels=1000
 set undoreload=10000
 set backspace=start,indent,eol
 set encoding=utf-8
-set scrolloff=5
+set scrolloff=5                " minimal number of lines above or below the cursor
 set showcmd
 set ruler
 set hidden                     " allow to change buffers even if current is unsaved
@@ -64,13 +74,22 @@ set smartcase
 set hlsearch                   " highlight search results
 set showmatch
 set gdefault                   " default to global substitution, without having to put the /g at the end
-set mouse=                     " no mouse (so I can copy easier when running inside putty)
 set t_Co=256                   " more colors
-set number                     " show line numbers
+set relativenumber             " show relative line numbers
 set virtualedit=block          " can select anything inside visual block mode (v + ctrl-v)
 set laststatus=2               " needed for powerline/airline
+set cursorline                 " highlight the line with the cursor
+set autochdir                  " change the cwd to the buffer 
 
-autocmd BufReadPost * " when opening a buffer, jump to the last known position
+" no mouse without GUI (so I can copy easier when running inside putty)
+if has("gui")
+    set mouse=a
+else
+    set mouse=
+endif
+
+" when opening a buffer, jump to the last known position
+autocmd BufReadPost *
     \ if line("'\"") > 1 && line("'\"") <= line("$") |
     \ exe "normal! g`\"" |
     \ endif
@@ -85,6 +104,13 @@ else
     set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*/.bzr/*
 endif
 
+" Dont drop back one character when existing insert mode
+let CursorColumnI = 0 "the cursor column position in INSERT
+autocmd InsertEnter * let CursorColumnI = col('.')
+autocmd CursorMovedI * let CursorColumnI = col('.')
+autocmd InsertLeave * if col('.') != CursorColumnI | call cursor(0, col('.')+1) | endif
+
+
 
 " =========================================================
 " === TABS, INDENTATION AND FORMATTING ====================
@@ -98,8 +124,6 @@ set softtabstop=4
 set shiftwidth=4
 set autoindent
 au BufNewFile,BufRead *.txt,*.me,*.ME,.article*,.followup,.letter*,mutt*  set tw=82 " 82 chars indentation for text files
-
-
 autocmd FileType html set formatoptions+=l
 
 set nowrap
@@ -108,10 +132,11 @@ set wh=12
 " justify comments inside code; start the next line after a comment as a comment;
 " automatic formatting of paragraphs, simple folding
 set formatoptions=qrn
-set copyindent " copy the indentation of the previous line
+set copyindent        " copy the indentation of the previous line
 set foldmethod=indent " fold by indentation
-set foldnestmax=2 " ...but not more than two levels (class and method)
-set foldlevel=99 " start with everything unfolder
+set foldnestmax=2     " ...but not more than two levels (class and method)
+set foldlevel=99      " start with everything unfolder
+set colorcolumn=94     " color text written past the column
 "autocmd FileType python,html,javascript,css,c,d,cpp,java,xhtml,htmldjango,ruby,lua,make,markdown,mel,perl,perl6,php,samba,xml set foldlevel=0
 
 
@@ -119,13 +144,45 @@ set foldlevel=99 " start with everything unfolder
 " === SHORTCUTS ===========================================
 " =========================================================
 
-" Reminders:
+" Vim Reminders:
 " <c-o> and <c-i> jump between the history of cursor positions
+" <c-o> run a single command while in insert mode
+" '. jump to last insert position
+" gi jump to last insert location and enter insert mode
+" "* register clipboard (Windows)
+" "+ register clipboard (Linux)
+" "% register with buffer name (only for pasting)
+" :goto n: go to the byte in the buffer
+" gp paste and move the cursor to the end
+" :pu or ,p paste below the current line
+" P paste before the cursor
+" f / F search for next / prev char in line
+" t / T search for next / prev char in line, jump before it
+" w start of next word (W for WORD)
+" e end of next word (E for WORD)
+" b start of prev word (B for WORD)
+" d/[search] delete until [search] not including the search terms
+" y/[search] yank until [search] not including the search terms
+" */# search for next/prev occurrence of word under cursor
+" 0/^/$ motions: start of line, start of text, end of line
+" gg / G: motions: start of text, end of text
+" I move to start of text and enter insert mode
+" A move to end of line and enter insert mode (append)
+" C change since cursor to the end of line
+" cc change entire line
+" o/O create new line below / above current
+" z= see spelling suggestions for word under cursor
+" ]s / [s jump to next / prev misspelled word
+" zg add word to spellfile
+" gn "next search match", e.g. cgn deletes and insert on the next search match
 
 " === BASIC ===
     let mapleader = ","
-    " I use a spanish keyboard but still want to use these keys without pressing shift
+    " I use a Spanish keyboard but still want to use these keys without pressing shift
     map - /
+    ",o / ,O to insert a line below / above and return to normal mode
+    nmap <leader>o o<esc>
+    nmap <leader>O O<esc>
 
 " === TAGS ===
     nmap <leader>tg :set tags=tags<cr>
@@ -139,7 +196,7 @@ set foldlevel=99 " start with everything unfolder
 
 " === TABS AND WINDOWS ===
     " ,v (vsplit)
-    nmap <leader>v :vspl<cr>
+    nmap <leader>v :vspl<cr><c-w><c-w>
     " ,cv (close other vertical split)
     nmap <leader>cv <c-w><c-w>:q<cr>
 
@@ -169,6 +226,9 @@ set foldlevel=99 " start with everything unfolder
 
     " ,p paste AFTER current line, useful when you're pasting several lines
     nnoremap <leader>p :pu<cr>
+
+    " ,V will select the last pasted text
+    nnoremap <leader>V `[v`]
 
 " === OTHER ===
     " ,ct Clear Trailing : remove trailing whitespace after the end of line
@@ -207,13 +267,11 @@ set foldlevel=99 " start with everything unfolder
         vnoremap <Down> j
     endif
 
-
-    ",x open a GUI file explorer
-    if has("win64") || has("win32")
-        nmap <leader>x :!start explorer %:p:h:gs?\/?\\\\\\?<CR>
-    else
-        nmap <leader>x :silent! !dolphin %:p:h& &> /dev/null<CR>:syntax off<CR>:syntax on<CR>
-    endif
+    ",F open a GUI file explorer (needs vim-gtfo)
+    ",T open a terminal
+    nmap <leader>F gof
+    nmap <leader>T got
+    
 
     " some aliases for stupid fingers
     nmap :W :w
@@ -235,8 +293,8 @@ set foldlevel=99 " start with everything unfolder
     nnoremap <f1> <ESC>
     vnoremap <f1> <ESC>
 
-    " Nerdtree, Tagbar and Project toggles
-    nmap <leader>nt :NERDTreeToggle<cr>
+    " Netrw, Tagbar and Project toggles
+    nmap <leader>E :Vex<cr>
     nmap <leader>tb :TagbarToggle<cr>
 	nmap <silent> <leader>P <Plug>ToggleProject
 
@@ -256,6 +314,8 @@ set foldlevel=99 " start with everything unfolder
     " Manual SyntasticCheck for the languages where I've the check-on-write disabled (like D)
     nmap <leader>sy :SyntasticCheck<cr>
 
+    " ,1 Put === lines above and below the current line
+    nnoremap <leader>1 yyPVr=jyypVr=k
 
     " =========================================================
     " === COLORS, FONTS AND GUI ===============================
@@ -272,8 +332,14 @@ set foldlevel=99 " start with everything unfolder
     hi link EasyMotionTarget2Second Define
 
     " Font
-    let g:fontman_font = "Monaco"
-    let g:fontman_size = 10
+    if has("win64") || has("win32")
+        let g:fontman_font = "Monaco"
+        let g:fontman_size = 10
+    else
+        let g:fontman_font = "DejaVu Sans Mono"
+        let g:fontman_size = 9
+    endif
+        
 
     " GVIM options: copied registers go to system clipboard too; use icon; include toolbar
     set guioptions-=Tai
@@ -336,7 +402,7 @@ highlight Pmenu guibg=brown gui=bold
 " <c-y>n jump to next editable point
 " <c-y>N jump to previous editable point
 " <c-y>k remove current tag
-" <c-y>/ comment tag 
+" <c-y>/ comment tag
 " <c-y>a convert URL to <a> tag (needs correct URL with http://)
 " <c-y>A convert URL to quote with the page title and description
 " <c-y>c convert code to prettified code with css classes by type
@@ -357,6 +423,7 @@ highlight Pmenu guibg=brown gui=bold
     " ,wr: rename current wiki page
     " ,wd: delete current wiki page
     " alt-up/down to jump between links
+    " <leader><enter> open link in new tab
     "
     " FORMAT:
     " [ ] create a checklist enter, <c-space> to enable/disable
@@ -385,6 +452,7 @@ highlight Pmenu guibg=brown gui=bold
         let g:vimwiki_list = [{'path': '~/Dropbox/Wiki',
                                \ 'path_html': '~/Dropbox/wiki/html'}]
     endif
+    nnoremap <leader><CR> :VimwikiTabnewLink<cr>
 
 " Syntastic: :Error to show the error listing windows
     let g:syntastic_error_symbol = '>>'
@@ -421,6 +489,8 @@ highlight Pmenu guibg=brown gui=bold
     call unite#custom_source('file_rec,file_rec/async,file_mru,file,buffer,grep',
       \ 'ignore_pattern', join([
       \ '\.git/',
+      \ '\.svn/',
+      \ '\.dub/',
       \ '\.sass-cache/',
       \ '\vendor/',
       \ '\node_modules/',
@@ -444,12 +514,12 @@ highlight Pmenu guibg=brown gui=bold
     nmap <space> [unite]
 
     " General purpose
-    nnoremap [unite]<space> :Unite -start-insert buffer tab file_mru<cr>
+    nnoremap [unite]<space> :Unite -start-insert tab buffer file_mru<cr>
     nnoremap [unite]b :Unite -start-insert buffer<cr>
     nnoremap [unite]m :Unite -start-insert file_mru<cr>
     nnoremap [unite]f :Unite -start-insert file_rec/async<cr>
     nnoremap [unite]g :Unite grep:.<cr>
-    nnoremap [unite]d :Unite grep:.:-s:\(TODO\|FIXME\)<cr>
+    nnoremap [unite]d :Unite grep:.:-s:\(TODO\|FIXME\|XXX\)<cr>
     nnoremap [unite]t :Unite -start-insert -auto-preview tag<cr>
     nnoremap [unite]o :Unite -start-insert -auto-preview outline<cr>
     nnoremap [unite]l :Unite -start-insert line<cr>
