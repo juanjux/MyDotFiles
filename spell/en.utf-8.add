@@ -5,3 +5,12 @@ configs
 Spellchecking
 spellfile
 prev
+plugin/!
+Plugins/!
+Plugins
+plugin
+vim
+Yankring
+cheatsheet
+autocomplete
+toolbar

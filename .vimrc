@@ -1,13 +1,13 @@
 " Plugins used:
 " Pathogen: easy plugin installation/removal, just do a git clone on ~/.vim/bundle
 " Yankring: register buffer, also allows to copy and paste between different vim instances
-" using an external file. ",yy" for seeing the ring, control-p alfter pasting
+" using an external file. ",yy" for seeing the ring, control-p after pasting
 " to cycle between previous yanks
 " Project: project manager, (,p to open, \C to create new, \R to refresh)
 " Pythoncomplete: better Python completion, needs a Vim with Python support
 " Tohtml: converts the buffer to HTML with syntax coloring (:tohtml)
 " ZipPlugin: to open zip files
-" NERD_commenter: ',c<space>' to togggle comment code
+" NERD_commenter: ',c<space>' to toggle comment code
 " Gzip: open gzip files
 " Matchparen++: show the matching parenthesis/bracket/etc
 " CSApprox: use GVim colors schemes in console Vim if the console allows for more than 256 colors
@@ -19,12 +19,12 @@
 " Syntastic: validates the code on writing (disabled for D, use ',sy' there) and shows the errors
 " Easy Motion: jump quickly to any word in the window, ',e' to activate
 " Unite: fuzzy search on buffers/files/tags/recent files/etc, <space><space> (needs vimproc)
-" Matchit: improves on the Vim % command to understant more things
+" Matchit: improves on the Vim % command to understand more things
 " Matchtagalways: highlight matching HTML tags
-" Tabular: align things, ':Tabularize /:' would align by the ':' character, useful to pretify code
+" Tabular: align things, ':Tabularize /:' would align by the ':' character, useful to prettify code
 " Emmet: quickly write HTML, using '<c-y>,' in insert mode can expand things like
 " 'div.bla+div#pok.bla2>ul>li*3>span>a' (see cheatsheet below)
-" YouCompleteMe: real time completion, needs Python and Vimproc, doesnt work on Windows
+" YouCompleteMe: real time completion, needs Python and Vimproc, doesn't work on Windows
 " VimColorschemes: lots of colorschemes
 " Surround:
 "   ys[object][delim] to add delimiter, like ysiw" for " around inner word
@@ -48,9 +48,10 @@ set nocompatible
 behave xterm
 syntax on
 filetype plugin on
-set novb                       " no beels please
+set novb                       " no bells please
+set list  lcs=tab:»·,eol:¬     " show invisible characters line newline or tabs
 set noerrorbells               " idem
-set switchbuf=usetab,newtab    " switch to a buffer opened on a tab switchs to that tab
+set switchbuf=usetab,newtab    " switch to a buffer opened on a tab switches to that tab
 filetype plugin indent on
 set history=50
 set viminfo='50,\"50
@@ -64,7 +65,8 @@ set showcmd
 set ruler
 set hidden                     " allow to change buffers even if current is unsaved
 set showmode
-set showtabline=2
+set showtabline=1
+set guitablabel=\[%N\]\ %t
 set wildmenu
 set nobackup
 set nowritebackup
@@ -76,6 +78,7 @@ set showmatch
 set gdefault                   " default to global substitution, without having to put the /g at the end
 set t_Co=256                   " more colors
 set relativenumber             " show relative line numbers
+set number                     " but show the current linenum at the center
 set virtualedit=block          " can select anything inside visual block mode (v + ctrl-v)
 set laststatus=2               " needed for powerline/airline
 set cursorline                 " highlight the line with the cursor
@@ -104,13 +107,6 @@ else
     set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*/.bzr/*
 endif
 
-" Dont drop back one character when exiting insert mode
-let CursorColumnI = 0 "the cursor column position in INSERT
-autocmd InsertEnter * let CursorColumnI = col('.')
-autocmd CursorMovedI * let CursorColumnI = col('.')
-autocmd InsertLeave * if col('.') != CursorColumnI | call cursor(0, col('.')+1) | endif
-
-
 
 " =========================================================
 " === TABS, INDENTATION AND FORMATTING ====================
@@ -123,27 +119,73 @@ set tabstop=4
 set softtabstop=4
 set shiftwidth=4
 set autoindent
-au BufNewFile,BufRead *.txt,*.me,*.ME,.article*,.followup,.letter*,mutt*  set tw=82 " 82 chars indentation for text files
-autocmd FileType html set formatoptions+=l
 
 set nowrap
 set wh=12
 
-" justify comments inside code; start the next line after a comment as a comment;
-" automatic formatting of paragraphs, simple folding
+" justify comments inside code; start the next line after a comment as a comment
 set formatoptions=qrn
 set copyindent        " copy the indentation of the previous line
 set foldmethod=indent " fold by indentation
 set foldnestmax=2     " ...but not more than two levels (class and method)
-set foldlevel=99      " start with everything unfolder
+set foldlevel=99      " start with everything unfolded
 set colorcolumn=94     " color text written past the column
 "autocmd FileType python,html,javascript,css,c,d,cpp,java,xhtml,htmldjango,ruby,lua,make,markdown,mel,perl,perl6,php,samba,xml set foldlevel=0
+" 82 chars indentation for text files
+au BufNewFile,BufRead,BufEnter *.txt,*.me,*.ME,.article*,.followup,.letter*,mutt*  set tw=82 formatoptions+=a
+autocmd FileType html set formatoptions+=l
 
+" Rename tabs to show tab number (change with [number]gt)
+if exists("+showtabline")
+    function! MyTabLine()
+        let s = ''
+        let wn = ''
+        let t = tabpagenr()
+        let i = 1
+        while i <= tabpagenr('$')
+            let buflist = tabpagebuflist(i)
+            let winnr = tabpagewinnr(i)
+            let s .= '%' . i . 'T'
+            let s .= (i == t ? '%1*' : '%2*')
+            let wn = tabpagewinnr(i,'$')
 
+            let s .= '%#TabNum#'
+            let s .= i
+            " let s .= '%*'
+            let s .= (i == t ? '%#TabLineSel#' : '%#TabLine#')
+            let bufnr = buflist[winnr - 1]
+            let file = bufname(bufnr)
+            let buftype = getbufvar(bufnr, 'buftype')
+            if buftype == 'nofile'
+                if file =~ '\/.'
+                    let file = substitute(file, '.*\/\ze.', '', '')
+                endif
+            else
+                let file = fnamemodify(file, ':p:t')
+            endif
+            if file == ''
+                let file = '[No Name]'
+            endif
+            let s .= ' ' . file . ' '
+            let i = i + 1
+        endwhile
+        let s .= '%T%#TabLineFill#%='
+        let s .= (tabpagenr('$') > 1 ? '%999XX' : 'X')
+        return s
+    endfunction
+    set stal=2
+    set tabline=%!MyTabLine()
+    highlight link TabNum Special 
+endif
 " =========================================================
 " === SHORTCUTS ===========================================
 " =========================================================
 
+" Important: uncoment any set encoding line before adding new non-ASCII chars
+" to vimrc, enable them after
+nmap ñ :
+nmap Ñ :
+imap º <esc>
 " Vim Reminders:
 " <c-o> and <c-i> jump between the history of cursor positions
 " <c-o> run a single command while in insert mode
@@ -183,6 +225,8 @@ set colorcolumn=94     " color text written past the column
     ",o / ,O to insert a line below / above and return to normal mode
     nmap <leader>o o<esc>
     nmap <leader>O O<esc>
+    " w!! to save as root with sudo
+    cmap w!! w !sudo tee % >/dev/null<cr>
 
 " === TAGS ===
     nmap <leader>tg :set tags=tags<cr>
@@ -324,6 +368,7 @@ set colorcolumn=94     " color text written past the column
     "colors summerfruit
     "colors molokai
     colors professional
+    hi NonText guifg=#b2b2b2
 
     " EasyMotion Colors
     hi link EasyMotionTarget ErrorMsg
@@ -358,7 +403,7 @@ autocmd filetype html set omnifunc=htmlcomplete#CompleteTags
 autocmd filetype css set omnifunc=csscomplete#CompleteCSS
 autocmd filetype d set omnifunc=dcomplete#Complete
 
-" show omni menu even when there is only a single entry and dont autocomplete with the first one
+" show omni menu even when there is only a single entry and don't autocomplete with the first one
 set completeopt=longest,menuone
 
 " not infernal-pink color for the complete menu
@@ -376,8 +421,7 @@ highlight Pmenu guibg=brown gui=bold
     " right side frame (left one is used for Project)
     let Tlist_Use_Right_Window = 1
 
-    " tama�o m�nimo de frame de tags
-    " minimun size for tags
+    " minimum tag frame size
     let Tlist_WinWidth = 40
 
     " get focus when opening
@@ -432,7 +476,7 @@ highlight Pmenu guibg=brown gui=bold
     " # for numbered lists
     " + 'decorates' links: converts URL to link, word to wikilink
     " gl[symbol] to insert symbols uses by vimwiki as *, #, -, 1, etc
-    " :VimwikiTable rows/colums: create a table, TAB to change between cells, alt+arrow to move a colum
+    " :VimwikiTable rows/columns: create a table, TAB to change between cells, alt+arrow to move a colum
     " *bold*
     " _italitc__
     " ~~striked~~
