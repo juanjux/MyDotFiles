@@ -9,7 +9,7 @@
 " ZipPlugin: to open zip files
 " NERD_commenter: ',c<space>' to toggle comment code
 " Gzip: open gzip files
-" Matchparen++: show the matching parenthesis/bracket/etc
+" Matchparen: show the matching parenthesis/bracket/etc
 " CSApprox: use GVim colors schemes in console Vim if the console allows for more than 256 colors
 " Airline: Cool status bar (need laststatus set to 2)
 " Tagbar: tag lists (method, var, classes, etc), ',tb' to toggle
@@ -36,8 +36,10 @@
 " Gtfo: gof for opening a file manager on the buffer's directory, got for a
 "   terminal
 " Ack: Ack [search] [directory]
-
-
+" Repeat: so I can repeat with the "." actions from some plugins like Surround
+" EasyOperator: [operator](easymotionselection) => awesome to delete and move things around
+" LustyJuggler: <leader>lj and a number to quickly switch buffers
+" Rename: :rename command to rename current file
 " ========================================================
 " === BASIC CONFIGURATION  ===============================
 " ========================================================
@@ -49,8 +51,8 @@ behave xterm
 syntax on
 filetype plugin on
 set novb                       " no bells please
-set list  lcs=tab:»·,eol:¬     " show invisible characters line newline or tabs
 set noerrorbells               " idem
+set list  lcs=tab:»·,eol:¬     " show invisible characters line newline or tabs
 set switchbuf=usetab,newtab    " switch to a buffer opened on a tab switches to that tab
 filetype plugin indent on
 set history=50
@@ -132,7 +134,7 @@ set foldlevel=99      " start with everything unfolded
 set colorcolumn=94     " color text written past the column
 "autocmd FileType python,html,javascript,css,c,d,cpp,java,xhtml,htmldjango,ruby,lua,make,markdown,mel,perl,perl6,php,samba,xml set foldlevel=0
 " 82 chars indentation for text files
-au BufNewFile,BufRead,BufEnter *.txt,*.me,*.ME,.article*,.followup,.letter*,mutt*  set tw=82 formatoptions+=a
+au BufNewFile,BufRead,BufEnter *.txt,*.me,*.ME,.article*,.followup,.letter*,mutt*  set tw=82
 autocmd FileType html set formatoptions+=l
 
 " Rename tabs to show tab number (change with [number]gt)
@@ -225,6 +227,11 @@ imap º <esc>
     ",o / ,O to insert a line below / above and return to normal mode
     nmap <leader>o o<esc>
     nmap <leader>O O<esc>
+
+    " navigate trought wrapped lines easily
+    nmap j gj
+    nmap k gk
+
     " w!! to save as root with sudo
     cmap w!! w !sudo tee % >/dev/null<cr>
 
@@ -278,9 +285,9 @@ imap º <esc>
     " ,ct Clear Trailing : remove trailing whitespace after the end of line
     nnoremap <leader>ct :%s/\s\+$//<cr>
 
-    " c-j c-k pagedown/up, I find these more 'vimish' than c-d/c-u
-    nnoremap <c-j> <c-d>
-    nnoremap <c-k> <c-u>
+    " c-j c-k pagedown/up, I find these more 'vimish' than c-f/c-b
+    nnoremap <c-j> <c-f>
+    nnoremap <c-k> <c-b>
 
     " ,sv reload .vimrc
     nmap <leader>sv :so $MYVIMRC<cr>
@@ -509,6 +516,9 @@ highlight Pmenu guibg=brown gui=bold
 
 " EasyMotion:
     nmap <leader>e <Plug>(easymotion-bd-w)
+    nmap d<leader>e <Plug>(easyoperator-line-delete)
+    nmap y<leader>e <Plug>(easyoperator-line-yank)
+    nmap v<leader>e <Plug>(easyoperator-line-select)
 
 " Unite:
     " <space> and...
