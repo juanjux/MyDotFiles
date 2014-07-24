@@ -38,7 +38,7 @@
 " Ack: Ack [search] [directory]
 " Repeat: so I can repeat with the "." actions from some plugins like Surround
 " EasyOperator: [operator](easymotionselection) => awesome to delete and move things around
-" LustyJuggler: <leader>lj and a number to quickly switch buffers
+" LustnoMail = "Error: could not get raw email";er: <leader>lj and a number to quickly switch buffers
 " Rename: :rename command to rename current file
 " ========================================================
 " === BASIC CONFIGURATION  ===============================
@@ -52,7 +52,7 @@ syntax on
 filetype plugin on
 set novb                       " no bells please
 set noerrorbells               " idem
-set list  lcs=tab:»·,eol:¬     " show invisible characters line newline or tabs
+"set list  lcs=tab:»·,eol:¬     " show invisible characters line newline or tabs
 set switchbuf=usetab,newtab    " switch to a buffer opened on a tab switches to that tab
 filetype plugin indent on
 set history=50
@@ -135,6 +135,7 @@ set colorcolumn=94     " color text written past the column
 "autocmd FileType python,html,javascript,css,c,d,cpp,java,xhtml,htmldjango,ruby,lua,make,markdown,mel,perl,perl6,php,samba,xml set foldlevel=0
 " 82 chars indentation for text files
 au BufNewFile,BufRead,BufEnter *.txt,*.me,*.ME,.article*,.followup,.letter*,mutt*  set tw=82
+au BufNewFile,BufRead,BufEnter *.d,*.cpp,*.cc,*.py,*.js set tw=90
 autocmd FileType html set formatoptions+=l
 
 " Rename tabs to show tab number (change with [number]gt)
@@ -185,9 +186,6 @@ endif
 
 " Important: uncoment any set encoding line before adding new non-ASCII chars
 " to vimrc, enable them after
-nmap ñ :
-nmap Ñ :
-imap º <esc>
 " Vim Reminders:
 " <c-o> and <c-i> jump between the history of cursor positions
 " <c-o> run a single command while in insert mode
@@ -224,6 +222,11 @@ imap º <esc>
     let mapleader = ","
     " I use a Spanish keyboard but still want to use these keys without pressing shift
     map - /
+    nmap ñ :
+    nmap Ñ :
+    imap º <esc>
+    nmap ç ^
+    nmap ¡ `
     ",o / ,O to insert a line below / above and return to normal mode
     nmap <leader>o o<esc>
     nmap <leader>O O<esc>
@@ -242,7 +245,7 @@ imap º <esc>
     ",cdt (Create D Tags) regenerate tags for a D project, it needs:
     "https://github.com/snosov1/ctags-d y modificar tagbar.d with:
     "http://blog.adamdklein.com/?p=28 (see Marenz's comment)
-    nmap <leader>cdt :!ctags -R /home/juanjux/webmail/backend/source  > tags<cr>:set tags=tags<cr>
+    nmap <leader>cdt :!ctags -R /home/juanjux/webmail/backend/source > tags<cr>:set tags=tags<cr>
 
 
 " === TABS AND WINDOWS ===
@@ -307,9 +310,6 @@ imap º <esc>
     nmap <leader>sn :set nospell<cr>
 
 
-    " ,f toggle fold/unfold
-    nmap <leader>ff zA
-
     " Make arrow keys work in Windows gvim
     if has("win64") || has("win32")
         vnoremap <Left> h
@@ -317,12 +317,6 @@ imap º <esc>
         vnoremap <Up> k
         vnoremap <Down> j
     endif
-
-    ",F open a GUI file explorer (needs vim-gtfo)
-    ",T open a terminal
-    nmap <leader>F gof
-    nmap <leader>T got
-    
 
     " some aliases for stupid fingers
     nmap :W :w
@@ -434,6 +428,16 @@ highlight Pmenu guibg=brown gui=bold
     " get focus when opening
     let Tlist_GainFocus_On_ToggleOpen = 1
 
+    let g:tagbar_type_d = {
+        \ 'ctagstype': 'D',
+        \ 'kinds'    : [
+            \ 'o:objects',
+            \ 'f:functions',
+            \ 'a:arrays',
+            \ 's:strings'
+        \ ]
+    \ }
+
 " Project:
     " default flags
     let g:proj_flags="imstvcg"
@@ -500,8 +504,8 @@ highlight Pmenu guibg=brown gui=bold
         let g:vimwiki_list = [{'path': 'c:\\Program Files\\ilionData\Users\\juanjo.alvarez\\My Documents\\My Dropbox\\Wiki',
                                \ 'path_html': 'c:\\Program Files\\ilionData\Users\\juanjo.alvarez\\My Documents\\My Dropbox\\Wiki\html'}]
     else
-        let g:vimwiki_list = [{'path': '~/Dropbox/Wiki',
-                               \ 'path_html': '~/Dropbox/wiki/html'}]
+        let g:vimwiki_list = [{'path': '~/btsync/Wiki',
+                               \ 'path_html': '~/btsync/wiki/html'}]
     endif
     nnoremap <leader><CR> :VimwikiTabnewLink<cr>
 
@@ -519,6 +523,10 @@ highlight Pmenu guibg=brown gui=bold
     nmap d<leader>e <Plug>(easyoperator-line-delete)
     nmap y<leader>e <Plug>(easyoperator-line-yank)
     nmap v<leader>e <Plug>(easyoperator-line-select)
+    " ,f easy motion search character 
+    nmap <leader>f <Plug>(easymotion-bd-f)
+    " ,j easy motion line 
+    nmap <leader>j <Plug>(easymotion-bd-jk)
 
 " Unite:
     " <space> and...
@@ -568,7 +576,7 @@ highlight Pmenu guibg=brown gui=bold
     nmap <space> [unite]
 
     " General purpose
-    nnoremap [unite]<space> :Unite -start-insert tab buffer file_mru<cr>
+    nnoremap [unite]<space> :Unite -start-insert buffer file_mru<cr>
     nnoremap [unite]b :Unite -start-insert buffer<cr>
     nnoremap [unite]m :Unite -start-insert file_mru<cr>
     nnoremap [unite]f :Unite -start-insert file_rec/async<cr>
