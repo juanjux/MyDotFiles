@@ -84,7 +84,7 @@ set number                     " but show the current linenum at the center
 set virtualedit=block          " can select anything inside visual block mode (v + ctrl-v)
 set laststatus=2               " needed for powerline/airline
 set cursorline                 " highlight the line with the cursor
-set autochdir                  " change the cwd to the buffer 
+set autochdir                  " change the cwd to the buffer
 
 " no mouse without GUI (so I can copy easier when running inside putty)
 if has("gui")
@@ -178,8 +178,15 @@ if exists("+showtabline")
     endfunction
     set stal=2
     set tabline=%!MyTabLine()
-    highlight link TabNum Special 
+    highlight link TabNum Special
 endif
+
+" Dont move back the cursor when exiting insert mode
+let CursorColumnI = 0 "the cursor column position in INSERT
+autocmd InsertEnter * let CursorColumnI = col('.')
+autocmd CursorMovedI * let CursorColumnI = col('.')
+autocmd InsertLeave * if col('.') != CursorColumnI | call cursor(0, col('.')+1) | endif
+
 " =========================================================
 " === SHORTCUTS ===========================================
 " =========================================================
@@ -286,7 +293,7 @@ endif
 
 " === OTHER ===
     " ,ct Clear Trailing : remove trailing whitespace after the end of line
-    nnoremap <leader>ct :%s/\s\+$//<cr>
+    nnoremap <leader>ct :%s/\s\+$//<cr>''
 
     " c-j c-k pagedown/up, I find these more 'vimish' than c-f/c-b
     nnoremap <c-j> <c-f>
@@ -343,6 +350,10 @@ endif
     nmap <leader>tb :TagbarToggle<cr>
 	nmap <silent> <leader>P <Plug>ToggleProject
 
+	" Tabularize ,T= ,T:
+	nmap <leader>T= :Tabularize /=<cr>
+	nmap <leader>T: :Tabularize /:<cr>
+
     " ,gs (Guarda Sesion) save vim session, ,css (Carga Sesion), load it
     if has("win64") || has("win32")
         nmap <leader>gs :mksession! c:\sesiones\vim_session <cr>
@@ -385,7 +396,7 @@ endif
         let g:fontman_font = "DejaVu Sans Mono"
         let g:fontman_size = 9
     endif
-        
+
 
     " GVIM options: copied registers go to system clipboard too; use icon; include toolbar
     set guioptions-=Tai
@@ -523,9 +534,9 @@ highlight Pmenu guibg=brown gui=bold
     nmap d<leader>e <Plug>(easyoperator-line-delete)
     nmap y<leader>e <Plug>(easyoperator-line-yank)
     nmap v<leader>e <Plug>(easyoperator-line-select)
-    " ,f easy motion search character 
+    " ,f easy motion search character
     nmap <leader>f <Plug>(easymotion-bd-f)
-    " ,j easy motion line 
+    " ,j easy motion line
     nmap <leader>j <Plug>(easymotion-bd-jk)
 
 " Unite:

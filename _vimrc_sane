@@ -1,0 +1,296 @@
+" ========================================================
+" === BASIC CONFIGURATION  ===============================
+" ========================================================
+" use :help [options] to show help about specific options and possible values
+set nocompatible
+behave xterm
+syntax on
+filetype plugin on
+set novb                       " no bells please
+set noerrorbells               " idem
+"set list  lcs=tab:»·,eol:¬    " show invisible characters line newline or tabs (disabled)
+set switchbuf=usetab,newtab    " switch to a buffer opened on a tab switches to that tab
+filetype plugin indent on
+set history=50 " undo and history
+set viminfo='50,\"50
+set undofile
+set undolevels=1000
+set undoreload=10000
+set backspace=start,indent,eol " sane backspace behaviour
+set encoding=utf-8
+set scrolloff=5                " minimal number of lines above or below the cursor when reaching the edges
+set showcmd                    " show commands 
+set ruler
+set hidden                     " allow to change buffers even if current is unsaved
+set showmode                   " show current mode
+set showtabline=1
+set guitablabel=\[%N\]\ %t     " Gvim: show tab number
+set wildmenu                   " show completions menu
+set nobackup                   " dont create backup files
+set nowritebackup
+set noswapfile
+set ignorecase                 " ignore case when searching
+set smartcase                  " ... except if there is a uppercase character
+set hlsearch                   " highlight search results
+set showmatch                  " show matching brackets, parenthesis, etc
+set gdefault                   " default to global substitution, without having to put the /g at the end
+set t_Co=256                   " more colors
+set relativenumber             " show relative line numbers
+set number                     " but show the current linenum at the center
+set virtualedit=block          " can select anything inside visual block mode (v + ctrl-v)
+set laststatus=2               " needed for powerline/airline
+set cursorline                 " highlight the line with the cursor
+set autochdir                  " change the cwd to the current buffer's
+
+" no mouse without GUI (so I can copy easier when running inside putty)
+if has("gui")
+    set mouse=a
+else
+    set mouse=
+endif
+
+" when opening a buffer, jump to the last known position
+autocmd BufReadPost *
+    \ if line("'\"") > 1 && line("'\"") <= line("$") |
+    \ exe "normal! g`\"" |
+    \ endif
+
+" basic settings by OS
+if has("win64") || has("win32")
+    set undodir="C:\\temp\\undodir"
+    let $PYTHONPATH="C:\\python27\\lib"
+    set wildignore+=.git\*,.hg\*,.svn\*,.bzr\*
+else
+    set undodir="$VIMRUNTIME\\undodir"
+    set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*/.bzr/*
+endif
+
+
+" =========================================================
+" === TABS, INDENTATION AND FORMATTING ====================
+" =========================================================
+
+" 4 space tabs
+set expandtab
+set tabstop=4
+set softtabstop=4
+set shiftwidth=4
+set autoindent
+
+set nowrap " dont wrap long lines (use :set wrap to change)
+set wh=12  " minimal size for Vim window, in lines
+
+" justify comments inside code; start the next line after a comment as a comment
+set formatoptions=qrn
+set copyindent        " copy the indentation of the previous line
+set foldmethod=indent " fold by indentation
+set foldnestmax=2     " ...but not more than two levels (class and method)
+set foldlevel=99      " start with everything unfolded
+set colorcolumn=94     " color text written past the column
+"autocmd FileType python,html,javascript,css,c,d,cpp,java,xhtml,htmldjango,ruby,lua,make,markdown,mel,perl,perl6,php,samba,xml set foldlevel=0
+" 82 chars indentation for text files
+au BufNewFile,BufRead,BufEnter *.txt,*.me,*.ME,.article*,.followup,.letter*,mutt*  set tw=82
+" 90 for code
+au BufNewFile,BufRead,BufEnter *.d,*.cpp,*.cc,*.py,*.js set tw=90
+autocmd FileType html set formatoptions+=l
+
+" Non GUI: Rename tabs to show tab number (change to tab with [number]gt)
+if exists("+showtabline")
+    function! MyTabLine()
+        let s = ''
+        let wn = ''
+        let t = tabpagenr()
+        let i = 1
+        while i <= tabpagenr('$')
+            let buflist = tabpagebuflist(i)
+            let winnr = tabpagewinnr(i)
+            let s .= '%' . i . 'T'
+            let s .= (i == t ? '%1*' : '%2*')
+            let wn = tabpagewinnr(i,'$')
+
+            let s .= '%#TabNum#'
+            let s .= i
+            " let s .= '%*'
+            let s .= (i == t ? '%#TabLineSel#' : '%#TabLine#')
+            let bufnr = buflist[winnr - 1]
+            let file = bufname(bufnr)
+            let buftype = getbufvar(bufnr, 'buftype')
+            if buftype == 'nofile'
+                if file =~ '\/.'
+                    let file = substitute(file, '.*\/\ze.', '', '')
+                endif
+            else
+                let file = fnamemodify(file, ':p:t')
+            endif
+            if file == ''
+                let file = '[No Name]'
+            endif
+            let s .= ' ' . file . ' '
+            let i = i + 1
+        endwhile
+        let s .= '%T%#TabLineFill#%='
+        let s .= (tabpagenr('$') > 1 ? '%999XX' : 'X')
+        return s
+    endfunction
+    set stal=2
+    set tabline=%!MyTabLine()
+    highlight link TabNum Special
+endif
+
+" Dont move back the cursor when exiting insert mode
+let CursorColumnI = 0 "the cursor column position in INSERT
+autocmd InsertEnter * let CursorColumnI = col('.')
+autocmd CursorMovedI * let CursorColumnI = col('.')
+autocmd InsertLeave * if col('.') != CursorColumnI | call cursor(0, col('.')+1) | endif
+
+" =========================================================
+" === SHORTCUTS ===========================================
+" =========================================================
+
+" Important: uncoment any set encoding line before adding new non-ASCII chars
+" to vimrc, enable them after
+" Vim Reminders:
+" <c-o> and <c-i> jump between the history of cursor positions
+" <c-o> run a single command while in insert mode
+" '. jump to last insert position
+" gi jump to last insert location and enter insert mode
+" "* register clipboard (Windows)
+" "+ register clipboard (Linux)
+" "% register with buffer name (only for pasting)
+" :goto n: go to the byte in the buffer
+" gp paste and move the cursor to the end
+" :pu or ,p paste below the current line
+" P paste before the cursor
+" f / F search for next / prev char in line
+" t / T search for next / prev char in line, jump before it
+" w start of next word (W for WORD)
+" e end of next word (E for WORD)
+" b start of prev word (B for WORD)
+" d/[search] delete until [search] not including the search terms
+" y/[search] yank until [search] not including the search terms
+" */# search for next/prev occurrence of word under cursor
+" 0/^/$ motions: start of line, start of text, end of line
+" gg / G: motions: start of text, end of text
+" I move to start of text and enter insert mode
+" A move to end of line and enter insert mode (append)
+" C change since cursor to the end of line
+" cc change entire line
+" o/O create new line below / above current
+" z= see spelling suggestions for word under cursor
+" ]s / [s jump to next / prev misspelled word
+" zg add word to spellfile
+" gn "next search match", e.g. cgn deletes and insert on the next search match
+
+" === BASIC ===
+    let mapleader = ","
+    " I use a Spanish keyboard but still want to use these keys without pressing shift
+    map - /
+    nmap ñ :
+    nmap Ñ :
+    imap º <esc>
+    nmap ç ^
+    nmap ¡ `
+    ",o / ,O to insert a line below / above and return to normal mode
+    nmap <leader>o o<esc>
+    nmap <leader>O O<esc>
+
+    " navigate trought wrapped lines easily
+    nmap j gj
+    nmap k gk
+
+    " w!! to save as root with sudo
+    cmap w!! w !sudo tee % >/dev/null<cr>
+
+" === COPY/PASTE ===
+    " Obvious shortcuts so I don't mess with C-V, C-C when using Vim along other
+    " programs that use these shortcuts for copy/paste (these copy/paste to the
+    " system clipboard)
+    nmap <C-V> "+gp
+    imap <C-V> <ESC><C-V>i
+    vmap <C-C> "+y
+
+    " ,p paste AFTER current line, useful when you're pasting several lines
+    nnoremap <leader>p :pu<cr>
+
+    " ,V will select the last pasted text (useful for reindenting with =)
+    nnoremap <leader>V `[v`]
+
+" === OTHER ===
+    " ,ct Clear Trailing : remove trailing whitespace after the end of line
+    nnoremap <leader>ct :%s/\s\+$//<cr>''
+
+    " c-j c-k pagedown/up, I find these more 'vimish' than c-f/c-b
+    nnoremap <c-j> <c-f>
+    nnoremap <c-k> <c-b>
+
+    " ,sv reload .vimrc
+    nmap <leader>sv :so $MYVIMRC<cr>
+
+    " ,rr: sometimes syntax highlighting fails and put everything as string, this reset it
+    nmap <leader>rr :syntax off<cr>:syntax on<cr>
+
+    " Spellchecking:
+    " ,ss Spanish
+    " ,se English
+    " ,sn Disable
+    " z= to see suggestions
+    " ]s / [s jump to next/prev misspelled word
+    " zg add word to the spellfile
+    nmap <leader>ss :setlocal spell spelllang=es_es<cr>
+    nmap <leader>se :setlocal spell spelllang=en_en<cr>
+    nmap <leader>sn :set nospell<cr>
+
+    " Make arrow keys work in Windows gvim
+    if has("win64") || has("win32")
+        vnoremap <Left> h
+        vnoremap <Right> l
+        vnoremap <Up> k
+        vnoremap <Down> j
+    endif
+
+    " some aliases for my stupid fingers
+    nmap :W :w
+    nmap :q1 :q!
+    nmap :Q :q
+    nmap :Q! :q!
+    nmap :Q1 :q!
+    nmap :Qa :qa
+    nmap :QA :qa
+
+    " ,<space> to clean search results
+    nmap <leader><space> :noh<cr>
+
+    " disable help with f1, I hit it alot instead of ESC (use :help)
+    inoremap <f1> <ESC>
+    nnoremap <f1> <ESC>
+    vnoremap <f1> <ESC>
+
+    " ,gs (Guarda Sesion) save vim session, ,css (Carga Sesion), load it
+    if has("win64") || has("win32")
+        nmap <leader>gs :mksession! c:\sesiones\vim_session <cr>
+        nmap <leader>css :source c:\sesiones\vim_session" <cr>
+    else
+        nmap <leader>gs :mksession! ~/vim_session <cr>
+        nmap <leader>css :source ~/vim_session <cr>
+    endif
+
+    " ,sp, ,snp set paste, set no paste modes
+    nmap <leader>sp :set paste<cr>
+    nmap <leader>np :set nopaste<cr>
+
+    " =========================================================
+    " === COLORS, FONTS AND GUI ===============================
+    " =========================================================
+    " GVIM options: copied registers go to system clipboard too; use icon; include toolbar
+    set guioptions-=Tai
+    set guioptions=egmrt
+
+
+" =========================================================
+" === AUTOCOMPLETE ========================================
+" =========================================================
+" show omni menu even when there is only a single entry and don't autocomplete with the first one
+set completeopt=longest,menuone
+
+" not infernal-pink color for the complete menu
+highlight Pmenu guibg=brown gui=bold
