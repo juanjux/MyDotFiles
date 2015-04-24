@@ -1,9 +1,10 @@
 " Plugins used:
 " Pathogen: easy plugin installation/removal, just do a git clone on ~/.vim/bundle
+" Bundle: plugin manager
 " Yankring: register buffer, also allows to copy and paste between different vim instances
 " using an external file. ",yy" for seeing the ring, control-p after pasting
 " to cycle between previous yanks
-" Project: project manager, (,p to open, \C to create new, \R to refresh)
+" Project: project manager, (,P to open, \C to create new, \R to refresh)
 " Pythoncomplete: better Python completion, needs a Vim with Python support
 " Tohtml: converts the buffer to HTML with syntax coloring (:tohtml)
 " ZipPlugin: to open zip files
@@ -14,8 +15,6 @@
 " Airline: Cool status bar (need laststatus set to 2)
 " Tagbar: tag lists (method, var, classes, etc), ',tb' to toggle
 " Vimwiki: personal wiki (see cheatsheet inside)
-" Vimmultiplecursors: select the same work several times with ctrl-n, v to edit, great for
-" renaming vars
 " Syntastic: validates the code on writing (disabled for D, use ',sy' there) and shows the errors
 " Easy Motion: jump quickly to any word in the window, ',e' to activate
 " Unite: fuzzy search on buffers/files/tags/recent files/etc, <space><space> (needs vimproc)
@@ -33,30 +32,78 @@
 "   cs[old][new] change delimiters surrounding: cs'" => ' to ", cs"t => " to html tag
 "   ds[delim]: to remove " delimiters
 " Jdaddy: json objects (aj), prettyfication (gqaj), pretty pasting (gwaj)
-" Gtfo: gof for opening a file manager on the buffer's directory, got for a
+" Gtfo: "gof" for opening a file manager on the buffer's directory, "got" for a
 "   terminal
-" Ack: Ack [search] [directory]
 " Repeat: so I can repeat with the "." actions from some plugins like Surround
 " EasyOperator: [operator](easymotionselection) => awesome to delete and move things around
-" LustnoMail = "Error: could not get raw email";er: <leader>lj and a number to quickly switch buffers
 " Rename: :rename command to rename current file
+" Ag: search with silversearcher
+" NrrwRgn: narrow region like Emacs. Select region, :NR and :WidenRegion to finish
+" Better Rainbow Parenthesis: colorized parenthesis
+" Crunch: easy to use calculator, just use :Crunch [expr] or :Crunch for interactive shell
+
+set nocompatible
+" ========================================================
+" === VUNDLE PLUGINS CONFIGURATION =======================
+" ========================================================
+filetype off
+
+if has("win64") || has("win32")
+    set rtp+=C:\\installs\\vim\\vim74\\bundle\\Vundle.vim
+else
+    set rtp+=~/.vim/bundle/Vundle.vim
+endif
+
+call vundle#begin()
+Plugin 'gmarik/vundle'
+
+Plugin 'Shougo/unite.vim'
+Plugin 'Shougo/neomru.vim'
+Plugin 'Valloric/MatchTagAlways'
+Plugin 'arecarn/crunch.vim'
+Plugin 'chrisbra/NrrwRgn'
+Plugin 'danro/rename.vim'
+Plugin 'godlygeek/tabular'
+Plugin 'kien/rainbow_parentheses.vim'
+Plugin 'majutsushi/tagbar'
+Plugin 'mattn/emmet-vim'
+Plugin 'rking/ag.vim'
+Plugin 'scrooloose/nerdcommenter'
+Plugin 'scrooloose/syntastic'
+Plugin 'tmhedberg/matchit'
+Plugin 'vim-scripts/CSApprox'
+Plugin 'vim-scripts/reorder-tabs'
+Plugin 'h1mesuke/unite-outline'
+Plugin 'tsukkee/unite-tag'
+Plugin 'bling/vim-airline'
+Plugin 'flazz/vim-colorschemes'
+Plugin 'Lokaltog/vim-easymotion'
+Plugin 'takac/vim-fontmanager'
+Plugin 'justinmk/vim-gtfo'
+Plugin 'Shougo/vimproc.vim'
+Plugin 'tpope/vim-surround'
+Plugin 'vimwiki/vimwiki'
+
+Plugin 'Dscanner'
+
+call vundle#end()
+
 " ========================================================
 " === BASIC CONFIGURATION  ===============================
 " ========================================================
-" PaThogen
-execute pathogen#infect()
 
-set nocompatible
 behave xterm
 syntax on
 filetype plugin on
 set novb                       " no bells please
 set noerrorbells               " idem
-"set list  lcs=tab:»·,eol:¬     " show invisible characters line newline or tabs
+"set list  lcs=tab:»·,eol:¬      show invisible characters line newline or tabs
 set switchbuf=usetab,newtab    " switch to a buffer opened on a tab switches to that tab
 filetype plugin indent on
 set history=50
 set viminfo='50,\"50
+set modeline                   " enable per-file modelines
+set modelines=5
 set undofile
 set undolevels=1000
 set undoreload=10000
@@ -84,7 +131,7 @@ set number                     " but show the current linenum at the center
 set virtualedit=block          " can select anything inside visual block mode (v + ctrl-v)
 set laststatus=2               " needed for powerline/airline
 set cursorline                 " highlight the line with the cursor
-set autochdir                  " change the cwd to the buffer
+set autochdir                  " change the cwd to the buffer 
 
 " no mouse without GUI (so I can copy easier when running inside putty)
 if has("gui")
@@ -131,11 +178,10 @@ set copyindent        " copy the indentation of the previous line
 set foldmethod=indent " fold by indentation
 set foldnestmax=2     " ...but not more than two levels (class and method)
 set foldlevel=99      " start with everything unfolded
-set colorcolumn=94     " color text written past the column
-"autocmd FileType python,html,javascript,css,c,d,cpp,java,xhtml,htmldjango,ruby,lua,make,markdown,mel,perl,perl6,php,samba,xml set foldlevel=0
+set colorcolumn=101     " color text written past the column
 " 82 chars indentation for text files
 au BufNewFile,BufRead,BufEnter *.txt,*.me,*.ME,.article*,.followup,.letter*,mutt*  set tw=82
-au BufNewFile,BufRead,BufEnter *.d,*.cpp,*.cc,*.py,*.js set tw=90
+au BufNewFile,BufRead,BufEnter *.d,*.cpp,*.cc,*.py,*.js set tw=100
 autocmd FileType html set formatoptions+=l
 
 " Rename tabs to show tab number (change with [number]gt)
@@ -178,15 +224,8 @@ if exists("+showtabline")
     endfunction
     set stal=2
     set tabline=%!MyTabLine()
-    highlight link TabNum Special
+    highlight link TabNum Special 
 endif
-
-" Dont move back the cursor when exiting insert mode
-let CursorColumnI = 0 "the cursor column position in INSERT
-autocmd InsertEnter * let CursorColumnI = col('.')
-autocmd CursorMovedI * let CursorColumnI = col('.')
-autocmd InsertLeave * if col('.') != CursorColumnI | call cursor(0, col('.')+1) | endif
-
 " =========================================================
 " === SHORTCUTS ===========================================
 " =========================================================
@@ -293,7 +332,7 @@ autocmd InsertLeave * if col('.') != CursorColumnI | call cursor(0, col('.')+1) 
 
 " === OTHER ===
     " ,ct Clear Trailing : remove trailing whitespace after the end of line
-    nnoremap <leader>ct :%s/\s\+$//<cr>''
+    nnoremap <leader>ct :%s/\s\+$//<cr>
 
     " c-j c-k pagedown/up, I find these more 'vimish' than c-f/c-b
     nnoremap <c-j> <c-f>
@@ -350,10 +389,6 @@ autocmd InsertLeave * if col('.') != CursorColumnI | call cursor(0, col('.')+1) 
     nmap <leader>tb :TagbarToggle<cr>
 	nmap <silent> <leader>P <Plug>ToggleProject
 
-	" Tabularize ,T= ,T:
-	nmap <leader>T= :Tabularize /=<cr>
-	nmap <leader>T: :Tabularize /:<cr>
-
     " ,gs (Guarda Sesion) save vim session, ,css (Carga Sesion), load it
     if has("win64") || has("win32")
         nmap <leader>gs :mksession! c:\sesiones\vim_session <cr>
@@ -373,13 +408,18 @@ autocmd InsertLeave * if col('.') != CursorColumnI | call cursor(0, col('.')+1) 
     " ,1 Put === lines above and below the current line
     nnoremap <leader>1 yyPVr=jyypVr=k
 
+    " ,li pylint
+    nmap <leader>li :!C:\Python27\scripts\flake8.exe --ignore=E501,E221,E265,E303,E302,E701,E251,E241,E128,E401,E301,E126,E225,E211,E226,E261,E127,E702,E123,E124,E201,E231,E262,E202,E203,E125,E228 %<cr>
+    "nmap <leader>li :!C:\Python27\scripts\flake8.exe %<cr>
+
     " =========================================================
     " === COLORS, FONTS AND GUI ===============================
     " =========================================================
 
-    "colors summerfruit
+    colors summerfruit256
     "colors molokai
-    colors professional
+    "colors professional
+    "colors iceberg
     hi NonText guifg=#b2b2b2
 
     " EasyMotion Colors
@@ -390,13 +430,15 @@ autocmd InsertLeave * if col('.') != CursorColumnI | call cursor(0, col('.')+1) 
 
     " Font
     if has("win64") || has("win32")
-        let g:fontman_font = "Monaco"
-        let g:fontman_size = 10
+        "let g:fontman_font = "Monaco"
+        "let g:fontman_size = 10
+        let g:fontman_font = "M+ 2m regular"
+        let g:fontman_size = 12
     else
         let g:fontman_font = "DejaVu Sans Mono"
         let g:fontman_size = 9
     endif
-
+        
 
     " GVIM options: copied registers go to system clipboard too; use icon; include toolbar
     set guioptions-=Tai
@@ -448,6 +490,10 @@ highlight Pmenu guibg=brown gui=bold
             \ 's:strings'
         \ ]
     \ }
+
+    if has("win64") || has("win32")
+        let g:tagbar_ctags_bin = "C:\\installs\\vim\\vim74\\ctags.exe"
+    endif
 
 " Project:
     " default flags
@@ -521,12 +567,31 @@ highlight Pmenu guibg=brown gui=bold
     nnoremap <leader><CR> :VimwikiTabnewLink<cr>
 
 " Syntastic: :Error to show the error listing windows
-    let g:syntastic_error_symbol = '>>'
+    set statusline+=%#warningmsg#
+    set statusline+=%{SyntasticStatuslineFlag()}
+    set statusline+=%*
+    "let g:syntastic_debug = 1
+    let g:syntastic_error_symbol = 'E>'
     let g:syntastic_warning_symbol = 'W>'
     let g:syntastic_d_check_header = 0
     let g:syntastic_d_compiler = "$HOME/bin/dub-syntastic"
+    let g:syntastic_python_checkers = ['flake8']
     let g:syntastic_mode_map = { 'mode': 'active', 'passive_filetypes': ['d'] }
+    let g:syntastic_python_flake8_post_args = '--ignore=E501,E221,E265,E303,E302,E701,E251,E241,E128,E401,E301,E126,E225,E211,E226,E261,E127,E702,E123,E124,E201,E231,E262,E202,E203,E125,E228'
+    let g:syntastic_always_populate_loc_list = 1
+    let g:syntastic_auto_loc_list = 0
+    let g:syntastic_check_on_open = 1
+    let g:syntastic_check_on_wq = 0
 
+    if has("win64") || has("win32")
+        let g:syntastic_flake8_exec='C:\python27\Scripts\flake8.exe'
+        let g:syntastic_python_flake8_exec='C:\python27\Scripts\flake8.exe'
+    endif
+
+" Ag: Windows path
+    if has("win64") || has("win32")
+        let g:ag_prg="C:\\installs\\ag\\ag.exe --column"
+    endif
 
 
 " EasyMotion:
@@ -534,9 +599,9 @@ highlight Pmenu guibg=brown gui=bold
     nmap d<leader>e <Plug>(easyoperator-line-delete)
     nmap y<leader>e <Plug>(easyoperator-line-yank)
     nmap v<leader>e <Plug>(easyoperator-line-select)
-    " ,f easy motion search character
+    " ,f easy motion search character 
     nmap <leader>f <Plug>(easymotion-bd-f)
-    " ,j easy motion line
+    " ,j easy motion line 
     nmap <leader>j <Plug>(easymotion-bd-jk)
 
 " Unite:
@@ -597,3 +662,9 @@ highlight Pmenu guibg=brown gui=bold
     nnoremap [unite]o :Unite -start-insert -auto-preview outline<cr>
     nnoremap [unite]l :Unite -start-insert line<cr>
     nnoremap [unite]y :Unite history/yank<cr>
+
+" Better Rainbow Parenthesis:
+au VimEnter * RainbowParenthesesActivate
+au Syntax * RainbowParenthesesLoadRound
+au Syntax * RainbowParenthesesLoadSquare
+au Syntax * RainbowParenthesesLoadBraces
