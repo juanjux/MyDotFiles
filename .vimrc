@@ -1,6 +1,5 @@
 " Plugins used:
-" Pathogen: easy plugin installation/removal, just do a git clone on ~/.vim/bundle
-" Bundle: plugin manager
+" Vundle: plugin manager
 " Yankring: register buffer, also allows to copy and paste between different vim instances
 " using an external file. ",yy" for seeing the ring, control-p after pasting
 " to cycle between previous yanks
@@ -17,7 +16,6 @@
 " Vimwiki: personal wiki (see cheatsheet inside)
 " Syntastic: validates the code on writing (disabled for D, use ',sy' there) and shows the errors
 " Easy Motion: jump quickly to any word in the window, ',e' to activate
-" Unite: fuzzy search on buffers/files/tags/recent files/etc, <space><space> (needs vimproc)
 " Matchit: improves on the Vim % command to understand more things
 " Matchtagalways: highlight matching HTML tags
 " Tabular: align things, ':Tabularize /:' would align by the ':' character, useful to prettify code
@@ -57,8 +55,7 @@ endif
 call vundle#begin()
 Plugin 'gmarik/vundle'
 
-Plugin 'Shougo/unite.vim'
-Plugin 'Shougo/neomru.vim'
+Plugin 'kien/ctrlp.vim' 
 Plugin 'Valloric/MatchTagAlways'
 Plugin 'arecarn/crunch.vim'
 Plugin 'chrisbra/NrrwRgn'
@@ -411,7 +408,7 @@ endif
     " ,li pylint
     nmap <leader>li :!C:\Python27\scripts\flake8.exe --ignore=E501,E221,E265,E303,E302,E701,E251,E241,E128,E401,E301,E126,E225,E211,E226,E261,E127,E702,E123,E124,E201,E231,E262,E202,E203,E125,E228 %<cr>
     "nmap <leader>li :!C:\Python27\scripts\flake8.exe %<cr>
-
+    
     " =========================================================
     " === COLORS, FONTS AND GUI ===============================
     " =========================================================
@@ -604,67 +601,33 @@ highlight Pmenu guibg=brown gui=bold
     " ,j easy motion line 
     nmap <leader>j <Plug>(easymotion-bd-jk)
 
-" Unite:
-    " <space> and...
-        " another <space> to search in buffers and recent files
-        " g: grep
-        " f: files
-        " b:buffers
-        " m: mru
-        " t: tags
-        " y yank history
-    call unite#filters#matcher_default#use(['matcher_fuzzy'])
-    call unite#filters#sorter_default#use(['sorter_rank'])
+" CtrlP
+    let g:ctrlp_map = '<space>'
+    let g:ctrlp_cmd = 'CtrlPMixed'  
+    let g:ctrlp_match_window = 'top, order:ttb,min:1,max:20,results:20'
+    let g:ctrlp_by_filename = 1
+    let g:ctrlp_working_path_mode = 'ra'
+    let g:ctrlp_clear_cache_on_exit = 1
+    let g:ctrlp_lazy_update = 1
 
-    let g:unite_source_history_yank_enable = 1
-    let g:unite_force_overwrite_statusline = 0
-    if executable('ag')
-      let g:unite_source_grep_command = 'ag'
-      let g:unite_source_grep_default_opts = '--nogroup --nocolor --column'
-      let g:unite_source_grep_recursive_opt = ''
+    let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$'
+    "let g:ctrlp_custom_ignore = {
+      "\ 'dir':  '\v[\/]\.(git|hg|svn)$',
+      "\ 'file': '\v\.(exe|so|dll)$',
+      "\ 'link': 'some_bad_symbolic_links',
+      "\ }
+    
+    if has("win64") || has("win32")
+        set wildignore+=*\\tmp\\*,*.swp,*.zip,*.exe  " Windows
+        let g:ctrlp_user_command = 'dir %s /-n /b /s /a-d'  " Windows
+    else
+        set wildignore+=*/tmp/*,*.so,*.swp,*.zip     " MacOSX/Linux
+        let g:ctrlp_user_command = 'find %s -type f'        " MacOSX/Linux
     endif
 
-    call unite#custom_source('file_rec,file_rec/async,file_mru,file,buffer,grep',
-      \ 'ignore_pattern', join([
-      \ '\.git/',
-      \ '\.svn/',
-      \ '\.dub/',
-      \ '\.sass-cache/',
-      \ '\vendor/',
-      \ '\node_modules/',
-      \ ], '\|'))
 
-    " Custom mappings for the unite buffer
-    autocmd FileType unite call s:unite_settings()
-    function! s:unite_settings()
-      let b:SuperTabDisabled=1
-      imap <buffer> <c-a> <Plug>(unite_choose_action)
-
-      imap <silent><buffer><expr> <C-s> unite#do_action('split')
-      imap <silent><buffer><expr> <C-v> unite#do_action('vsplit')
-      imap <silent><buffer><expr> <C-t> unite#do_action('tabopen')
-
-      nmap <buffer> <ESC> <Plug>(unite_exit)
-    endfunction
-
-    " The prefix key
-    nnoremap [unite] <Nop>
-    nmap <space> [unite]
-
-    " General purpose
-    nnoremap [unite]<space> :Unite -start-insert buffer file_mru<cr>
-    nnoremap [unite]b :Unite -start-insert buffer<cr>
-    nnoremap [unite]m :Unite -start-insert file_mru<cr>
-    nnoremap [unite]f :Unite -start-insert file_rec/async<cr>
-    nnoremap [unite]g :Unite grep:.<cr>
-    nnoremap [unite]d :Unite grep:.:-s:\(TODO\|FIXME\|XXX\)<cr>
-    nnoremap [unite]t :Unite -start-insert -auto-preview tag<cr>
-    nnoremap [unite]o :Unite -start-insert -auto-preview outline<cr>
-    nnoremap [unite]l :Unite -start-insert line<cr>
-    nnoremap [unite]y :Unite history/yank<cr>
-
-" Better Rainbow Parenthesis:
-au VimEnter * RainbowParenthesesActivate
-au Syntax * RainbowParenthesesLoadRound
-au Syntax * RainbowParenthesesLoadSquare
-au Syntax * RainbowParenthesesLoadBraces
+" Better Rainbow Parenthesis
+   au VimEnter * RainbowParenthesesActivate
+   au Syntax * RainbowParenthesesLoadRound
+   au Syntax * RainbowParenthesesLoadSquare
+   au Syntax * RainbowParenthesesLoadBraces
