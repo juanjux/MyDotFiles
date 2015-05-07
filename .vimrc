@@ -1,4 +1,4 @@
-" Plugins used:
+﻿" Plugins used:
 " Vundle: plugin manager
 " Yankring: register buffer, also allows to copy and paste between different vim instances
 " using an external file. ",yy" for seeing the ring, control-p after pasting
@@ -41,6 +41,7 @@
 " Crunch: easy to use calculator, just use :Crunch [expr] or :Crunch for interactive shell
 
 set nocompatible
+
 " ========================================================
 " === VUNDLE PLUGINS CONFIGURATION =======================
 " ========================================================
@@ -55,7 +56,9 @@ endif
 call vundle#begin()
 Plugin 'gmarik/vundle'
 
-Plugin 'kien/ctrlp.vim' 
+"Plugin 'python-rope/ropevim'
+Plugin 'klen/python-mode' " doesnt really work for me on Windows
+Plugin 'kien/ctrlp.vim'
 Plugin 'Valloric/MatchTagAlways'
 Plugin 'arecarn/crunch.vim'
 Plugin 'chrisbra/NrrwRgn'
@@ -65,8 +68,10 @@ Plugin 'kien/rainbow_parentheses.vim'
 Plugin 'majutsushi/tagbar'
 Plugin 'mattn/emmet-vim'
 Plugin 'rking/ag.vim'
+Plugin 'tpope/vim-fugitive'
 Plugin 'scrooloose/nerdcommenter'
 Plugin 'scrooloose/syntastic'
+Plugin 'altercation/vim-colors-solarized'
 Plugin 'tmhedberg/matchit'
 Plugin 'vim-scripts/CSApprox'
 Plugin 'vim-scripts/reorder-tabs'
@@ -80,8 +85,6 @@ Plugin 'justinmk/vim-gtfo'
 Plugin 'Shougo/vimproc.vim'
 Plugin 'tpope/vim-surround'
 Plugin 'vimwiki/vimwiki'
-
-Plugin 'Dscanner'
 
 call vundle#end()
 
@@ -128,7 +131,7 @@ set number                     " but show the current linenum at the center
 set virtualedit=block          " can select anything inside visual block mode (v + ctrl-v)
 set laststatus=2               " needed for powerline/airline
 set cursorline                 " highlight the line with the cursor
-set autochdir                  " change the cwd to the buffer 
+set autochdir                  " change the cwd to the buffer
 
 " no mouse without GUI (so I can copy easier when running inside putty)
 if has("gui")
@@ -221,7 +224,7 @@ if exists("+showtabline")
     endfunction
     set stal=2
     set tabline=%!MyTabLine()
-    highlight link TabNum Special 
+    highlight link TabNum Special
 endif
 " =========================================================
 " === SHORTCUTS ===========================================
@@ -408,7 +411,7 @@ endif
     " ,li pylint
     nmap <leader>li :!C:\Python27\scripts\flake8.exe --ignore=E501,E221,E265,E303,E302,E701,E251,E241,E128,E401,E301,E126,E225,E211,E226,E261,E127,E702,E123,E124,E201,E231,E262,E202,E203,E125,E228 %<cr>
     "nmap <leader>li :!C:\Python27\scripts\flake8.exe %<cr>
-    
+
     " =========================================================
     " === COLORS, FONTS AND GUI ===============================
     " =========================================================
@@ -435,7 +438,7 @@ endif
         let g:fontman_font = "DejaVu Sans Mono"
         let g:fontman_size = 9
     endif
-        
+
 
     " GVIM options: copied registers go to system clipboard too; use icon; include toolbar
     set guioptions-=Tai
@@ -585,6 +588,11 @@ highlight Pmenu guibg=brown gui=bold
         let g:syntastic_python_flake8_exec='C:\python27\Scripts\flake8.exe'
     endif
 
+" PythonMode:
+
+    let g:pymode_lint_ignore = 'E501,E221,E265,E303,E302,E701,E251,E241,E128,E401,E301,E126,E225,E211,E226,E261,E127,E702,E123,E124,E201,E231,E262,E202,E203,E125,E228'
+    let g:pymode_rope = 1
+
 " Ag: Windows path
     if has("win64") || has("win32")
         let g:ag_prg="C:\\installs\\ag\\ag.exe --column"
@@ -596,14 +604,14 @@ highlight Pmenu guibg=brown gui=bold
     nmap d<leader>e <Plug>(easyoperator-line-delete)
     nmap y<leader>e <Plug>(easyoperator-line-yank)
     nmap v<leader>e <Plug>(easyoperator-line-select)
-    " ,f easy motion search character 
+    " ,f easy motion search character
     nmap <leader>f <Plug>(easymotion-bd-f)
-    " ,j easy motion line 
+    " ,j easy motion line
     nmap <leader>j <Plug>(easymotion-bd-jk)
 
 " CtrlP
     let g:ctrlp_map = '<space>'
-    let g:ctrlp_cmd = 'CtrlPMixed'  
+    let g:ctrlp_cmd = 'CtrlPMixed'
     let g:ctrlp_match_window = 'top, order:ttb,min:1,max:20,results:20'
     let g:ctrlp_by_filename = 1
     let g:ctrlp_working_path_mode = 'ra'
@@ -616,7 +624,7 @@ highlight Pmenu guibg=brown gui=bold
       "\ 'file': '\v\.(exe|so|dll)$',
       "\ 'link': 'some_bad_symbolic_links',
       "\ }
-    
+
     if has("win64") || has("win32")
         set wildignore+=*\\tmp\\*,*.swp,*.zip,*.exe  " Windows
         let g:ctrlp_user_command = 'dir %s /-n /b /s /a-d'  " Windows
