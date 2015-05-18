@@ -1,5 +1,11 @@
 ﻿" Plugins used:
 " Vundle: plugin manager
+" CtrlP: fuzzy matching on buffers/files/mru
+" Jedivim: Python's autocompletion, renaming and symbol jumping (better than ROPE)
+" PythonMode: Adds Python motion objects, run code, better syntax highlighting,
+"             breakpoints, better indentation, etc. Syntax checking and code
+"             completion / refactoring is disabled because I prefer Syntastic + JediVim
+"             for that.
 " Yankring: register buffer, also allows to copy and paste between different vim instances
 " using an external file. ",yy" for seeing the ring, control-p after pasting
 " to cycle between previous yanks
@@ -56,8 +62,8 @@ endif
 call vundle#begin()
 Plugin 'gmarik/vundle'
 
-"Plugin 'python-rope/ropevim'
-Plugin 'klen/python-mode' " doesnt really work for me on Windows
+Plugin 'klen/python-mode'
+Plugin 'davidhalter/jedi-vim'
 Plugin 'kien/ctrlp.vim'
 Plugin 'Valloric/MatchTagAlways'
 Plugin 'arecarn/crunch.vim'
@@ -75,8 +81,6 @@ Plugin 'altercation/vim-colors-solarized'
 Plugin 'tmhedberg/matchit'
 Plugin 'vim-scripts/CSApprox'
 Plugin 'vim-scripts/reorder-tabs'
-Plugin 'h1mesuke/unite-outline'
-Plugin 'tsukkee/unite-tag'
 Plugin 'bling/vim-airline'
 Plugin 'flazz/vim-colorschemes'
 Plugin 'Lokaltog/vim-easymotion'
@@ -122,16 +126,16 @@ set nowritebackup
 set noswapfile
 set ignorecase
 set smartcase
-set hlsearch                   " highlight search results
+set hlsearch              " highlight search results
 set showmatch
-set gdefault                   " default to global substitution, without having to put the /g at the end
-set t_Co=256                   " more colors
-set relativenumber             " show relative line numbers
-set number                     " but show the current linenum at the center
-set virtualedit=block          " can select anything inside visual block mode (v + ctrl-v)
-set laststatus=2               " needed for powerline/airline
-set cursorline                 " highlight the line with the cursor
-set autochdir                  " change the cwd to the buffer
+set gdefault            " default to global substitution, without having to put the /g at the end
+set t_Co=256            " more colors
+set relativenumber      " show relative line numbers
+set number              " but show the current linenum at the center
+set virtualedit=block   " can select anything inside visual block mode (v + ctrl-v)
+set laststatus=2        " needed for powerline/airline
+set cursorline          " highlight the line with the cursor
+set autochdir           " change the cwd to the buffer
 
 " no mouse without GUI (so I can copy easier when running inside putty)
 if has("gui")
@@ -379,10 +383,10 @@ endif
     " ,yy show yanking registers
     nnoremap <leader>yy :YRShow<cr>
 
-    " disable help with f1, I hit it alot instead of ESC
-    inoremap <f1> <ESC>
-    nnoremap <f1> <ESC>
-    vnoremap <f1> <ESC>
+    " F1 = exit insert mode and save
+    inoremap <f1> <ESC>:w<cr>
+    nnoremap <f1> :w<cr>
+    vnoremap <f1> :w<cr>
 
     " Netrw, Tagbar and Project toggles
     nmap <leader>E :Vex<cr>
@@ -407,10 +411,6 @@ endif
 
     " ,1 Put === lines above and below the current line
     nnoremap <leader>1 yyPVr=jyypVr=k
-
-    " ,li pylint
-    nmap <leader>li :!C:\Python27\scripts\flake8.exe --ignore=E501,E221,E265,E303,E302,E701,E251,E241,E128,E401,E301,E126,E225,E211,E226,E261,E127,E702,E123,E124,E201,E231,E262,E202,E203,E125,E228 %<cr>
-    "nmap <leader>li :!C:\Python27\scripts\flake8.exe %<cr>
 
     " =========================================================
     " === COLORS, FONTS AND GUI ===============================
@@ -467,6 +467,20 @@ highlight Pmenu guibg=brown gui=bold
 " =============================================
 " === PLUGIN's OPTIONS ========================
 " =============================================
+
+" Jedi Vim:
+" <leader>d: go to definition
+" <leader>re: rename
+" <leader>u: list symbol usages
+" Control-Space: complete symbol
+" Writing a '.' will also trigger completion
+    let g:jedi#goto_command = "<leader>d"
+    let g:jedi#goto_assignments_command = "<leader>go"
+    let g:jedi#goto_definitions_command = ""
+    let g:jedi#documentation_command = "K"
+    let g:jedi#usages_command = "<leader>u"
+    let g:jedi#completions_command = "<C-Space>"
+    let g:jedi#rename_command = "<leader>re"
 
 " XML Plugin:
     let xml_use_xhtml = 1
@@ -544,7 +558,8 @@ highlight Pmenu guibg=brown gui=bold
     " # for numbered lists
     " + 'decorates' links: converts URL to link, word to wikilink
     " gl[symbol] to insert symbols uses by vimwiki as *, #, -, 1, etc
-    " :VimwikiTable rows/columns: create a table, TAB to change between cells, alt+arrow to move a colum
+    " :VimwikiTable rows/columns: create a table, TAB to change between cells,
+    " alt+arrow to move a colum
     " *bold*
     " _italitc__
     " ~~striked~~
@@ -558,11 +573,13 @@ highlight Pmenu guibg=brown gui=bold
     " [[link|with description]]
     "
     if has("win64") || has("win32")
-        let g:vimwiki_list = [{'path': 'c:\\Program Files\\ilionData\Users\\juanjo.alvarez\\My Documents\\My Dropbox\\Wiki',
-                               \ 'path_html': 'c:\\Program Files\\ilionData\Users\\juanjo.alvarez\\My Documents\\My Dropbox\\Wiki\html'}]
+        let g:vimwiki_list = [{'path': 'c:\\Program Files\\ilionData\Users' +
+                               \'\\juanjo.alvarez\\My Documents\\My Dropbox\\Wiki',
+                               \'path_html': 'c:\\Program Files\\ilionData\Users' +
+                               \'\\juanjo.alvarez\\My Documents\\My Dropbox\\Wiki\html'}]
     else
         let g:vimwiki_list = [{'path': '~/btsync/Wiki',
-                               \ 'path_html': '~/btsync/wiki/html'}]
+                               \'path_html': '~/btsync/wiki/html'}]
     endif
     nnoremap <leader><CR> :VimwikiTabnewLink<cr>
 
@@ -571,17 +588,19 @@ highlight Pmenu guibg=brown gui=bold
     set statusline+=%{SyntasticStatuslineFlag()}
     set statusline+=%*
     "let g:syntastic_debug = 1
-    let g:syntastic_error_symbol = 'E>'
-    let g:syntastic_warning_symbol = 'W>'
-    let g:syntastic_d_check_header = 0
-    let g:syntastic_d_compiler = "$HOME/bin/dub-syntastic"
-    let g:syntastic_python_checkers = ['flake8']
-    let g:syntastic_mode_map = { 'mode': 'active', 'passive_filetypes': ['d'] }
-    let g:syntastic_python_flake8_post_args = '--ignore=E501,E221,E265,E303,E302,E701,E251,E241,E128,E401,E301,E126,E225,E211,E226,E261,E127,E702,E123,E124,E201,E231,E262,E202,E203,E125,E228'
+    let g:syntastic_error_symbol             = 'E>'
+    let g:syntastic_warning_symbol           = 'W>'
+    let g:syntastic_d_check_header           = 0
+    let g:syntastic_d_compiler               = "$HOME/bin/dub-syntastic"
+    let g:syntastic_python_checkers          = ['flake8']
+    let g:syntastic_mode_map                 = { 'mode': 'active', 'passive_filetypes': ['d'] }
+    let g:syntastic_python_flake8_post_args  = '--ignore=E501,E221,E265,E303,E302,E701,E251,E241,'
+    let g:syntastic_python_flake8_post_args .= 'E128,E401,E301,E126,E225,E211,E226,E261,E127,E702,'
+    let g:syntastic_python_flake8_post_args .= 'E123,E124,E201,E231,E262,E202,E203,E125,E228'
     let g:syntastic_always_populate_loc_list = 1
-    let g:syntastic_auto_loc_list = 0
-    let g:syntastic_check_on_open = 1
-    let g:syntastic_check_on_wq = 0
+    let g:syntastic_auto_loc_list            = 0
+    let g:syntastic_check_on_open            = 1
+    let g:syntastic_check_on_wq              = 0
 
     if has("win64") || has("win32")
         let g:syntastic_flake8_exec='C:\python27\Scripts\flake8.exe'
@@ -589,9 +608,34 @@ highlight Pmenu guibg=brown gui=bold
     endif
 
 " PythonMode:
+    " Motions
+    " [[ / ]] previous / next class or function
+    " [M / ]M previous / next class or method
+    " aC / iC Python class objects
+    " aM / iM Python function of method objects
+    " Functions
+    " <leader>ru run buffer or selection
+    " <leader>br set breakpoint
+    let g:pymode                  = 0
+    let g:pymode_syntax           = 1
+    let g:pymode_syntax_all       = 1
+    let g:pymode_trim_whitespaces = 1
+    let g:pymode_max_line_length  = 99
+    let g:pymode_indent           = 1
+    let g:pymode_folding          = 1
+    let g:pymode_run_bind         = '<leader>ru'
+    " These things are better done by jedi-vim
+    let g:pymode_rope            = 0
+    let g:pymode_rope_completion = 0
+    let g:pymode_doc             = 0
+    " Better done by Syntastic
+    let g:pymode_lint            = 0
 
-    let g:pymode_lint_ignore = 'E501,E221,E265,E303,E302,E701,E251,E241,E128,E401,E301,E126,E225,E211,E226,E261,E127,E702,E123,E124,E201,E231,E262,E202,E203,E125,E228'
-    let g:pymode_rope = 1
+    if has("win64") || has("win32")
+        let g:pymode_python = 'python'
+    else
+        let g:pymode_python = 'python3'
+    endif
 
 " Ag: Windows path
     if has("win64") || has("win32")
@@ -626,11 +670,11 @@ highlight Pmenu guibg=brown gui=bold
       "\ }
 
     if has("win64") || has("win32")
-        set wildignore+=*\\tmp\\*,*.swp,*.zip,*.exe  " Windows
-        let g:ctrlp_user_command = 'dir %s /-n /b /s /a-d'  " Windows
+        set wildignore+=*\\tmp\\*,*.swp,*.zip,*.exe
+        let g:ctrlp_user_command = 'dir %s /-n /b /s /a-d'
     else
-        set wildignore+=*/tmp/*,*.so,*.swp,*.zip     " MacOSX/Linux
-        let g:ctrlp_user_command = 'find %s -type f'        " MacOSX/Linux
+        set wildignore+=*/tmp/*,*.so,*.swp,*.zip
+        let g:ctrlp_user_command = 'find %s -type f'
     endif
 
 
