@@ -1,4 +1,4 @@
-ï»¿" Plugins used:
+" Plugins used:
 " Vundle: plugin manager
 " CtrlP: fuzzy matching on buffers/files/mru
 " Jedivim: Python's autocompletion, renaming and symbol jumping (better than ROPE)
@@ -9,7 +9,8 @@
 " Yankring: register buffer, also allows to copy and paste between different vim instances
 " using an external file. ",yy" for seeing the ring, control-p after pasting
 " to cycle between previous yanks
-" Project: project manager, (,P to open, \C to create new, \R to refresh)
+" Project: project manager, (,P to open, \C to create new, \R to refresh) (CURRENTLY REMOVED)
+" Fugitive: Awesome git support
 " Pythoncomplete: better Python completion, needs a Vim with Python support
 " Tohtml: converts the buffer to HTML with syntax coloring (:tohtml)
 " ZipPlugin: to open zip files
@@ -54,7 +55,7 @@ set nocompatible
 filetype off
 
 if has("win64") || has("win32")
-    set rtp+=C:\\installs\\vim\\vim74\\bundle\\Vundle.vim
+    set rtp+=$HOME\\vimfiles\\bundle\\Vundle.vim
 else
     set rtp+=~/.vim/bundle/Vundle.vim
 endif
@@ -65,6 +66,7 @@ Plugin 'gmarik/vundle'
 Plugin 'klen/python-mode'
 Plugin 'davidhalter/jedi-vim'
 Plugin 'kien/ctrlp.vim'
+Plugin 'FelikZ/ctrlp-py-matcher'
 Plugin 'Valloric/MatchTagAlways'
 Plugin 'arecarn/crunch.vim'
 Plugin 'chrisbra/NrrwRgn'
@@ -101,7 +103,7 @@ syntax on
 filetype plugin on
 set novb                       " no bells please
 set noerrorbells               " idem
-"set list  lcs=tab:Â»Â·,eol:Â¬      show invisible characters line newline or tabs
+"set list  lcs=tab:»·,eol:¬      show invisible characters line newline or tabs
 set switchbuf=usetab,newtab    " switch to a buffer opened on a tab switches to that tab
 filetype plugin indent on
 set history=50
@@ -272,11 +274,11 @@ endif
     let mapleader = ","
     " I use a Spanish keyboard but still want to use these keys without pressing shift
     map - /
-    nmap Ã± :
-    nmap Ã‘ :
-    imap Âº <esc>
-    nmap Ã§ ^
-    nmap Â¡ `
+    nmap ñ :
+    nmap Ñ :
+    imap º <esc>
+    nmap ç ^
+    nmap ¡ `
     ",o / ,O to insert a line below / above and return to normal mode
     nmap <leader>o o<esc>
     nmap <leader>O O<esc>
@@ -339,8 +341,13 @@ endif
     nnoremap <leader>ct :%s/\s\+$//<cr>
 
     " c-j c-k pagedown/up, I find these more 'vimish' than c-f/c-b
+    " also: space and backspace
     nnoremap <c-j> <c-f>
+    nnoremap <space> <c-f>
+
     nnoremap <c-k> <c-b>
+    nnoremap <BS> <c-b>
+
 
     " ,sv reload .vimrc
     nmap <leader>sv :so $MYVIMRC<cr>
@@ -391,12 +398,12 @@ endif
     " Netrw, Tagbar and Project toggles
     nmap <leader>E :Vex<cr>
     nmap <leader>tb :TagbarToggle<cr>
-	nmap <silent> <leader>P <Plug>ToggleProject
+    nmap <silent> <leader>P <Plug>ToggleProject
 
     " ,gs (Guarda Sesion) save vim session, ,css (Carga Sesion), load it
     if has("win64") || has("win32")
-        nmap <leader>gs :mksession! c:\sesiones\vim_session <cr>
-        nmap <leader>css :source c:\sesiones\vim_session" <cr>
+        nmap <leader>gs :mksession! w:\vim_session <cr>
+        nmap <leader>css :source w:\vim_session" <cr>
     else
         nmap <leader>gs :mksession! ~/vim_session <cr>
         nmap <leader>css :source ~/vim_session <cr>
@@ -506,7 +513,7 @@ highlight Pmenu guibg=brown gui=bold
     \ }
 
     if has("win64") || has("win32")
-        let g:tagbar_ctags_bin = "C:\\installs\\vim\\vim74\\ctags.exe"
+        let g:tagbar_ctags_bin = "W:\\software\\ExhuberantCtags\\ctags.exe"
     endif
 
 " Project:
@@ -639,7 +646,7 @@ highlight Pmenu guibg=brown gui=bold
 
 " Ag: Windows path
     if has("win64") || has("win32")
-        let g:ag_prg="C:\\installs\\ag\\ag.exe --column"
+        let g:ag_prg="W:\\software\\bins\\ag.exe --column"
     endif
 
 
@@ -654,13 +661,15 @@ highlight Pmenu guibg=brown gui=bold
     nmap <leader>j <Plug>(easymotion-bd-jk)
 
 " CtrlP
-    let g:ctrlp_map = '<space>'
+    let g:ctrlp_map = '<c-p>'
     let g:ctrlp_cmd = 'CtrlPMixed'
     let g:ctrlp_match_window = 'top, order:ttb,min:1,max:20,results:20'
     let g:ctrlp_by_filename = 1
     let g:ctrlp_working_path_mode = 'ra'
-    let g:ctrlp_clear_cache_on_exit = 1
     let g:ctrlp_lazy_update = 1
+    " Ag is fast enough that no cache is needed
+    let g:ctrlp_use_caching = 0
+    "let g:ctrlp_clear_cache_on_exit = 1
 
     let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$'
     "let g:ctrlp_custom_ignore = {
@@ -671,12 +680,20 @@ highlight Pmenu guibg=brown gui=bold
 
     if has("win64") || has("win32")
         set wildignore+=*\\tmp\\*,*.swp,*.zip,*.exe
-        let g:ctrlp_user_command = 'dir %s /-n /b /s /a-d'
+        "let g:ctrlp_user_command = 'dir %s /-n /b /s /a-d'
+        let g:ctrlp_user_command = 'W:\\software\\bins\\ag.exe %s -l --nocolor -g "">>'
     else
         set wildignore+=*/tmp/*,*.so,*.swp,*.zip
-        let g:ctrlp_user_command = 'find %s -type f'
+        "let g:ctrlp_user_command = 'find %s -type f'
+        let g:ctrlp_user_command = 'ag %s -l --nocolor -g "">>'
     endif
 
+    " PyMatcher for CtrlP
+    if !has('python')
+        echo 'In order to use pymatcher plugin, you need +python compiled vim'
+    else
+        let g:ctrlp_match_func = { 'match': 'pymatcher#PyMatch' }
+    endif
 
 " Better Rainbow Parenthesis
    au VimEnter * RainbowParenthesesActivate
