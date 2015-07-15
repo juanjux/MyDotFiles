@@ -187,7 +187,7 @@ set foldlevel=99      " start with everything unfolded
 set colorcolumn=101     " color text written past the column
 " 82 chars indentation for text files
 au BufNewFile,BufRead,BufEnter *.txt,*.me,*.ME,.article*,.followup,.letter*,mutt*  set tw=82
-au BufNewFile,BufRead,BufEnter *.d,*.cpp,*.cc,*.py,*.js set tw=100
+au BufNewFile,BufRead,BufEnter *.d,*.cpp,*.cc,*.py,*.js,*.markdown,*.md set tw=100
 autocmd FileType html set formatoptions+=l
 
 " Rename tabs to show tab number (change with [number]gt)
@@ -272,13 +272,20 @@ endif
 
 " === BASIC ===
     let mapleader = ","
-    " I use a Spanish keyboard but still want to use these keys without pressing shift
-    map - /
-    nmap ñ :
-    nmap Ñ :
-    imap º <esc>
-    nmap ç ^
-    nmap ¡ `
+    " When I use a Spanish keyboard but still want to use these keys
+    " without pressing shift
+    "map - /
+    "nmap ñ :
+    "nmap Ñ :
+    "imap º <esc>
+    "nmap ç ^
+    "nmap ¡ `
+
+    " map Tab/ShiftTab to next/prev tab
+    nmap <Tab> gt
+    nmap <S-Tab> gT
+
+
     ",o / ,O to insert a line below / above and return to normal mode
     nmap <leader>o o<esc>
     nmap <leader>O O<esc>
@@ -340,13 +347,9 @@ endif
     " ,ct Clear Trailing : remove trailing whitespace after the end of line
     nnoremap <leader>ct :%s/\s\+$//<cr>
 
-    " c-j c-k pagedown/up, I find these more 'vimish' than c-f/c-b
-    " also: space and backspace
-    nnoremap <c-j> <c-f>
+    " space and backspace pagedown/up
     nnoremap <space> <c-f>
-
-    nnoremap <c-k> <c-b>
-    nnoremap <BS> <c-b>
+    nnoremap <bs> <c-b>
 
 
     " ,sv reload .vimrc
@@ -423,8 +426,8 @@ endif
     " === COLORS, FONTS AND GUI ===============================
     " =========================================================
 
-    colors summerfruit256
-    "colors molokai
+    "colors summerfruit256
+    colors molokai
     "colors professional
     "colors iceberg
     hi NonText guifg=#b2b2b2
@@ -594,7 +597,7 @@ highlight Pmenu guibg=brown gui=bold
     set statusline+=%#warningmsg#
     set statusline+=%{SyntasticStatuslineFlag()}
     set statusline+=%*
-    "let g:syntastic_debug = 1
+    let g:syntastic_debug = 0
     let g:syntastic_error_symbol             = 'E>'
     let g:syntastic_warning_symbol           = 'W>'
     let g:syntastic_d_check_header           = 0
@@ -668,7 +671,7 @@ highlight Pmenu guibg=brown gui=bold
     let g:ctrlp_working_path_mode = 'ra'
     let g:ctrlp_lazy_update = 1
     " Ag is fast enough that no cache is needed
-    let g:ctrlp_use_caching = 0
+    let g:ctrlp_use_caching = 1
     "let g:ctrlp_clear_cache_on_exit = 1
 
     let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$'
@@ -689,14 +692,29 @@ highlight Pmenu guibg=brown gui=bold
     endif
 
     " PyMatcher for CtrlP
-    if !has('python')
-        echo 'In order to use pymatcher plugin, you need +python compiled vim'
-    else
-        let g:ctrlp_match_func = { 'match': 'pymatcher#PyMatch' }
-    endif
+    "if !has('python')
+        "echo 'In order to use pymatcher plugin, you need +python compiled vim'
+    "else
+        "let g:ctrlp_match_func = { 'match': 'pymatcher#PyMatch' }
+    "endif
 
 " Better Rainbow Parenthesis
    au VimEnter * RainbowParenthesesActivate
    au Syntax * RainbowParenthesesLoadRound
    au Syntax * RainbowParenthesesLoadSquare
    au Syntax * RainbowParenthesesLoadBraces
+
+" CM Storm Mappings
+    " M1
+    inoremap <f17> <ESC>:w<cr>
+    nnoremap <f17> :w<cr>
+    vnoremap <f17> :w<cr>
+    " M2
+    nnoremap <F18> :tabnew<cr>:CtrlPMixed<cr>
+    "" M3
+    nnoremap <F19> :bd!<cr>
+    "imap <F19> POK3
+    "" M4
+    "imap <F20> POK4
+    "" M5
+    "imap <F21> POK5
