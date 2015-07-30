@@ -65,14 +65,15 @@ Plugin 'gmarik/vundle'
 
 Plugin 'klen/python-mode'
 Plugin 'davidhalter/jedi-vim'
-Plugin 'kien/ctrlp.vim'
+"Plugin 'kien/ctrlp.vim'
+Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'FelikZ/ctrlp-py-matcher'
 Plugin 'Valloric/MatchTagAlways'
 Plugin 'arecarn/crunch.vim'
 Plugin 'chrisbra/NrrwRgn'
 Plugin 'danro/rename.vim'
 Plugin 'godlygeek/tabular'
-Plugin 'kien/rainbow_parentheses.vim'
+Plugin 'junegunn/rainbow_parentheses.vim'
 Plugin 'majutsushi/tagbar'
 Plugin 'mattn/emmet-vim'
 Plugin 'rking/ag.vim'
@@ -670,9 +671,9 @@ highlight Pmenu guibg=brown gui=bold
     let g:ctrlp_by_filename = 1
     let g:ctrlp_working_path_mode = 'ra'
     let g:ctrlp_lazy_update = 1
-    " Ag is fast enough that no cache is needed
     let g:ctrlp_use_caching = 1
-    "let g:ctrlp_clear_cache_on_exit = 1
+    let g:ctrlp_clear_cache_on_exit = 0
+    let g:ctrlp_max_files = 0
 
     let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$'
     "let g:ctrlp_custom_ignore = {
@@ -684,29 +685,28 @@ highlight Pmenu guibg=brown gui=bold
     if has("win64") || has("win32")
         set wildignore+=*\\tmp\\*,*.swp,*.zip,*.exe
         "let g:ctrlp_user_command = 'dir %s /-n /b /s /a-d'
-        let g:ctrlp_user_command = 'W:\\software\\bins\\ag.exe %s -l --nocolor -g "">>'
+        let g:ctrlp_user_command = 'W:\\software\\bins\\ag.exe %s -l --nocolor --ignore ''.git'' -g "">>'
     else
         set wildignore+=*/tmp/*,*.so,*.swp,*.zip
         "let g:ctrlp_user_command = 'find %s -type f'
-        let g:ctrlp_user_command = 'ag %s -l --nocolor -g "">>'
+        let g:ctrlp_user_command = 'ag %s -l --nocolor --ignore ''.git'' -g "">>'
     endif
 
     " PyMatcher for CtrlP
-    "if !has('python')
-        "echo 'In order to use pymatcher plugin, you need +python compiled vim'
-    "else
-        "let g:ctrlp_match_func = { 'match': 'pymatcher#PyMatch' }
-    "endif
+    if !has('python')
+        echo 'In order to use pymatcher plugin, you need +python compiled vim'
+    else
+        let g:ctrlp_match_func = { 'match': 'pymatcher#PyMatch' }
+    endif
 
-" Better Rainbow Parenthesis
-   au VimEnter * RainbowParenthesesActivate
-   au Syntax * RainbowParenthesesLoadRound
-   au Syntax * RainbowParenthesesLoadSquare
-   au Syntax * RainbowParenthesesLoadBraces
+
+" More Rainbox Parenthesis
+    let g:rainbow#max_level = 16
+    let g:rainbow#pairs = [['(', ')'], ['[', ']']]
 
 " CM Storm Mappings
     " M1
-    inoremap <f17> <ESC>:w<cr>
+    inoremap <f17> <ESC>
     nnoremap <f17> :w<cr>
     vnoremap <f17> :w<cr>
     " M2
