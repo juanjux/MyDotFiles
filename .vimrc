@@ -46,6 +46,10 @@
 " NrrwRgn: narrow region like Emacs. Select region, :NR and :WidenRegion to finish
 " Better Rainbow Parenthesis: colorized parenthesis
 " Crunch: easy to use calculator, just use :Crunch [expr] or :Crunch for interactive shell
+" QuickRun: execute code of several languages in the buffer, range, selection...
+" VimStartify: Show an useful start screen with recent files, dirs, sessions and
+" bookmarks
+" VimColorSchemeSwitcher: :NextColorScheme, :PrevColorScheme, :RandomColorScheme
 
 set nocompatible
 
@@ -62,7 +66,6 @@ endif
 
 call vundle#begin()
 Plugin 'gmarik/vundle'
-
 Plugin 'klen/python-mode'
 Plugin 'davidhalter/jedi-vim'
 "Plugin 'kien/ctrlp.vim'
@@ -92,6 +95,10 @@ Plugin 'justinmk/vim-gtfo'
 Plugin 'Shougo/vimproc.vim'
 Plugin 'tpope/vim-surround'
 Plugin 'vimwiki/vimwiki'
+Plugin 'thinca/vim-quickrun'
+Plugin 'mhinz/vim-startify'
+Plugin 'xolox/vim-misc'
+Plugin 'xolox/vim-colorscheme-switcher'
 
 call vundle#end()
 
@@ -162,8 +169,30 @@ else
     set undodir="$VIMRUNTIME\\undodir"
     set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*/.bzr/*
 endif
+"
+" A standalone function to set the working directory to the project's root, or
+" to the parent directory of the current file if a root can't be found:
+  function! s:setcwd()
+    let cph = expand('%:p:h', 1)
+    if cph =~ '^.\+://' | retu | en
+    for mkr in ['.git/', '.hg/', '.svn/', '.bzr/', '_darcs/', '.vimprojects']
+      let wd = call('find'.(mkr =~ '/$' ? 'dir' : 'file'), [mkr, cph.';'])
+      if wd != '' | let &acd = 0 | brea | en
+    endfo
+    exe 'lc!' fnameescape(wd == '' ? cph : substitute(wd, mkr.'$', '.', ''))
+  endfunction
 
+  autocmd BufEnter * call s:setcwd()
 
+" automatically strip trailing whitespace
+ fun! <SID>StripTrailingWhitespaces()
+    let l = line(".")
+    let c = col(".")
+    %s/\s\+$//e
+    call cursor(l, c)
+ endfun
+
+ autocmd FileType c,cpp,java,php,ruby,python autocmd BufWritePre <buffer> :call <SID>StripTrailingWhitespaces()
 " =========================================================
 " === TABS, INDENTATION AND FORMATTING ====================
 " =========================================================
@@ -406,11 +435,11 @@ endif
 
     " ,gs (Guarda Sesion) save vim session, ,css (Carga Sesion), load it
     if has("win64") || has("win32")
-        nmap <leader>gs :mksession! w:\vim_session <cr>
-        nmap <leader>css :source w:\vim_session" <cr>
+        nmap <leader>gs :mksession! ~\.vim\session\default <cr>
+        nmap <leader>css :source ~\.vim\session\default<cr>
     else
-        nmap <leader>gs :mksession! ~/vim_session <cr>
-        nmap <leader>css :source ~/vim_session <cr>
+        nmap <leader>gs :mksession! ~\.vim\session\default<cr>
+        nmap <leader>css :source ~\.vim\session\default<cr>
     endif
 
     " ,sp, ,snp set paste, set no paste modes
@@ -423,14 +452,20 @@ endif
     " ,1 Put === lines above and below the current line
     nnoremap <leader>1 yyPVr=jyypVr=k
 
+    " C-B CtrlPBuffers
+    nmap <C-b> :CtrlPBuffer<cr>
+
     " =========================================================
     " === COLORS, FONTS AND GUI ===============================
     " =========================================================
 
     "colors summerfruit256
-    colors molokai
-    "colors professional
+    "colors molokai
+    "colors professional_jjux
     "colors iceberg
+    "colors jelleybeans
+    "colors obsidian2
+    colors northsky
     hi NonText guifg=#b2b2b2
 
     " EasyMotion Colors
@@ -666,7 +701,7 @@ highlight Pmenu guibg=brown gui=bold
 
 " CtrlP
     let g:ctrlp_map = '<c-p>'
-    let g:ctrlp_cmd = 'CtrlPMixed'
+    let g:ctrlp_cmd = 'CtrlPMRUFiles'
     let g:ctrlp_match_window = 'top, order:ttb,min:1,max:20,results:20'
     let g:ctrlp_by_filename = 1
     let g:ctrlp_working_path_mode = 'ra'
@@ -674,6 +709,7 @@ highlight Pmenu guibg=brown gui=bold
     let g:ctrlp_use_caching = 1
     let g:ctrlp_clear_cache_on_exit = 0
     let g:ctrlp_max_files = 0
+    let g:ctrlp_show_hidden = 0
 
     let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$'
     "let g:ctrlp_custom_ignore = {
@@ -703,6 +739,10 @@ highlight Pmenu guibg=brown gui=bold
 " More Rainbox Parenthesis
     let g:rainbow#max_level = 16
     let g:rainbow#pairs = [['(', ')'], ['[', ']']]
+    call g:rainbow_parentheses#activate()
+
+" Indent Guides
+    "let g:indent_guides_enable_on_vim_startup = 1
 
 " CM Storm Mappings
     " M1
@@ -710,7 +750,7 @@ highlight Pmenu guibg=brown gui=bold
     nnoremap <f17> :w<cr>
     vnoremap <f17> :w<cr>
     " M2
-    nnoremap <F18> :tabnew<cr>:CtrlPMixed<cr>
+    nnoremap <F18> :tabnew<cr>:CtrlPMRU<cr>
     "" M3
     nnoremap <F19> :bd!<cr>
     "imap <F19> POK3
