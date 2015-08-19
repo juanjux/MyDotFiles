@@ -68,7 +68,6 @@ call vundle#begin()
 Plugin 'gmarik/vundle'
 Plugin 'klen/python-mode'
 Plugin 'davidhalter/jedi-vim'
-"Plugin 'kien/ctrlp.vim'
 Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'FelikZ/ctrlp-py-matcher'
 Plugin 'Valloric/MatchTagAlways'
@@ -459,13 +458,14 @@ endif
     " === COLORS, FONTS AND GUI ===============================
     " =========================================================
 
-    "colors summerfruit256
-    "colors molokai
-    "colors professional_jjux
-    "colors iceberg
-    "colors jelleybeans
-    "colors obsidian2
-    colors northsky
+    " colors summerfruit256    " white, high contrast
+    " colors molokai           " dark, high contrast
+    " colors professional_jjux " yellow-white, high contrast
+    " colors iceberg           " very dark blue, low contrast
+    " colors jelleybeans       " black background, medium contrast
+    " colors obsidian2         " dark green, low contrast
+    " colors northsky          " dark blue, medium contrast
+    colors leo               " black background, medium to high contrast
     hi NonText guifg=#b2b2b2
 
     " EasyMotion Colors
@@ -527,6 +527,8 @@ highlight Pmenu guibg=brown gui=bold
     let g:jedi#usages_command = "<leader>u"
     let g:jedi#completions_command = "<C-Space>"
     let g:jedi#rename_command = "<leader>re"
+" Dont complete function parameters, it's annoying
+    autocmd FileType python setlocal completeopt-=preview
 
 " XML Plugin:
     let xml_use_xhtml = 1
