@@ -22,11 +22,10 @@
 " CSApprox: use GVim colors schemes in console Vim if the console allows for more than 256 colors
 " Airline: Cool status bar (need laststatus set to 2)
 " Tagbar: tag lists (method, var, classes, etc), ',tb' to toggle
-" Vimwiki: personal wiki (see cheatsheet inside)
 " Syntastic: validates the code on writing (disabled for D, use ',sy' there) and shows the errors
 " Easy Motion: jump quickly to any word in the window, ',e' to activate
 " Matchit: improves on the Vim % command to understand more things
-" Matchtagalways: highlight matching HTML tags
+" Matchtagalways: highlight matching HTML tags (disabled, problems with python3)
 " Tabular: align things, ':Tabularize /:' would align by the ':' character, useful to prettify code
 " Emmet: quickly write HTML, using '<c-y>,' in insert mode can expand things like
 " 'div.bla+div#pok.bla2>ul>li*3>span>a' (see cheatsheet below)
@@ -45,11 +44,16 @@
 " EasyOperator: [operator](easymotionselection) => awesome to delete and move things around
 " Rename: :rename command to rename current file
 " Ag: search with silversearcher
-" NrrwRgn: narrow region like Emacs. Select region, :NR and :WidenRegion to finish
 " Better Rainbow Parenthesis: colorized parenthesis
 " QuickRun: execute code of several languages in the buffer, range, selection... (:QuickRun)
 " VimStartify: Show an useful start screen with recent files, dirs, sessions and
 " VimColorSchemeSwitcher: :NextColorScheme, :PrevColorScheme, :RandomColorScheme
+" Vinegar: improved the netrw file explorer using a project manager like split: 
+" - to go to the directory of the current buffer
+" I to show the help, gh to toggle dot file hiding
+" . (dot)  on a file to write its path at the : command line (for :Ag, !chmod, etc)
+" cg to to :cd to the currently edited buffer directory
+" ~ to go thome
 
 set nocompatible
 
@@ -67,36 +71,34 @@ endif
 call vundle#begin()
 Plugin 'VundleVim/Vundle.vim'
 Plugin 'vim-scripts/YankRing.vim'
-Plugin 'klen/python-mode'
 Plugin 'davidhalter/jedi-vim'
+Plugin 'klen/python-mode'
 Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'FelikZ/ctrlp-py-matcher'
 Plugin 'Valloric/MatchTagAlways'
-Plugin 'chrisbra/NrrwRgn'
 Plugin 'danro/rename.vim'
 Plugin 'godlygeek/tabular'
 Plugin 'junegunn/rainbow_parentheses.vim'
 Plugin 'majutsushi/tagbar'
-Plugin 'mattn/emmet-vim'
 Plugin 'rking/ag.vim'
 Plugin 'scrooloose/nerdcommenter'
-Plugin 'scrooloose/syntastic'
-Plugin 'altercation/vim-colors-solarized'
+Plugin 'vim-syntastic/syntastic'
 Plugin 'tmhedberg/matchit'
 Plugin 'vim-scripts/CSApprox'
 Plugin 'vim-scripts/reorder-tabs'
-Plugin 'bling/vim-airline'
+Plugin 'vim-airline/vim-airline'
 Plugin 'flazz/vim-colorschemes'
-Plugin 'Lokaltog/vim-easymotion'
+Plugin 'easymotion/vim-easymotion'
 Plugin 'takac/vim-fontmanager'
 Plugin 'justinmk/vim-gtfo'
 Plugin 'Shougo/vimproc.vim'
 Plugin 'tpope/vim-surround'
-Plugin 'vimwiki/vimwiki'
+Plugin 'tpope/vim-fugitive'
 Plugin 'thinca/vim-quickrun'
 Plugin 'mhinz/vim-startify'
 Plugin 'xolox/vim-misc'
 Plugin 'xolox/vim-colorscheme-switcher'
+Plugin 'tpope/vim-vinegar'
 
 call vundle#end()
 
@@ -163,33 +165,16 @@ autocmd BufReadPost *
 if has("win64") || has("win32")
     let $PYTHONPATH="C:\\python27\\lib"
 endif
-
-"
-" A standalone function to set the working directory to the project's root, or
-" to the parent directory of the current file if a root can't be found:
-  function! s:setcwd()
-    let cph = expand('%:p:h', 1)
-    if cph =~ '^.\+://' | retu | en
-    for mkr in ['.git/', '.hg/', '.svn/', '.bzr/', '_darcs/', '.vimprojects']
-      let wd = call('find'.(mkr =~ '/$' ? 'dir' : 'file'), [mkr, cph.';'])
-      if wd != '' | let &acd = 0 | brea | en
-    endfo
-    exe 'lc!' fnameescape(wd == '' ? cph : substitute(wd, mkr.'$', '.', ''))
-  endfunction
-
-  syntax sync fromstart
-  autocmd BufEnter * call s:setcwd()
-  autocmd BufEnter * :syntax sync fromstart
-
 " automatically strip trailing whitespace
- fun! <SID>StripTrailingWhitespaces()
-    let l = line(".")
-    let c = col(".")
-    %s/\s\+$//e
-    call cursor(l, c)
- endfun
+fun! <SID>StripTrailingWhitespaces()
+   let l = line(".")
+   let c = col(".")
+   %s/\s\+$//e
+   call cursor(l, c)
+endfun
 
- autocmd FileType c,cpp,java,php,ruby,python autocmd BufWritePre <buffer> :call <SID>StripTrailingWhitespaces()
+autocmd FileType c,cpp,java,php,ruby,python autocmd BufWritePre <buffer> :call <SID>StripTrailingWhitespaces()
+
 
  " Dont go back 1 character when leaving insert mode
  au InsertLeave * call cursor([getpos('.')[1], getpos('.')[2]+1])
@@ -208,6 +193,11 @@ onoremap <C-A> <C-C>gggH<C-O>G
 snoremap <C-A> <C-C>gggH<C-O>G
 xnoremap <C-A> <C-C>ggVG
 
+" automatically change the working directory to the buffer's one
+set autochdir
+
+let $PYTHONPATH="C:\\python27\\lib;C:\\python27\\DLL"
+py "import sys; sys.path = [vim.eval(\"$PYTHONPATH\")]"
 
 " =========================================================
 " === TABS, INDENTATION AND FORMATTING ====================
@@ -226,7 +216,7 @@ set wh=12
 " justify comments inside code; start the next line after a comment as a comment
 set formatoptions=qrn
 set copyindent        " copy the indentation of the previous line
-set foldmethod=indent " fold by indentation
+set foldmethod=indent " fold by indentation (except for python, see below)
 set foldnestmax=2     " ...but not more than two levels (class and method)
 set foldlevel=99      " start with everything unfolded
 set colorcolumn=120   " color text written past the column
@@ -277,6 +267,25 @@ if exists("+showtabline")
     set tabline=%!MyTabLine()
     highlight link TabNum Special
 endif
+
+" Format for the folded folds line
+function! MyFoldText() " {{{
+    let line = getline(v:foldstart)
+
+    let nucolwidth = &fdc + &number * &numberwidth
+    let windowwidth = winwidth(0) - nucolwidth - 3
+    let foldedlinecount = v:foldend - v:foldstart
+
+    " expand tabs into spaces
+    let onetab = strpart('          ', 0, &tabstop)
+    let line = substitute(line, '\t', onetab, 'g')
+
+    let line = strpart(line, 0, windowwidth - 2 -len(foldedlinecount))
+    let fillcharcount = windowwidth - len(line) - len(foldedlinecount)
+    "return line . '-' . repeat(" ",fillcharcount) . foldedlinecount . '-' . ' '
+    return line . '   |' . foldedlinecount . ' lines|'
+endfunction " }}}
+set foldtext=MyFoldText()
 
 " =========================================================
 " === SHORTCUTS ===========================================
@@ -395,7 +404,7 @@ exe 'vnoremap <script> <C-V> ' . paste#paste_cmd['v']
 imap <S-Insert>		<C-V>
 vmap <S-Insert>		<C-V>
 
-" Use CTRL-Q to do what CTRL-V used to do (block visual mode)
+" Use CTRL-Q to do what CTRL-V used to do (block visual mode, escape chars in the command line, etc)
 noremap <C-Q>		<C-V>
 
 " For CTRL-V to work autoselect must be off.
@@ -451,8 +460,9 @@ if has("win64") || has("win32")
     vnoremap <Down> j
 endif
 
-" some aliases for stupid fingers
-nmap :W :w
+" some aliases for my stupid fingers
+nmap :w :update
+nmap :W :update
 nmap :q1 :q!
 nmap :Q :q
 nmap :Q! :q!
@@ -467,9 +477,15 @@ nmap <leader><space> :noh<cr>
 nnoremap <leader>yy :YRShow<cr>
 
 " F1 = exit insert mode and save
-inoremap <f1> <ESC>:w<cr>
-nnoremap <f1> :w<cr>
-vnoremap <f1> :w<cr>
+inoremap <f1> <ESC>:update<cr>
+nnoremap <f1> :update<cr>
+vnoremap <f1> :update<cr>
+inoremap <f2> <ESC>:bd!<cr>
+nnoremap <f2> :bd!<cr>
+vnoremap <f2> :bd!<cr>
+inoremap <f3> <ESC>:QuickRun<cr>
+nnoremap <f3> :QuickRun<cr>
+vnoremap <f3> :QuickRun<cr>
 
 " Netrw, Tagbar and Project toggles
 nmap <leader>E :Vex<cr>
@@ -490,7 +506,7 @@ nmap <leader>sp :set paste<cr>
 nmap <leader>np :set nopaste<cr>
 
 " Manual SyntasticCheck for the languages where I've the check-on-write disabled (like D)
-nmap <leader>sy :SyntasticCheck<cr>
+"nmap <leader>sy :SyntasticCheck<cr>
 
 " ,1 Put === lines above and below the current line
 nnoremap <leader>1 yyPVr=jyypVr=k
@@ -498,19 +514,40 @@ nnoremap <leader>1 yyPVr=jyypVr=k
 " C-B CtrlPBuffers
 nmap <C-b> :CtrlPBuffer<cr>
 
+" F5 open a Markdown preview in Chrome. Needs the "Markdown preview" addon for Chrome
+if has("win64") || has("win32")
+    autocmd BufEnter *.md exe 'noremap <F5> :!start C:\Program Files (x86)\Google\Chrome\Application\chrome.exe %:p<CR>'
+else
+    autocmd BufEnter *.md exe 'noremap <F5> :!/usr/bin/env google-chrome %:p<CR>'
+endif
+
+" <leader>cp copy the current path to the system clipboard
+nmap <leader>cp :let @+ = expand("%:p:h")<cr>:echo @+<cr>
+
 " =========================================================
 " COLORS, FONTS AND GUI
 " =========================================================
 
+set renderoptions=type:directx,taamode:1,renmode:5,contrast:1,level:2,geom:1,gamma:0
+
+" light background
+set background=light
 " colors summerfruit256    " white, high contrast
-" colors molokai           " dark, high contrast
-colors professional_jjux " yellow-white, high contrast
-" colors iceberg           " very dark blue, low contrast
-" colors jelleybeans       " black background, medium contrast
-" colors obsidian2         " dark green, low contrast
- "colors obsidian         " dark grey, medium contrast
-" colors northsky          " dark blue, medium contrast
+"colors professional " yellow-white, high contrast
+"colors ironman            " light gray, medium contrast
+"colors PapayaWhip   " yellow-orange, high contrast
+colors PaperColor
+
+" dark background
+"set background=dark
+"colors jelleybeans       " black background, medium contrast
+"colors obsidian2         " dark green, low contrast
+"colors obsidian         " dark grey, medium contrast
+"colors northsky          " dark blue, medium contrast
 "colors leo               " black background, medium to high contrast
+"colors molokai           " dark, high contrast
+"colorss iceberg           " very dark blue, low contrast
+
 hi NonText guifg=#b2b2b2
 
 " EasyMotion Colors
@@ -523,12 +560,32 @@ hi link EasyMotionTarget2Second Define
 if has("win64") || has("win32")
     "let g:fontman_font = "Monaco"
     "let g:fontman_size = 10
-    let g:fontman_font = "M+ 2m regular"
-    let g:fontman_size = 12
+    "
+    "let g:fontman_font = "M+ 2m regular"
+    "let g:fontman_size = 12
+    "
+    let g:fontman_font = "Consolas"
+    "let g:fontman_font = "FantasqueSansMono"
+    "let g:fontman_size = 11
 else
     let g:fontman_font = "DejaVu Sans Mono"
     let g:fontman_size = 9
 endif
+
+
+" Recommended settings for ConEmu
+if (has("win64") || has("win32")) && !has("gui_running")
+    set term=xterm
+    set t_Co=256  
+    let &t_AB="\e[48;5;%dm"
+    let &t_AF="\e[38;5;%dm"
+    "colorscheme zenburn
+    inoremap <Char-0x07F> <BS>
+    nnoremap <Char-0x07F> <BS>
+    set mouse=a
+endif
+
+
 
 " GVIM options: copied registers go to system clipboard too; use icon; include toolbar
 set guioptions-=Tai
@@ -572,6 +629,7 @@ let g:jedi#documentation_command = "K"
 let g:jedi#usages_command = "<leader>u"
 let g:jedi#completions_command = "<C-Space>"
 let g:jedi#rename_command = "<leader>re"
+
 " Dont complete function parameters, it's annoying
 autocmd FileType python setlocal completeopt-=preview
 
@@ -608,10 +666,11 @@ let g:proj_flags="imstvcg"
 " wait a little longer for commands
 set timeout timeoutlen=5000 ttimeoutlen=100
 
-" Yankring: =====
+" Yankring: use c-j and c-k to paste prev/next from the ring=====
 " default file
 let g:yankring_history_dir="$VIMRUNTIME"
-
+let g:yankring_replace_n_pkey = '<c-j>'
+let g:yankring_replace_n_nkey = '<c-k>'
 " Emmet: =====
 " <c-y>, to expand abbreviations like div#page>div.logo+ul#navigation>li*5>a
 " <c-y>n jump to next editable point
@@ -629,54 +688,17 @@ let g:yankring_history_dir="$VIMRUNTIME"
 " <c-y>, if you write 'lorem' it will expand to a lorem ipsum
 
 
-" VimWiki: ===
-" ,ww: index
-" ,wt: index on new tab
-" ,whh: convert to HTML and open in browser
-" <enter> with something selected will create a new wiki page, over an already
-" linked page the same key will jump to its page
-" ,wr: rename current wiki page
-" ,wd: delete current wiki page
-" alt-up/down to jump between links
-" <leader><enter> open link in new tab
-"
-" FORMAT: ====
-" [ ] create a checklist enter, <c-space> to enable/disable
-" = for headers (= is h1, == is h2, etc). Spaces before the = will center the tittle
-" * for unnumbered lists
-" # for numbered lists
-" + 'decorates' links: converts URL to link, word to wikilink
-" gl[symbol] to insert symbols uses by vimwiki as *, #, -, 1, etc
-" :VimwikiTable rows/columns: create a table, TAB to change between cells,
-" alt+arrow to move a colum
-" *bold*
-" _italitc__
-" ~~striked~~
-" `code`
-" super^script
-" sub,,script,,
-" {{{ preformatted multiline text}}}
-" quotes indented by 4 spaces
-" ----- is an <hr>
-" [[link]]
-" [[link|with description]]
-"
-if has("win64") || has("win32")
-    let g:vimwiki_list = [{'path': 'c:\\Program Files\\ilionData\Users' +
-                           \'\\juanjo.alvarez\\My Documents\\My Dropbox\\Wiki',
-                           \'path_html': 'c:\\Program Files\\ilionData\Users' +
-                           \'\\juanjo.alvarez\\My Documents\\My Dropbox\\Wiki\html'}]
-else
-    let g:vimwiki_list = [{'path': '~/btsync/Wiki',
-                           \'path_html': '~/btsync/wiki/html'}]
-endif
-nnoremap <leader><CR> :VimwikiTabnewLink<cr>
-
 " Syntastic:  ====
 " :Error to show the error listing windows
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
+
+if has("win64") || has("win32")
+    let g:syntastic_python_mypy_exec='W:\\software\\bins\\mypycheck.bat'
+endif
+let g:syntastic_aggregate_errors = 0
+
 let g:syntastic_debug = 0
 let g:syntastic_error_symbol             = 'E>'
 let g:syntastic_warning_symbol           = 'W>'
@@ -687,16 +709,11 @@ let g:syntastic_mode_map                 = { 'mode': 'active', 'passive_filetype
 let g:syntastic_python_flake8_post_args  = '--ignore=E501,E221,E265,E303,E302,E701,E251,E241,'
 let g:syntastic_python_flake8_post_args .= 'E128,E401,E301,E126,E225,E211,E226,E261,E127,E702,'
 let g:syntastic_python_flake8_post_args .= 'E123,E124,E129,E201,E231,E262,E202,E203,E125,E228,'
-let g:syntastic_python_flake8_post_args .= 'E272,E131,E402,E114,E116'
+let g:syntastic_python_flake8_post_args .= 'E272,E131,E402,E114,E116,E266'
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list            = 0
 let g:syntastic_check_on_open            = 1
 let g:syntastic_check_on_wq              = 0
-
-if has("win64") || has("win32")
-    let g:syntastic_flake8_exec='C:\python27\Scripts\flake8.exe'
-    let g:syntastic_python_flake8_exec='C:\python27\Scripts\flake8.exe'
-endif
 
 " PythonMode: =====
 " Motions
@@ -707,26 +724,23 @@ endif
 " Functions
 " <leader>ru run buffer or selection
 " <leader>br set breakpoint
+"
+let g:pymode_python = 'python'
 let g:pymode                  = 1
-let g:pymode_syntax           = 1
-let g:pymode_syntax_all       = 1
+let g:pymode_syntax           = 0
+let g:pymode_syntax_all       = 0
 let g:pymode_trim_whitespaces = 1
 let g:pymode_max_line_length  = 119
 let g:pymode_indent           = 1
-let g:pymode_folding          = 1
+let g:pymode_folding          = 0
 let g:pymode_run_bind         = '<leader>ru'
-" These things are better done by jedi-vim
+" These things are better done by jedi-vim or Syntastic
 let g:pymode_rope            = 0
 let g:pymode_rope_completion = 0
 let g:pymode_doc             = 0
 " Better done by Syntastic
 let g:pymode_lint            = 0
 
-if has("win64") || has("win32")
-    let g:pymode_python = 'python'
-else
-    let g:pymode_python = 'python3'
-endif
 
 " Ag:  =====
 " Windows path
@@ -789,5 +803,7 @@ call g:rainbow_parentheses#activate()
 "let g:indent_guides_enable_on_vim_startup = 1
 
 " GTFO: ====
-"let g:gtfo#terminals = { 'win' : 'powershell -NoLogo -NoExit -Command' }
+let g:gtfo#terminals = { 'win' : 'powershell -NoLogo -NoExit -Command' }
 
+" Vim Markdown: ====
+let vim_markdown_preview_toggle=2
