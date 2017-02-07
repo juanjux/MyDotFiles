@@ -1,5 +1,5 @@
 " Plugins used:
-" Vundle: plugin manager. To install it: 
+" Vundle: plugin manager. To install it:
 " git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 " git submodule update?
 " CtrlP: fuzzy matching on buffers/files/mru
@@ -48,7 +48,7 @@
 " QuickRun: execute code of several languages in the buffer, range, selection... (:QuickRun)
 " VimStartify: Show an useful start screen with recent files, dirs, sessions and
 " VimColorSchemeSwitcher: :NextColorScheme, :PrevColorScheme, :RandomColorScheme
-" Vinegar: improved the netrw file explorer using a project manager like split: 
+" Vinegar: improved the netrw file explorer using a project manager like split:
 " - to go to the directory of the current buffer
 " I to show the help, gh to toggle dot file hiding
 " . (dot)  on a file to write its path at the : command line (for :Ag, !chmod, etc)
@@ -62,12 +62,7 @@ set nocompatible
 " ========================================================
 filetype off
 
-if has("win64") || has("win32")
-    set rtp+=$HOME\\vimfiles\\bundle\\Vundle.vim
-else
-    set rtp+=~/.vim/bundle/Vundle.vim
-endif
-
+set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 Plugin 'VundleVim/Vundle.vim'
 Plugin 'vim-scripts/YankRing.vim'
@@ -89,7 +84,10 @@ Plugin 'vim-scripts/reorder-tabs'
 Plugin 'vim-airline/vim-airline'
 Plugin 'flazz/vim-colorschemes'
 Plugin 'easymotion/vim-easymotion'
-Plugin 'takac/vim-fontmanager'
+if !(has("win64") || has("win32"))
+    " Doesnt work well for me on Windows
+    Plugin 'takac/vim-fontmanager'
+endif
 Plugin 'justinmk/vim-gtfo'
 Plugin 'Shougo/vimproc.vim'
 Plugin 'tpope/vim-surround'
@@ -99,6 +97,7 @@ Plugin 'mhinz/vim-startify'
 Plugin 'xolox/vim-misc'
 Plugin 'xolox/vim-colorscheme-switcher'
 Plugin 'tpope/vim-vinegar'
+Plugin 'fatih/vim-go'
 
 call vundle#end()
 
@@ -111,7 +110,7 @@ syntax on
 filetype plugin indent on
 set novb                       " no bells please
 set noerrorbells               " idem
-"set list  lcs=tab:»·,eol:¬      show invisible characters line newline or tabs
+"set list lcs=tab:»·,eol:¬      " show invisible characters line newline or tabs
 set switchbuf=usetab,newtab    " switch to a buffer opened on a tab switches to that tab
 set history=50
 set viminfo='50,\"50
@@ -128,14 +127,14 @@ set ruler
 set hidden                     " allow to change buffers even if current is unsaved
 set showmode
 set showtabline=1
-set guitablabel=\[%N\]\ %t
+set guitablabel=\[%N\]\ %t     " Nice format for the tabs, with number and filename
 set wildmenu
 set nobackup
 set nowritebackup
 set noswapfile
 set ignorecase
-set smartcase
-set hlsearch              " highlight search results
+set smartcase           " Case insensitive search with lowercase terms, sensitive with uppercase
+set hlsearch            " highlight search results
 set showmatch
 set gdefault            " default to global substitution, without having to put the /g at the end
 set t_Co=256            " more colors
@@ -143,17 +142,11 @@ set relativenumber      " show relative line numbers
 set number              " but show the current linenum at the center
 set virtualedit=block   " can select anything inside visual block mode (v + ctrl-v)
 set laststatus=2        " needed for powerline/airline
-set cursorline          " highlight the line with the cursor
+"set cursorline          " highlight the line with the cursor
 set autochdir           " change the cwd to the buffer
 set undodir="$VIMRUNTIME\\undodir"
 set wildignore+=.git\*,.hg\*,.svn\*,.bzr\*
-
-" no mouse without GUI (so I can copy easier when running inside putty)
-if has("gui")
-    set mouse=a
-else
-    set mouse=
-endif
+set mouse+=a
 
 " when opening a buffer, jump to the last known position
 autocmd BufReadPost *
@@ -161,10 +154,6 @@ autocmd BufReadPost *
     \ exe "normal! g`\"" |
     \ endif
 
-" settings by OS
-if has("win64") || has("win32")
-    let $PYTHONPATH="C:\\python27\\lib"
-endif
 " automatically strip trailing whitespace
 fun! <SID>StripTrailingWhitespaces()
    let l = line(".")
@@ -173,35 +162,24 @@ fun! <SID>StripTrailingWhitespaces()
    call cursor(l, c)
 endfun
 
-autocmd FileType c,cpp,java,php,ruby,python autocmd BufWritePre <buffer> :call <SID>StripTrailingWhitespaces()
-
+autocmd FileType c,cpp,java,php,ruby,python,go,nim,d,java autocmd BufWritePre <buffer> 
+            \ :call <SID>StripTrailingWhitespaces()
 
  " Dont go back 1 character when leaving insert mode
  au InsertLeave * call cursor([getpos('.')[1], getpos('.')[2]+1])
 
- " Some stuff cherry picked from mswin.vim
 " Use CTRL-S for saving, also in Insert mode
-noremap <C-S>		:update<CR>
+noremap  <C-S>		:update<CR>
 vnoremap <C-S>		<C-C>:update<CR>
 inoremap <C-S>		<C-O>:update<CR>
-
-" CTRL-A is Select all
-noremap <C-A> gggH<C-O>G
-inoremap <C-A> <C-O>gg<C-O>gH<C-O>G
-cnoremap <C-A> <C-C>gggH<C-O>G
-onoremap <C-A> <C-C>gggH<C-O>G
-snoremap <C-A> <C-C>gggH<C-O>G
-xnoremap <C-A> <C-C>ggVG
-
-" automatically change the working directory to the buffer's one
-set autochdir
-
-let $PYTHONPATH="C:\\python27\\lib;C:\\python27\\DLL"
-py "import sys; sys.path = [vim.eval(\"$PYTHONPATH\")]"
 
 " =========================================================
 " === TABS, INDENTATION AND FORMATTING ====================
 " =========================================================
+
+" default line length, can be changed depending on the filemode
+let my_linelen = 82
+set colorcolumn=110   " color text written past the column
 
 " 4 space tabs, anything else is wrong
 set expandtab
@@ -219,10 +197,17 @@ set copyindent        " copy the indentation of the previous line
 set foldmethod=indent " fold by indentation (except for python, see below)
 set foldnestmax=2     " ...but not more than two levels (class and method)
 set foldlevel=99      " start with everything unfolded
-set colorcolumn=120   " color text written past the column
-" 82 chars indentation for text files
-au BufNewFile,BufRead,BufEnter *.txt,*.me,*.ME,.article*,.followup,.letter*,mutt*  set tw=82
-au BufNewFile,BufRead,BufEnter *.d,*.cpp,*.cc,*.py,*.js,*.markdown,*.md set tw=100
+
+function! SetLineLengthOptions(len)
+    let &l:tw = a:len
+    let &l:colorcolumn = a:len
+endfunction
+
+au BufNewFile,BufRead,BufEnter *.md,*.markdown,*.txt,*.me,*.ME,.article*,.followup,.letter*,mutt*
+            \ call SetLineLengthOptions(82)
+au BufNewFile,BufRead,BufEnter .vimrc,_vimrc,*.d,*.cpp,*.cc,*.py,*.js,*.go,*.nim,*.js,*.java
+            \ call SetLineLengthOptions(110)
+
 autocmd FileType html set formatoptions+=l
 
 " Rename tabs to show tab number (change with [number]gt)
@@ -293,6 +278,7 @@ set foldtext=MyFoldText()
 
 " Important: uncoment any set encoding line before adding new non-ASCII chars
 " to vimrc, enable them after
+
 " Vim Reminders:
 " <c-o> and <c-i> jump between the history of cursor positions
 " <c-o> run a single command while in insert mode
@@ -323,11 +309,11 @@ set foldtext=MyFoldText()
 " z= see spelling suggestions for word under cursor
 " ]s / [s jump to next / prev misspelled word
 " zg add word to spellfile
-" gn "next search match", e.g. cgn deletes and insert on the next search match
+" gn "select next search match", e.g. cgn deletes and insert on the next search match
 
 " === BASIC ===
 let mapleader = ","
-" When I use a Spanish keyboard but still want to use these keys
+" When I use a Spanish keyboard I still want to use these keys
 " without pressing shift
 "map - /
 "nmap ñ :
@@ -337,9 +323,8 @@ let mapleader = ","
 "nmap ¡ `
 
 " map Tab/ShiftTab to next/prev tab
-nmap <Tab> gt
+nmap <Tab>   gt
 nmap <S-Tab> gT
-
 
 ",o / ,O to insert a line below / above and return to normal mode
 nmap <leader>o o<esc>
@@ -353,7 +338,7 @@ nmap k gk
 cmap w!! w !sudo tee % >/dev/null<cr>
 
 " ==============
-" TAGS 
+" TAGS
 " ==============
 nmap <leader>tg :set tags=tags<cr>
 ",ta jump to tag (also the default C-])
@@ -364,9 +349,7 @@ nnoremap <leader>ta <C-]>
 nmap <leader>cdt :!ctags -R ~/webmail/backend/source > tags<cr>:set tags=tags<cr>
 
 
-" ==========================
-" TABS AND WINDOWS
-" ==========================
+" TABS AND WINDOWS =====
 
 " ,v (vsplit)
 nmap <leader>v :vspl<cr><c-w><c-w>
@@ -389,23 +372,32 @@ nnoremap <leader>tl :tabm -1<cr>
 ",tr moves the tab one position to the right
 nnoremap <leader>tr :tabm +1<cr>
 
-" === COPY/PASTE ===
+" COPY/PASTE =====
 " Obvious shortcuts so I don't mess with C-V, C-C when using Vim along other
 " programs that use these shortcuts for copy/paste (these copy/paste to the
 " system clipboard). Taken from mswin.vim.
 
 vnoremap <C-X> "+x
 vnoremap <C-C> "+y
-map <C-V> "+gP
-" Paste also work in the command line!
+map      <C-V> "+gP
+
+" make paste also work in the command line
 cmap <C-V> <C-R>+
 exe 'inoremap <script> <C-V> <C-G>u' . paste#paste_cmd['i']
 exe 'vnoremap <script> <C-V> ' . paste#paste_cmd['v']
 imap <S-Insert>		<C-V>
 vmap <S-Insert>		<C-V>
 
+" CTRL-A is Select all
+noremap  <C-A> gggH<C-O>G
+inoremap <C-A> <C-O>gg<C-O>gH<C-O>G
+cnoremap <C-A> <C-C>gggH<C-O>G
+onoremap <C-A> <C-C>gggH<C-O>G
+snoremap <C-A> <C-C>gggH<C-O>G
+xnoremap <C-A> <C-C>ggVG
+
 " Use CTRL-Q to do what CTRL-V used to do (block visual mode, escape chars in the command line, etc)
-noremap <C-Q>		<C-V>
+noremap <C-Q> <C-V>
 
 " For CTRL-V to work autoselect must be off.
 " On Unix we have two selections, autoselect can be used.
@@ -422,9 +414,7 @@ nnoremap <leader>V `[v`]
 " The unnamed buffer (when you yank or cut without naming a register) is the clipboard
 set clipboard=unnamed
 
-" ===============
-" OTHER 
-" ===============
+" OTHER SHORTCUTS =====
 
 " ,ct Clear Trailing : remove trailing whitespace after the end of line
 nnoremap <leader>ct :%s/\s\+$//<cr>
@@ -432,7 +422,6 @@ nnoremap <leader>ct :%s/\s\+$//<cr>
 " space and backspace pagedown/up
 nnoremap <space> <c-f>
 nnoremap <bs> <c-b>
-
 
 " ,sv reload .vimrc
 nmap <leader>sv :so $MYVIMRC<cr>
@@ -451,18 +440,8 @@ nmap <leader>ss :setlocal spell spelllang=es_es<cr>
 nmap <leader>se :setlocal spell spelllang=en_en<cr>
 nmap <leader>sn :set nospell<cr>
 
-
-" Make arrow keys work in Windows gvim
-if has("win64") || has("win32")
-    vnoremap <Left> h
-    vnoremap <Right> l
-    vnoremap <Up> k
-    vnoremap <Down> j
-endif
-
 " some aliases for my stupid fingers
-nmap :w :update
-nmap :W :update
+nmap :W :w
 nmap :q1 :q!
 nmap :Q :q
 nmap :Q! :q!
@@ -493,43 +472,35 @@ nmap <leader>tb :TagbarToggle<cr>
 nmap <silent> <leader>P <Plug>ToggleProject
 
 " ,gs (Guarda Sesion) save vim session, ,css (Carga Sesion), load it
-if has("win64") || has("win32")
-    nmap <leader>gs :mksession! ~\.vim\session\default <cr>
-    nmap <leader>css :source ~\.vim\session\default<cr>
-else
-    nmap <leader>gs :mksession! ~\.vim\session\default<cr>
-    nmap <leader>css :source ~\.vim\session\default<cr>
-endif
+nmap <leader>gs :mksession! ~\.vim\session\default<cr>
+nmap <leader>css :source ~\.vim\session\default<cr>
 
 " ,sp, ,snp set paste, set no paste modes
 nmap <leader>sp :set paste<cr>
 nmap <leader>np :set nopaste<cr>
 
 " Manual SyntasticCheck for the languages where I've the check-on-write disabled (like D)
-"nmap <leader>sy :SyntasticCheck<cr>
+nmap <leader>sy :SyntasticCheck<cr>
 
-" ,1 Put === lines above and below the current line
+" ,1 Put === lines above and below the current line (lame, I know)
 nnoremap <leader>1 yyPVr=jyypVr=k
 
 " C-B CtrlPBuffers
 nmap <C-b> :CtrlPBuffer<cr>
 
 " F5 open a Markdown preview in Chrome. Needs the "Markdown preview" addon for Chrome
-if has("win64") || has("win32")
-    autocmd BufEnter *.md exe 'noremap <F5> :!start C:\Program Files (x86)\Google\Chrome\Application\chrome.exe %:p<CR>'
-else
-    autocmd BufEnter *.md exe 'noremap <F5> :!/usr/bin/env google-chrome %:p<CR>'
-endif
+autocmd BufEnter *.md exe 'noremap <F5> :!/usr/bin/env google-chrome %:p<CR>'
 
 " <leader>cp copy the current path to the system clipboard
 nmap <leader>cp :let @+ = expand("%:p:h")<cr>:echo @+<cr>
 
+" Replace the timestamp under cursor for a date. Must be a "word" so separate
+" using spaces or other word delimiters before calling it
+nmap <leader>ts <esc>"mciw<c-r>=strftime("%d/%m/%y %H:%M:%S", @m)
+
 " =========================================================
 " COLORS, FONTS AND GUI
 " =========================================================
-
-set renderoptions=type:directx,taamode:1,renmode:5,contrast:1,level:2,geom:1,gamma:0
-
 " light background
 set background=light
 " colors summerfruit256    " white, high contrast
@@ -557,40 +528,65 @@ hi link EasyMotionTarget2First ErrorMsg
 hi link EasyMotionTarget2Second Define
 
 " Font
-if has("win64") || has("win32")
-    "let g:fontman_font = "Monaco"
-    "let g:fontman_size = 10
-    "
-    "let g:fontman_font = "M+ 2m regular"
-    "let g:fontman_size = 12
-    "
-    let g:fontman_font = "Consolas"
-    "let g:fontman_font = "FantasqueSansMono"
-    "let g:fontman_size = 11
-else
-    let g:fontman_font = "DejaVu Sans Mono"
-    let g:fontman_size = 9
-endif
+" On gvim we can use :set guifont=* to show a font picker window
+" TIP for changing the font in the .vimrc: to get the guifont value copied to the current
+" buffer as text do :put =&guifont
+let g:fontman_font = "DejaVu Sans Mono"
+let g:fontman_size = 9
 
+" GVIM options ====
 
-" Recommended settings for ConEmu
-if (has("win64") || has("win32")) && !has("gui_running")
-    set term=xterm
-    set t_Co=256  
-    let &t_AB="\e[48;5;%dm"
-    let &t_AF="\e[38;5;%dm"
-    "colorscheme zenburn
-    inoremap <Char-0x07F> <BS>
-    nnoremap <Char-0x07F> <BS>
-    set mouse=a
-endif
+" Negated:
+" !a: dont autocopy VISUAL regions to the clipboard
+set guioptions-=a
+" !T: dont show the toolbar
+set guioptions-=T
+" !i: dont use an icon
+set guioptions-=i
+" !e: dont use graphic tabs (they look nicer with text tabs can be reordered by dragging with the plugin)
+"set guioptions-=e
+" !m: dont show menu bar
+set guioptions-=m
+" !h: dont use the cursorline as size reference for the horizontal scrollbar
+set guioptions-=h
 
+" Enabled:
+" g: show inactive menu items greyed
+set guioptions+=g
+" r: show graphic scrollbar
+set guioptions+=r
+" b: show horizontal scrollbar
+set guioptions+=b
 
+" Only show the horizontall scrollbar when its actually needed:
+" MaxWidth() - Return length of longest line in current buffer
+function! <SID>MaxWidth()
+  return max(map(range(1, line('$')), "virtcol([v:val, '$'])"))
+endfunction
 
-" GVIM options: copied registers go to system clipboard too; use icon; include toolbar
-set guioptions-=Tai
-set guioptions=egmrt
+" TextWidth() - Return width of actual text area in current window
+function! <SID>TextWidth()
+  return winwidth(0) - &l:foldcolumn -
+    \ ((&l:number || &l:relativenumber) ? &numberwidth : 0)
+endfunction
 
+" ToggleBottomScrollbar() - Toggle horizontal scrollbar on/off as required
+function! <SID>ToggleBottomScrollbar()
+  if !&l:wrap && <SID>MaxWidth() > <SID>TextWidth()
+    if &l:guioptions !~# "b"
+      setlocal guioptions+=b
+    endif
+  elseif &l:guioptions =~# "b"
+    setlocal guioptions-=b
+  endif
+endfunction
+
+augroup autoscrollbar
+  au!
+  au CursorHold * :call <SID>ToggleBottomScrollbar()
+  au CursorHoldI * :call <SID>ToggleBottomScrollbar()
+  au VimResized * :call <SID>ToggleBottomScrollbar()
+augroup END
 
 " =========================================================
 " AUTOCOMPLETE
@@ -612,10 +608,10 @@ highlight Pmenu guibg=brown gui=bold
 
 
 " =============================================
-" PLUGIN's OPTIONS
+" PLUGIN's OPTIONS AND CHEAT SHEETS
 " =============================================
 
-" Jedi Vim: ====
+" Jedi Vim (for Python): ====
 
 " <leader>d: go to definition
 " <leader>re: rename
@@ -630,11 +626,8 @@ let g:jedi#usages_command = "<leader>u"
 let g:jedi#completions_command = "<C-Space>"
 let g:jedi#rename_command = "<leader>re"
 
-" Dont complete function parameters, it's annoying
+" Don't complete function parameters, it's annoying
 autocmd FileType python setlocal completeopt-=preview
-
-" XML Plugin: =====
-let xml_use_xhtml = 1
 
 " Tagbar: =====
 " right side frame (left one is used for Project)
@@ -656,21 +649,18 @@ let g:tagbar_type_d = {
     \ ]
 \ }
 
-if has("win64") || has("win32")
-    let g:tagbar_ctags_bin = "W:\\software\\ExhuberantCtags\\ctags.exe"
-endif
-
 " Project: =====
 " default flags
 let g:proj_flags="imstvcg"
 " wait a little longer for commands
 set timeout timeoutlen=5000 ttimeoutlen=100
 
-" Yankring: use c-j and c-k to paste prev/next from the ring=====
+" Yankring: use c-j and c-k to paste prev/next from the ring =====
 " default file
 let g:yankring_history_dir="$VIMRUNTIME"
 let g:yankring_replace_n_pkey = '<c-j>'
 let g:yankring_replace_n_nkey = '<c-k>'
+
 " Emmet: =====
 " <c-y>, to expand abbreviations like div#page>div.logo+ul#navigation>li*5>a
 " <c-y>n jump to next editable point
@@ -694,11 +684,7 @@ set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
 
-if has("win64") || has("win32")
-    let g:syntastic_python_mypy_exec='W:\\software\\bins\\mypycheck.bat'
-endif
 let g:syntastic_aggregate_errors = 0
-
 let g:syntastic_debug = 0
 let g:syntastic_error_symbol             = 'E>'
 let g:syntastic_warning_symbol           = 'W>'
@@ -742,22 +728,15 @@ let g:pymode_doc             = 0
 let g:pymode_lint            = 0
 
 
-" Ag:  =====
-" Windows path
-if has("win64") || has("win32")
-    let g:ag_prg="W:\\software\\bins\\ag.exe --column"
-endif
-
-
 " EasyMotion: ====
-nmap <leader>e <Plug>(easymotion-bd-w)
+nmap <leader>e  <Plug>(easymotion-bd-w)
 nmap d<leader>e <Plug>(easyoperator-line-delete)
 nmap y<leader>e <Plug>(easyoperator-line-yank)
 nmap v<leader>e <Plug>(easyoperator-line-select)
 " ,f easy motion search character
-nmap <leader>f <Plug>(easymotion-bd-f)
+nmap <leader>f  <Plug>(easymotion-bd-f)
 " ,j easy motion line
-nmap <leader>j <Plug>(easymotion-bd-jk)
+nmap <leader>j  <Plug>(easymotion-bd-jk)
 
 " CtrlP: ====
 let g:ctrlp_map = '<c-p>'
@@ -767,7 +746,7 @@ let g:ctrlp_by_filename = 1
 let g:ctrlp_working_path_mode = 'ra'
 let g:ctrlp_lazy_update = 1
 let g:ctrlp_use_caching = 1
-let g:ctrlp_clear_cache_on_exit = 1
+let g:ctrlp_clear_cache_on_exit = 0
 let g:ctrlp_max_files = 0
 let g:ctrlp_show_hidden = 0
 
@@ -778,21 +757,14 @@ let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$'
   "\ 'link': 'some_bad_symbolic_links',
   "\ }
 
-if has("win64") || has("win32")
-    set wildignore+=*\\tmp\\*,*.swp,*.zip,*.exe
-    "let g:ctrlp_user_command = 'dir %s /-n /b /s /a-d'
-    let g:ctrlp_user_command = 'W:\\software\\bins\\ag.exe %s -l --nocolor --ignore ''.git'' -g "">>'
-else
-    set wildignore+=*/tmp/*,*.so,*.swp,*.zip
-    "let g:ctrlp_user_command = 'find %s -type f'
-    let g:ctrlp_user_command = 'ag %s -l --nocolor --ignore ''.git'' -g "">>'
-endif
+set wildignore+=*/tmp/*,*.so,*.swp,*.zip
+"let g:ctrlp_user_command = 'find %s -type f'
+let g:ctrlp_user_command = 'ag %s -l --nocolor --ignore ''.git'' -g "">>'
 
 " PyMatcher for CtrlP:  =====
 if has('python')
     let g:ctrlp_match_func = { 'match': 'pymatcher#PyMatch' }
 endif
-
 
 " Rainbox Parenthesis: ====
 let g:rainbow#max_level = 16
@@ -801,9 +773,6 @@ call g:rainbow_parentheses#activate()
 
 " Indent Guides:  ====
 "let g:indent_guides_enable_on_vim_startup = 1
-
-" GTFO: ====
-let g:gtfo#terminals = { 'win' : 'powershell -NoLogo -NoExit -Command' }
 
 " Vim Markdown: ====
 let vim_markdown_preview_toggle=2
