@@ -1,0 +1,104 @@
+" Surround plugin emulation for IdeaVim
+set surround
+
+" TODO: easymotion
+
+" ========================================================
+" === BASIC CONFIGURATION  ===============================
+" ========================================================
+
+set novb                       " no bells please
+set scrolloff=5                " minimal number of lines above or below the cursor
+set showmode
+set ignorecase
+set smartcase           " Case insensitive search with lowercase terms, sensitive with uppercase
+set hlsearch              " highlight search results
+set gdefault            " default to global substitution, without having to put the /g at the end
+set relativenumber      " show relative line numbers
+set number              " but show the current linenum at the center
+
+let mapleader = ","
+
+" map Tab/ShiftTab to next/prev tab
+nmap <Tab>   gt
+nmap <S-Tab> gT
+
+",o / ,O to insert a line below / above and return to normal mode
+nmap <leader>o o<esc>
+nmap <leader>O O<esc>
+
+" navigate trought wrapped lines easily
+nmap j gj
+nmap k gk
+
+" === TABS AND WINDOWS ===
+" ,v (vsplit)
+nmap <leader>v :vspl<cr><c-w><c-w>
+" ,cv (close other vertical split)
+nmap <leader>cv <c-w><c-w>:q<cr>
+
+" === COPY/PASTE ===
+" Obvious shortcuts so I don't mess with C-V, C-C when using Vim along other
+" programs that use these shortcuts for copy/paste (these copy/paste to the
+" system clipboard)
+
+vnoremap <C-X> "+x
+vnoremap <C-C> "+y
+map      <C-V> "+gP
+
+" make paste also work in the command line
+cmap <C-V> <C-R>+
+exe 'inoremap <script> <C-V> <C-G>u' . paste#paste_cmd['i']
+exe 'vnoremap <script> <C-V> ' . paste#paste_cmd['v']
+imap <S-Insert>		<C-V>
+vmap <S-Insert>		<C-V>
+
+" TODO: select all
+
+" Use CTRL-Q to do what CTRL-V used to do (block visual mode, escape chars in the command line, etc)
+noremap <C-Q> <C-V>
+
+" ,p paste AFTER current line, useful when you're pasting several lines
+nnoremap <leader>p :pu<cr>
+
+" ,V will select the last pasted text
+nnoremap <leader>V `[v`]
+
+" The unnamed buffer (when you yank or cut without naming a register) is the clipboard
+set clipboard+=unnamed
+set clipboard+=unnamedplus
+
+" === OTHER SHORTCUTS ===
+" ,ct Clear Trailing : remove trailing whitespace after the end of line
+nnoremap <leader>ct :%s/\s\+$//<cr>
+
+" space and backspace pagedown/up
+nnoremap <space> <c-f>
+nnoremap <bs> <c-b>
+
+" Spellchecking:
+" TODO: spellchecking
+"
+" ,yy show yanking registers
+nnoremap <leader>yy :YRShow<cr>
+
+" F1 = exit insert mode and save
+inoremap <f1> <ESC>:w<cr>
+nnoremap <f1> :w<cr>
+vnoremap <f1> :w<cr>
+inoremap <f2> <ESC>:bd!<cr>
+nnoremap <f2> :bd!<cr>
+vnoremap <f2> :bd!<cr>
+inoremap <f3> <ESC>:QuickRun<cr>
+nnoremap <f3> :QuickRun<cr>
+vnoremap <f3> :QuickRun<cr>
+
+" This needs the IntelliJ plugin "AceJump", it provides the same functionality
+" that easymotion for Vim
+nmap <leader>e :action AceAction<cr>
+
+" Comment 
+nmap <leader>c :action CommentByLineComment<cr>
+
+" Remove highlighted search
+nmap <leader><space> :nohl<cr>

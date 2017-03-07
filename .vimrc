@@ -1,8 +1,7 @@
 " Plugins used:
-" Vundle: plugin manager. To install it:
+" Vundle: plugin manager
 " git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 " git submodule update?
-" CtrlP: fuzzy matching on buffers/files/mru
 " Jedivim: Python's autocompletion, renaming and symbol jumping (better than ROPE)
 " PythonMode: Adds Python motion objects, run code, better syntax highlighting,
 "             breakpoints, better indentation, etc. Syntax checking and code
@@ -22,10 +21,11 @@
 " CSApprox: use GVim colors schemes in console Vim if the console allows for more than 256 colors
 " Airline: Cool status bar (need laststatus set to 2)
 " Tagbar: tag lists (method, var, classes, etc), ',tb' to toggle
+" Vimwiki: personal wiki (see cheatsheet inside)
 " Syntastic: validates the code on writing (disabled for D, use ',sy' there) and shows the errors
 " Easy Motion: jump quickly to any word in the window, ',e' to activate
 " Matchit: improves on the Vim % command to understand more things
-" Matchtagalways: highlight matching HTML tags (disabled, problems with python3)
+" Matchtagalways: highlight matching HTML tags
 " Tabular: align things, ':Tabularize /:' would align by the ':' character, useful to prettify code
 " Emmet: quickly write HTML, using '<c-y>,' in insert mode can expand things like
 " 'div.bla+div#pok.bla2>ul>li*3>span>a' (see cheatsheet below)
@@ -43,9 +43,8 @@
 " Repeat: so I can repeat with the "." actions from some plugins like Surround
 " EasyOperator: [operator](easymotionselection) => awesome to delete and move things around
 " Rename: :rename command to rename current file
-" Ag: search with silversearcher
 " Better Rainbow Parenthesis: colorized parenthesis
-" QuickRun: execute code of several languages in the buffer, range, selection... (:QuickRun)
+" QuickRun: execute code of several languages in the buffer, range, selection...
 " VimStartify: Show an useful start screen with recent files, dirs, sessions and
 " VimColorSchemeSwitcher: :NextColorScheme, :PrevColorScheme, :RandomColorScheme
 " Vinegar: improved the netrw file explorer using a project manager like split:
@@ -54,50 +53,60 @@
 " . (dot)  on a file to write its path at the : command line (for :Ag, !chmod, etc)
 " cg to to :cd to the currently edited buffer directory
 " ~ to go thome
+" FZF: Fuzzy searcher for almost anything: 
+"   c-p: recent 
+"   ,wt: buffer tags
+"   ,wa: lines in all buffer (all)
+"   ,wg: files
+"   ,wc: vim command history
+"   ,wb: buffers (for switching quickly)
+" UltiSnip: programming snippets, works well with YouCompleteMe
 
-set nocompatible
 
 " ========================================================
 " === VUNDLE PLUGINS CONFIGURATION =======================
 " ========================================================
+set nocompatible
 filetype off
 
 set rtp+=~/.vim/bundle/Vundle.vim
+
 call vundle#begin()
 Plugin 'VundleVim/Vundle.vim'
-Plugin 'vim-scripts/YankRing.vim'
-Plugin 'davidhalter/jedi-vim'
-Plugin 'klen/python-mode'
-Plugin 'ctrlpvim/ctrlp.vim'
-Plugin 'FelikZ/ctrlp-py-matcher'
+
+Plugin 'Shougo/vimproc.vim'
 Plugin 'Valloric/MatchTagAlways'
 Plugin 'danro/rename.vim'
+Plugin 'davidhalter/jedi-vim'
+Plugin 'easymotion/vim-easymotion'
+Plugin 'fatih/vim-go'
+Plugin 'flazz/vim-colorschemes'
+Plugin 'gmarik/vundle'
 Plugin 'godlygeek/tabular'
 Plugin 'junegunn/rainbow_parentheses.vim'
-Plugin 'majutsushi/tagbar'
-Plugin 'rking/ag.vim'
+Plugin 'justinmk/vim-gtfo'
+Plugin 'klen/python-mode'
+"Plugin 'majutsushi/tagbar'
+Plugin 'mhinz/vim-startify'
 Plugin 'scrooloose/nerdcommenter'
-Plugin 'vim-syntastic/syntastic'
+Plugin 'suan/vim-instant-markdown'
+Plugin 'thinca/vim-quickrun'
 Plugin 'tmhedberg/matchit'
+Plugin 'tpope/vim-fugitive'
+Plugin 'tpope/vim-surround'
+Plugin 'tpope/vim-vinegar'
+Plugin 'vim-airline/vim-airline'
 Plugin 'vim-scripts/CSApprox'
 Plugin 'vim-scripts/reorder-tabs'
-Plugin 'vim-airline/vim-airline'
-Plugin 'flazz/vim-colorschemes'
-Plugin 'easymotion/vim-easymotion'
-if !(has("win64") || has("win32"))
-    " Doesnt work well for me on Windows
-    Plugin 'takac/vim-fontmanager'
-endif
-Plugin 'justinmk/vim-gtfo'
-Plugin 'Shougo/vimproc.vim'
-Plugin 'tpope/vim-surround'
-Plugin 'tpope/vim-fugitive'
-Plugin 'thinca/vim-quickrun'
-Plugin 'mhinz/vim-startify'
-Plugin 'xolox/vim-misc'
+Plugin 'vim-syntastic/syntastic'
 Plugin 'xolox/vim-colorscheme-switcher'
-Plugin 'tpope/vim-vinegar'
-Plugin 'fatih/vim-go'
+Plugin 'xolox/vim-misc'
+Plugin 'zah/nim.vim'
+Plugin 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plugin 'junegunn/fzf.vim'
+Plugin 'SirVer/ultisnips'
+Plugin 'Valloric/YouCompleteMe'
+"Plugin 'nixprime/cpsm'
 
 call vundle#end()
 
@@ -110,9 +119,9 @@ syntax on
 filetype plugin indent on
 set novb                       " no bells please
 set noerrorbells               " idem
-"set list lcs=tab:»·,eol:¬      " show invisible characters line newline or tabs
+"set list  lcs=tab:»·,eol:¬      show invisible characters line newline or tabs
 set switchbuf=usetab,newtab    " switch to a buffer opened on a tab switches to that tab
-set history=50
+set history=200
 set viminfo='50,\"50
 set modeline                   " enable per-file modelines
 set modelines=5
@@ -134,7 +143,7 @@ set nowritebackup
 set noswapfile
 set ignorecase
 set smartcase           " Case insensitive search with lowercase terms, sensitive with uppercase
-set hlsearch            " highlight search results
+set hlsearch              " highlight search results
 set showmatch
 set gdefault            " default to global substitution, without having to put the /g at the end
 set t_Co=256            " more colors
@@ -142,7 +151,7 @@ set relativenumber      " show relative line numbers
 set number              " but show the current linenum at the center
 set virtualedit=block   " can select anything inside visual block mode (v + ctrl-v)
 set laststatus=2        " needed for powerline/airline
-"set cursorline          " highlight the line with the cursor
+set cursorline          " highlight the line with the cursor
 set autochdir           " change the cwd to the buffer
 set undodir="$VIMRUNTIME\\undodir"
 set wildignore+=.git\*,.hg\*,.svn\*,.bzr\*
@@ -155,14 +164,14 @@ autocmd BufReadPost *
     \ endif
 
 " automatically strip trailing whitespace
-fun! <SID>StripTrailingWhitespaces()
-   let l = line(".")
-   let c = col(".")
-   %s/\s\+$//e
-   call cursor(l, c)
-endfun
+ fun! <SID>StripTrailingWhitespaces()
+    let l = line(".")
+    let c = col(".")
+    %s/\s\+$//e
+    call cursor(l, c)
+ endfun
 
-autocmd FileType c,cpp,java,php,ruby,python,go,nim,d,java autocmd BufWritePre <buffer> 
+autocmd FileType c,cpp,java,php,ruby,python,go,nim,d,java autocmd BufWritePre <buffer>
             \ :call <SID>StripTrailingWhitespaces()
 
  " Dont go back 1 character when leaving insert mode
@@ -179,7 +188,7 @@ inoremap <C-S>		<C-O>:update<CR>
 
 " default line length, can be changed depending on the filemode
 let my_linelen = 82
-set colorcolumn=110   " color text written past the column
+set colorcolumn=90  " color text written past the column
 
 " 4 space tabs, anything else is wrong
 set expandtab
@@ -278,7 +287,6 @@ set foldtext=MyFoldText()
 
 " Important: uncoment any set encoding line before adding new non-ASCII chars
 " to vimrc, enable them after
-
 " Vim Reminders:
 " <c-o> and <c-i> jump between the history of cursor positions
 " <c-o> run a single command while in insert mode
@@ -326,31 +334,25 @@ let mapleader = ","
 nmap <Tab>   gt
 nmap <S-Tab> gT
 
+
 ",o / ,O to insert a line below / above and return to normal mode
 nmap <leader>o o<esc>
 nmap <leader>O O<esc>
 
 " navigate trought wrapped lines easily
-nmap j gj
-nmap k gk
+"nmap j gj
+"nmap k gk
 
 " w!! to save as root with sudo
 cmap w!! w !sudo tee % >/dev/null<cr>
 
-" ==============
-" TAGS
-" ==============
+" === TAGS ===
 nmap <leader>tg :set tags=tags<cr>
 ",ta jump to tag (also the default C-])
 nnoremap <leader>ta <C-]>
-",cdt (Create D Tags) regenerate tags for a D project, it needs:
-"https://github.com/snosov1/ctags-d y modificar tagbar.d with:
-"http://blog.adamdklein.com/?p=28 (see Marenz's comment)
-nmap <leader>cdt :!ctags -R ~/webmail/backend/source > tags<cr>:set tags=tags<cr>
 
 
-" TABS AND WINDOWS =====
-
+" === TABS AND WINDOWS ===
 " ,v (vsplit)
 nmap <leader>v :vspl<cr><c-w><c-w>
 " ,cv (close other vertical split)
@@ -358,10 +360,6 @@ nmap <leader>cv <c-w><c-w>:q<cr>
 
 " ,tn (Tab New)
 nmap <leader>tn :tabnew<cr>
-
-" c-h/c-l change to previous/next tab
-nmap <c-h> :tabp<cr>
-nmap <c-l> :tabn<cr>
 
 " ,bt (buffer tabs) open all buffers as tabs
 nnoremap <leader>bt :tab sball<cr>
@@ -372,10 +370,10 @@ nnoremap <leader>tl :tabm -1<cr>
 ",tr moves the tab one position to the right
 nnoremap <leader>tr :tabm +1<cr>
 
-" COPY/PASTE =====
+" === COPY/PASTE ===
 " Obvious shortcuts so I don't mess with C-V, C-C when using Vim along other
 " programs that use these shortcuts for copy/paste (these copy/paste to the
-" system clipboard). Taken from mswin.vim.
+" system clipboard)
 
 vnoremap <C-X> "+x
 vnoremap <C-C> "+y
@@ -412,10 +410,10 @@ nnoremap <leader>p :pu<cr>
 nnoremap <leader>V `[v`]
 
 " The unnamed buffer (when you yank or cut without naming a register) is the clipboard
-set clipboard=unnamed
+set clipboard+=unnamed
+set clipboard+=unnamedplus
 
-" OTHER SHORTCUTS =====
-
+" === OTHER SHORTCUTS ===
 " ,ct Clear Trailing : remove trailing whitespace after the end of line
 nnoremap <leader>ct :%s/\s\+$//<cr>
 
@@ -440,7 +438,7 @@ nmap <leader>ss :setlocal spell spelllang=es_es<cr>
 nmap <leader>se :setlocal spell spelllang=en_en<cr>
 nmap <leader>sn :set nospell<cr>
 
-" some aliases for my stupid fingers
+" some aliases for stupid fingers
 nmap :W :w
 nmap :q1 :q!
 nmap :Q :q
@@ -456,9 +454,9 @@ nmap <leader><space> :noh<cr>
 nnoremap <leader>yy :YRShow<cr>
 
 " F1 = exit insert mode and save
-inoremap <f1> <ESC>:update<cr>
-nnoremap <f1> :update<cr>
-vnoremap <f1> :update<cr>
+inoremap <f1> <ESC>:w<cr>
+nnoremap <f1> :w<cr>
+vnoremap <f1> :w<cr>
 inoremap <f2> <ESC>:bd!<cr>
 nnoremap <f2> :bd!<cr>
 vnoremap <f2> :bd!<cr>
@@ -468,7 +466,7 @@ vnoremap <f3> :QuickRun<cr>
 
 " Netrw, Tagbar and Project toggles
 nmap <leader>E :Vex<cr>
-nmap <leader>tb :TagbarToggle<cr>
+"nmap <leader>tb :TagbarToggle<cr>
 nmap <silent> <leader>P <Plug>ToggleProject
 
 " ,gs (Guarda Sesion) save vim session, ,css (Carga Sesion), load it
@@ -481,15 +479,11 @@ nmap <leader>np :set nopaste<cr>
 
 " Manual SyntasticCheck for the languages where I've the check-on-write disabled (like D)
 nmap <leader>sy :SyntasticCheck<cr>
+" MyPy
+nmap <leader>m :SyntasticCheck mypy<cr>
 
-" ,1 Put === lines above and below the current line (lame, I know)
+" ,1 Put === lines above and below the current line
 nnoremap <leader>1 yyPVr=jyypVr=k
-
-" C-B CtrlPBuffers
-nmap <C-b> :CtrlPBuffer<cr>
-
-" F5 open a Markdown preview in Chrome. Needs the "Markdown preview" addon for Chrome
-autocmd BufEnter *.md exe 'noremap <F5> :!/usr/bin/env google-chrome %:p<CR>'
 
 " <leader>cp copy the current path to the system clipboard
 nmap <leader>cp :let @+ = expand("%:p:h")<cr>:echo @+<cr>
@@ -499,42 +493,35 @@ nmap <leader>cp :let @+ = expand("%:p:h")<cr>:echo @+<cr>
 nmap <leader>ts <esc>"mciw<c-r>=strftime("%d/%m/%y %H:%M:%S", @m)
 
 " =========================================================
-" COLORS, FONTS AND GUI
+" === COLORS, FONTS AND GUI ===============================
 " =========================================================
-" light background
-set background=light
-" colors summerfruit256    " white, high contrast
-"colors professional " yellow-white, high contrast
-"colors ironman            " light gray, medium contrast
-"colors PapayaWhip   " yellow-orange, high contrast
-colors PaperColor
 
-" dark background
-"set background=dark
-"colors jelleybeans       " black background, medium contrast
-"colors obsidian2         " dark green, low contrast
-"colors obsidian         " dark grey, medium contrast
-"colors northsky          " dark blue, medium contrast
-"colors leo               " black background, medium to high contrast
-"colors molokai           " dark, high contrast
-"colorss iceberg           " very dark blue, low contrast
-
+"colors summerfruit256
+"colors molokai
+"colors professional_jjux
+"colors iceberg
+"colors jelleybeans
+colors obsidian
+"colors northsky
 hi NonText guifg=#b2b2b2
-
 " EasyMotion Colors
 hi link EasyMotionTarget ErrorMsg
 hi link EasyMotionShade  Comment
 hi link EasyMotionTarget2First ErrorMsg
 hi link EasyMotionTarget2Second Define
 
+" GVIM options:
+
 " Font
 " On gvim we can use :set guifont=* to show a font picker window
 " TIP for changing the font in the .vimrc: to get the guifont value copied to the current
-" buffer as text do :put =&guifont
-let g:fontman_font = "DejaVu Sans Mono"
-let g:fontman_size = 9
+" buffer as text do :put =&guifont   " Font
+set guifont="Fira Code weight=450 18"
 
-" GVIM options ====
+" Maximized initial screen
+if has("gui_running")
+  set lines=999 columns=999
+endif
 
 " Negated:
 " !a: dont autocopy VISUAL regions to the clipboard
@@ -544,7 +531,7 @@ set guioptions-=T
 " !i: dont use an icon
 set guioptions-=i
 " !e: dont use graphic tabs (they look nicer with text tabs can be reordered by dragging with the plugin)
-"set guioptions-=e
+set guioptions-=e
 " !m: dont show menu bar
 set guioptions-=m
 " !h: dont use the cursorline as size reference for the horizontal scrollbar
@@ -589,7 +576,7 @@ augroup autoscrollbar
 augroup END
 
 " =========================================================
-" AUTOCOMPLETE
+" === AUTOCOMPLETE ========================================
 " =========================================================
 
 " By language
@@ -629,27 +616,27 @@ let g:jedi#rename_command = "<leader>re"
 " Don't complete function parameters, it's annoying
 autocmd FileType python setlocal completeopt-=preview
 
-" Tagbar: =====
+" Tagbar:
 " right side frame (left one is used for Project)
-let Tlist_Use_Right_Window = 1
+"let Tlist_Use_Right_Window = 1
 
 " minimum tag frame size
-let Tlist_WinWidth = 40
+"let Tlist_WinWidth = 40
 
 " get focus when opening
-let Tlist_GainFocus_On_ToggleOpen = 1
+"let Tlist_GainFocus_On_ToggleOpen = 1
 
-let g:tagbar_type_d = {
-    \ 'ctagstype': 'D',
-    \ 'kinds'    : [
-        \ 'o:objects',
-        \ 'f:functions',
-        \ 'a:arrays',
-        \ 's:strings'
-    \ ]
-\ }
+"let g:tagbar_type_d = {
+    "\ 'ctagstype': 'D',
+    "\ 'kinds'    : [
+        "\ 'o:objects',
+        "\ 'f:functions',
+        "\ 'a:arrays',
+        "\ 's:strings'
+    "\ ]
+"\ }
 
-" Project: =====
+" Project:
 " default flags
 let g:proj_flags="imstvcg"
 " wait a little longer for commands
@@ -657,7 +644,7 @@ set timeout timeoutlen=5000 ttimeoutlen=100
 
 " Yankring: use c-j and c-k to paste prev/next from the ring =====
 " default file
-let g:yankring_history_dir="$VIMRUNTIME"
+let g:yankring_history_dir="~/.vim"
 let g:yankring_replace_n_pkey = '<c-j>'
 let g:yankring_replace_n_nkey = '<c-k>'
 
@@ -677,31 +664,34 @@ let g:yankring_replace_n_nkey = '<c-k>'
 " <c-y>j join/separate block => <div></div> => <div/>
 " <c-y>, if you write 'lorem' it will expand to a lorem ipsum
 
-
-" Syntastic:  ====
+" Syntastic: :Error to show the error listing windows
 " :Error to show the error listing windows
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
-
-let g:syntastic_aggregate_errors = 0
-let g:syntastic_debug = 0
-let g:syntastic_error_symbol             = 'E>'
-let g:syntastic_warning_symbol           = 'W>'
-let g:syntastic_d_check_header           = 0
-let g:syntastic_d_compiler               = "$HOME/bin/dub-syntastic"
+let g:syntastic_aggregate_errors = 1
+"let g:syntastic_debug = 0
+"let g:syntastic_error_symbol             = 'E>'
+"let g:syntastic_warning_symbol           = 'W>'
+"let g:syntastic_d_check_header           = 0
+"let g:syntastic_d_compiler               = "$HOME/bin/dub-syntastic"
 let g:syntastic_python_checkers          = ['flake8']
-let g:syntastic_mode_map                 = { 'mode': 'active', 'passive_filetypes': ['d'] }
+let g:syntastic_go_checkers              = ['go']
+"let g:syntastic_mode_map                 = { 'mode': 'active' }
+"let g:syntastic_mode_map                 = { 'mode': 'active', 'passive_filetypes': ['d'] }
 let g:syntastic_python_flake8_post_args  = '--ignore=E501,E221,E265,E303,E302,E701,E251,E241,'
 let g:syntastic_python_flake8_post_args .= 'E128,E401,E301,E126,E225,E211,E226,E261,E127,E702,'
 let g:syntastic_python_flake8_post_args .= 'E123,E124,E129,E201,E231,E262,E202,E203,E125,E228,'
-let g:syntastic_python_flake8_post_args .= 'E272,E131,E402,E114,E116,E266'
+let g:syntastic_python_flake8_post_args .= 'E305,E116'
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list            = 0
 let g:syntastic_check_on_open            = 1
-let g:syntastic_check_on_wq              = 0
+"let g:syntastic_check_on_wq              = 0
 
-" PythonMode: =====
+let g:syntastic_python_flake8_exe = 'python3 -m flake8'
+"let g:syntastic_python_mypy_exec='/home/juanjux/neme/mypy.sh'
+
+" PythonMode:
 " Motions
 " [[ / ]] previous / next class or function
 " [M / ]M previous / next class or method
@@ -710,13 +700,11 @@ let g:syntastic_check_on_wq              = 0
 " Functions
 " <leader>ru run buffer or selection
 " <leader>br set breakpoint
-"
-let g:pymode_python = 'python'
-let g:pymode                  = 1
+let g:pymode                  = 0
 let g:pymode_syntax           = 0
 let g:pymode_syntax_all       = 0
 let g:pymode_trim_whitespaces = 1
-let g:pymode_max_line_length  = 119
+let g:pymode_max_line_length  = 90
 let g:pymode_indent           = 1
 let g:pymode_folding          = 0
 let g:pymode_run_bind         = '<leader>ru'
@@ -726,53 +714,70 @@ let g:pymode_rope_completion = 0
 let g:pymode_doc             = 0
 " Better done by Syntastic
 let g:pymode_lint            = 0
+let g:pymode_python = 'python3'
 
-
-" EasyMotion: ====
-nmap <leader>e  <Plug>(easymotion-bd-w)
-nmap d<leader>e <Plug>(easyoperator-line-delete)
-nmap y<leader>e <Plug>(easyoperator-line-yank)
-nmap v<leader>e <Plug>(easyoperator-line-select)
+" EasyMotion:
+nmap <leader>e <Plug>(easymotion-bd-w)
 " ,f easy motion search character
-nmap <leader>f  <Plug>(easymotion-bd-f)
+nmap <leader>f <Plug>(easymotion-bd-f)
 " ,j easy motion line
-nmap <leader>j  <Plug>(easymotion-bd-jk)
+nmap <leader>j <Plug>(easymotion-bd-jk)
 
-" CtrlP: ====
-let g:ctrlp_map = '<c-p>'
-let g:ctrlp_cmd = 'CtrlPMRUFiles'
-let g:ctrlp_match_window = 'top, order:ttb,min:1,max:20,results:20'
-let g:ctrlp_by_filename = 1
-let g:ctrlp_working_path_mode = 'ra'
-let g:ctrlp_lazy_update = 1
-let g:ctrlp_use_caching = 1
-let g:ctrlp_clear_cache_on_exit = 0
-let g:ctrlp_max_files = 0
-let g:ctrlp_show_hidden = 0
-
-let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$'
-"let g:ctrlp_custom_ignore = {
-  "\ 'dir':  '\v[\/]\.(git|hg|svn)$',
-  "\ 'file': '\v\.(exe|so|dll)$',
-  "\ 'link': 'some_bad_symbolic_links',
-  "\ }
-
-set wildignore+=*/tmp/*,*.so,*.swp,*.zip
-"let g:ctrlp_user_command = 'find %s -type f'
-let g:ctrlp_user_command = 'ag %s -l --nocolor --ignore ''.git'' -g "">>'
-
-" PyMatcher for CtrlP:  =====
-if has('python')
-    let g:ctrlp_match_func = { 'match': 'pymatcher#PyMatch' }
-endif
-
-" Rainbox Parenthesis: ====
+" More Rainbox Parenthesis
 let g:rainbow#max_level = 16
 let g:rainbow#pairs = [['(', ')'], ['[', ']']]
 call g:rainbow_parentheses#activate()
 
-" Indent Guides:  ====
+" Indent Guides
 "let g:indent_guides_enable_on_vim_startup = 1
 
-" Vim Markdown: ====
-let vim_markdown_preview_toggle=2
+" NimVim recommends this
+fun! JumpToDef()
+  if exists("*GotoDefinition_" . &filetype)
+    call GotoDefinition_{&filetype}()
+  else
+    exe "norm! \<C-]>"
+  endif
+endf
+
+" Jump to tag
+nn <M-g> :call JumpToDef()<cr>
+ino <M-g> <esc>:call JumpToDef()<cr>i
+
+" Vim-go
+let g:go_highlight_functions = 1
+let g:go_highlight_methods = 1
+let g:go_highlight_fields = 1
+let g:go_highlight_types = 1
+let g:go_highlight_operators = 1
+let g:go_highlight_build_constraints = 1
+let g:go_fmt_command = "goimports"
+let g:go_fmt_autosave = 0
+
+" FZF
+"   e.g. File preview using Highlight
+let g:fzf_files_options =
+  \ '--preview "(highlight -O ansi {} || cat {}) 2> /dev/null | head -'.&lines.'"'
+
+" Same for :Ag (use :Ag! for the preview or press ?)
+command! -bang -nargs=* Ag
+  \ call fzf#vim#ag(<q-args>,
+  \                 <bang>0 ? fzf#vim#with_preview('up:60%')
+  \                         : fzf#vim#with_preview('right:50%:hidden', '?'),
+  \                 <bang>0)
+
+nmap <c-p> :History<cr>
+nmap <leader>wt :BTags<cr>
+nmap <leader>wa :Lines<cr>
+nmap <leader>wg :GFiles<cr>
+nmap <leader>wc :Commands<cr>
+nmap <leader>wb :Buffers<cr>
+
+" Insert mode completion
+imap <c-x><c-k> <plug>(fzf-complete-word)
+imap <c-x><c-f> <plug>(fzf-complete-path)
+imap <c-x><c-j> <plug>(fzf-complete-file-ag)
+imap <c-x><c-l> <plug>(fzf-complete-line)
+
+" Advanced customization using autoload functions
+inoremap <expr> <c-x><c-k> fzf#vim#complete#word({'left': '15%'})
