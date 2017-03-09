@@ -96,7 +96,7 @@ Plugin 'tpope/vim-fugitive'
 Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-vinegar'
 Plugin 'vim-airline/vim-airline'
-Plugin 'vim-scripts/CSApprox'
+"Plugin 'vim-scripts/CSApprox'
 Plugin 'vim-scripts/reorder-tabs'
 Plugin 'vim-syntastic/syntastic'
 Plugin 'xolox/vim-colorscheme-switcher'
@@ -146,7 +146,10 @@ set smartcase           " Case insensitive search with lowercase terms, sensitiv
 set hlsearch              " highlight search results
 set showmatch
 set gdefault            " default to global substitution, without having to put the /g at the end
+"set termguicolors       " true color
 set t_Co=256            " more colors
+"set term=xterm-256color
+set t_ut=               " this is needed so the background is correctly shown under tmux
 set relativenumber      " show relative line numbers
 set number              " but show the current linenum at the center
 set virtualedit=block   " can select anything inside visual block mode (v + ctrl-v)
@@ -499,11 +502,16 @@ nmap <leader>ts <esc>"mciw<c-r>=strftime("%d/%m/%y %H:%M:%S", @m)
 "colors summerfruit256
 "colors molokai
 "colors professional_jjux
-"colors iceberg
+colors iceberg
 "colors jelleybeans
-colors obsidian
+"colors obsidian
 "colors northsky
-hi NonText guifg=#b2b2b2
+"hi NonText guifg=#b2b2b2
+
+"set background=dark
+"let g:solarized_termcolors=256
+"colors solarized
+
 " EasyMotion Colors
 hi link EasyMotionTarget ErrorMsg
 hi link EasyMotionShade  Comment
@@ -516,7 +524,8 @@ hi link EasyMotionTarget2Second Define
 " On gvim we can use :set guifont=* to show a font picker window
 " TIP for changing the font in the .vimrc: to get the guifont value copied to the current
 " buffer as text do :put =&guifont   " Font
-set guifont="Fira Code weight=450 18"
+set guifont="Fira Code weight=450 8.5"
+
 
 " Maximized initial screen
 if has("gui_running")
