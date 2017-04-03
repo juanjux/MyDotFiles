@@ -61,6 +61,10 @@
 "   ,wc: vim command history
 "   ,wb: buffers (for switching quickly)
 " UltiSnip: programming snippets, works well with YouCompleteMe
+" Dutyl: For the D language, integrates DCD (autocomplete), dub, Dscanner, dfmt 
+"        (the tools must be installed separately), commands:
+"        :DUDCDstartserver, :DUDCDstopserver, :DUDCDrestartserver, :DUDCDclearcache,
+"
 
 
 " ========================================================
@@ -105,8 +109,10 @@ Plugin 'zah/nim.vim'
 Plugin 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plugin 'junegunn/fzf.vim'
 Plugin 'SirVer/ultisnips'
+Plugin 'honza/vim-snippets'
 Plugin 'Valloric/YouCompleteMe'
 "Plugin 'nixprime/cpsm'
+Plugin 'idanarye/vim-dutyl'
 
 call vundle#end()
 
@@ -146,10 +152,6 @@ set smartcase           " Case insensitive search with lowercase terms, sensitiv
 set hlsearch              " highlight search results
 set showmatch
 set gdefault            " default to global substitution, without having to put the /g at the end
-"set termguicolors       " true color
-set t_Co=256            " more colors
-"set term=xterm-256color
-set t_ut=               " this is needed so the background is correctly shown under tmux
 set relativenumber      " show relative line numbers
 set number              " but show the current linenum at the center
 set virtualedit=block   " can select anything inside visual block mode (v + ctrl-v)
@@ -159,6 +161,15 @@ set autochdir           " change the cwd to the buffer
 set undodir="$VIMRUNTIME\\undodir"
 set wildignore+=.git\*,.hg\*,.svn\*,.bzr\*
 set mouse+=a
+
+" Colors related settings
+set termguicolors       " true color
+" set Vim-specific sequences for RGB colors
+let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+"set t_Co=256            " more colors
+set term=xterm-256color
+set t_ut=               " this is needed so the background is correctly shown under tmux
 
 " when opening a buffer, jump to the last known position
 autocmd BufReadPost *
@@ -499,16 +510,23 @@ nmap <leader>ts <esc>"mciw<c-r>=strftime("%d/%m/%y %H:%M:%S", @m)
 " === COLORS, FONTS AND GUI ===============================
 " =========================================================
 
-"colors summerfruit256
-"colors molokai
-"colors professional_jjux
-colors iceberg
-"colors jelleybeans
-"colors obsidian
-"colors northsky
 "hi NonText guifg=#b2b2b2
 
+" Uncomment the first like of every block for setting the right background
+" and then the specific colorscheme
+
+set background=light
+"colors gruvbox
+"colors professional_jjux
+colors professional
+"colors summerfruit256
+
 "set background=dark
+"colors obsidian
+"colors northsky
+"colors jelleybeans
+"colors molokai
+"colors iceberg
 "let g:solarized_termcolors=256
 "colors solarized
 
@@ -524,8 +542,11 @@ hi link EasyMotionTarget2Second Define
 " On gvim we can use :set guifont=* to show a font picker window
 " TIP for changing the font in the .vimrc: to get the guifont value copied to the current
 " buffer as text do :put =&guifont   " Font
-set guifont="Fira Code weight=450 8.5"
-
+if has("gui_running")
+    if has("gui_gtk2") || has("gui_gtk3") || has("gui_gnome")
+        set guifont=Fira\ Code\ 9
+    endif
+endif
 
 " Maximized initial screen
 if has("gui_running")
@@ -594,7 +615,6 @@ autocmd filetype python set omnifunc=pythoncomplete#Complete
 autocmd filetype javascript set omnifunc=javascriptcomplete#CompleteJS
 autocmd filetype html set omnifunc=htmlcomplete#CompleteTags
 autocmd filetype css set omnifunc=csscomplete#CompleteCSS
-autocmd filetype d set omnifunc=dcomplete#Complete
 
 " show omni menu even when there is only a single entry and don't autocomplete with the first one
 set completeopt=longest,menuone
@@ -763,7 +783,7 @@ let g:go_highlight_build_constraints = 1
 let g:go_fmt_command = "goimports"
 let g:go_fmt_autosave = 0
 
-" FZF
+" FZF:
 "   e.g. File preview using Highlight
 let g:fzf_files_options =
   \ '--preview "(highlight -O ansi {} || cat {}) 2> /dev/null | head -'.&lines.'"'
@@ -790,3 +810,14 @@ imap <c-x><c-l> <plug>(fzf-complete-line)
 
 " Advanced customization using autoload functions
 inoremap <expr> <c-x><c-k> fzf#vim#complete#word({'left': '15%'})
+
+" D language support, Dutyl:
+" dcd-client, dcd-server, dscanner, dub and dfmt must be in the path
+
+" Not needed, configured in ~/.config/dcd/dcd.conf
+"let g:dutyl_stdImportPaths=['/usr/include/dmd/phobos', '/usr/include/dmd/druntime/import']
+let g:dutyl_neverAddClosingParen=0
+
+" map "gd" to :DUJump
+autocmd filetype d nnoremap gd :DUjump<cr>
+
