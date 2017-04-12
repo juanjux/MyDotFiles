@@ -65,6 +65,7 @@
 "        (the tools must be installed separately), commands:
 "        :DUDCDstartserver, :DUDCDstopserver, :DUDCDrestartserver, :DUDCDclearcache,
 "
+" Ale: Asynchronous linting engine, like Synthastic but running constantly
 
 
 " ========================================================
@@ -102,7 +103,8 @@ Plugin 'tpope/vim-vinegar'
 Plugin 'vim-airline/vim-airline'
 "Plugin 'vim-scripts/CSApprox'
 Plugin 'vim-scripts/reorder-tabs'
-Plugin 'vim-syntastic/syntastic'
+"Plugin 'vim-syntastic/syntastic'
+Plugin 'w0rp/ale'
 Plugin 'xolox/vim-colorscheme-switcher'
 Plugin 'xolox/vim-misc'
 Plugin 'zah/nim.vim'
@@ -451,6 +453,8 @@ nmap <leader>rr :syntax sync fromstart<cr>:redraw!<cr>
 nmap <leader>ss :setlocal spell spelllang=es_es<cr>
 nmap <leader>se :setlocal spell spelllang=en_en<cr>
 nmap <leader>sn :set nospell<cr>
+" Download missing files from there
+let g:spellfile_URL = 'http://ftp.vim.org/vim/runtime/spell'
 
 " some aliases for stupid fingers
 nmap :W :w
@@ -695,30 +699,35 @@ let g:yankring_replace_n_nkey = '<c-k>'
 
 " Syntastic: :Error to show the error listing windows
 " :Error to show the error listing windows
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
-let g:syntastic_aggregate_errors = 1
+" Disabled with the plugin:
+"set statusline+=%#warningmsg#
+"set statusline+=%{SyntasticStatuslineFlag()}
+"set statusline+=%*
+"let g:syntastic_aggregate_errors = 1
+"let g:syntastic_python_checkers          = ['flake8']
+"let g:syntastic_go_checkers              = ['go']
+"let g:syntastic_python_flake8_post_args  = '--ignore=E501,E221,E265,E303,E302,E701,E251,E241,'
+"let g:syntastic_python_flake8_post_args .= 'E128,E401,E301,E126,E225,E211,E226,E261,E127,E702,'
+"let g:syntastic_python_flake8_post_args .= 'E123,E124,E129,E201,E231,E262,E202,E203,E125,E228,'
+"let g:syntastic_python_flake8_post_args .= 'E305,E116'
+"let g:syntastic_always_populate_loc_list = 1
+"let g:syntastic_auto_loc_list            = 0
+"let g:syntastic_check_on_open            = 1
+"let g:syntastic_python_flake8_exe = 'python3 -m flake8'
+
+" Previously disabled:
 "let g:syntastic_debug = 0
-"let g:syntastic_error_symbol             = 'E>'
-"let g:syntastic_warning_symbol           = 'W>'
-"let g:syntastic_d_check_header           = 0
 "let g:syntastic_d_compiler               = "$HOME/bin/dub-syntastic"
-let g:syntastic_python_checkers          = ['flake8']
-let g:syntastic_go_checkers              = ['go']
 "let g:syntastic_mode_map                 = { 'mode': 'active' }
 "let g:syntastic_mode_map                 = { 'mode': 'active', 'passive_filetypes': ['d'] }
-let g:syntastic_python_flake8_post_args  = '--ignore=E501,E221,E265,E303,E302,E701,E251,E241,'
-let g:syntastic_python_flake8_post_args .= 'E128,E401,E301,E126,E225,E211,E226,E261,E127,E702,'
-let g:syntastic_python_flake8_post_args .= 'E123,E124,E129,E201,E231,E262,E202,E203,E125,E228,'
-let g:syntastic_python_flake8_post_args .= 'E305,E116'
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list            = 0
-let g:syntastic_check_on_open            = 1
 "let g:syntastic_check_on_wq              = 0
 
-let g:syntastic_python_flake8_exe = 'python3 -m flake8'
 "let g:syntastic_python_mypy_exec='/home/juanjux/neme/mypy.sh'
+
+
+" Ale: 
+let g:ale_python_flake8_args = '--ignore=E501,E251,E128,E126,E201,E202'
+let g:ale_python_pylint_options = '-rcfile ~/.vim/pylint_rc'
 
 " PythonMode:
 " Motions
