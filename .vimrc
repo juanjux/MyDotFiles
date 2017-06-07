@@ -61,11 +61,13 @@
 "   ,wc: vim command history
 "   ,wb: buffers (for switching quickly)
 " UltiSnip: programming snippets, works well with YouCompleteMe
+" DSnips: Dlang snippets
 " Dutyl: For the D language, integrates DCD (autocomplete), dub, Dscanner, dfmt 
 "        (the tools must be installed separately), commands:
 "        :DUDCDstartserver, :DUDCDstopserver, :DUDCDrestartserver, :DUDCDclearcache,
 "
 " Ale: Asynchronous linting engine, like Synthastic but running constantly
+" SuperTab: complete with tab, also makes YCM and UltiSnips play nice together
 
 
 " ========================================================
@@ -78,7 +80,7 @@ set rtp+=~/.vim/bundle/Vundle.vim
 
 call vundle#begin()
 Plugin 'VundleVim/Vundle.vim'
-
+Plugin 'ervandew/supertab'
 Plugin 'Shougo/vimproc.vim'
 Plugin 'Valloric/MatchTagAlways'
 Plugin 'danro/rename.vim'
@@ -89,9 +91,9 @@ Plugin 'flazz/vim-colorschemes'
 Plugin 'gmarik/vundle'
 Plugin 'godlygeek/tabular'
 Plugin 'junegunn/rainbow_parentheses.vim'
-Plugin 'justinmk/vim-gtfo'
+"Plugin 'justinmk/vim-gtfo'
 Plugin 'klen/python-mode'
-"Plugin 'majutsushi/tagbar'
+Plugin 'majutsushi/tagbar'
 Plugin 'mhinz/vim-startify'
 Plugin 'scrooloose/nerdcommenter'
 Plugin 'suan/vim-instant-markdown'
@@ -115,6 +117,7 @@ Plugin 'honza/vim-snippets'
 Plugin 'Valloric/YouCompleteMe'
 "Plugin 'nixprime/cpsm'
 Plugin 'idanarye/vim-dutyl'
+Plugin 'kiith-sa/DSnips'
 
 call vundle#end()
 
@@ -450,9 +453,9 @@ nmap <leader>rr :syntax sync fromstart<cr>:redraw!<cr>
 " z= to see suggestions
 " ]s / [s jump to next/prev misspelled word
 " zg add word to the spellfile
-nmap <leader>ss :setlocal spell spelllang=es_es<cr>
-nmap <leader>se :setlocal spell spelllang=en_en<cr>
-nmap <leader>sn :set nospell<cr>
+nmap <leader>ss :set termguicolors&<cr>:setlocal spell spelllang=es_es<cr>
+nmap <leader>se :set termguicolors&<cr>:setlocal spell spelllang=en_en<cr>
+nmap <leader>sn :set termguicolors<cr>:set nospell<cr>
 " Download missing files from there
 let g:spellfile_URL = 'http://ftp.vim.org/vim/runtime/spell'
 
@@ -522,7 +525,7 @@ nmap <leader>ts <esc>"mciw<c-r>=strftime("%d/%m/%y %H:%M:%S", @m)
 set background=light
 "colors gruvbox
 "colors professional_jjux
-colors professional
+"colors professional
 "colors summerfruit256
 
 "set background=dark
@@ -533,6 +536,7 @@ colors professional
 "colors iceberg
 "let g:solarized_termcolors=256
 "colors solarized
+colors flattened_dark
 
 " EasyMotion Colors
 hi link EasyMotionTarget ErrorMsg
@@ -726,7 +730,7 @@ let g:yankring_replace_n_nkey = '<c-k>'
 
 
 " Ale: 
-let g:ale_python_flake8_args = '--ignore=E501,E251,E128,E126,E201,E202'
+let g:ale_python_flake8_args = '--ignore=E501,E251,E128,E123,E126,E201,E202,E221,E203'
 let g:ale_python_pylint_options = '-rcfile ~/.vim/pylint_rc'
 
 " PythonMode:
@@ -830,3 +834,13 @@ let g:dutyl_neverAddClosingParen=0
 " map "gd" to :DUJump
 autocmd filetype d nnoremap gd :DUjump<cr>
 
+" YouCompleteMe, SuperTab and UltiSnip
+" make YCM compatible with UltiSnips (using supertab)
+let g:ycm_key_list_select_completion = ['<C-n>', '<Down>']
+let g:ycm_key_list_previous_completion = ['<C-p>', '<Up>']
+let g:SuperTabDefaultCompletionType = '<C-n>'
+
+" better key bindings for UltiSnipsExpandTrigger
+let g:UltiSnipsExpandTrigger = "<tab>"
+let g:UltiSnipsJumpForwardTrigger = "<tab>"
+let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
