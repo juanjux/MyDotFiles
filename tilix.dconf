@@ -1,0 +1,36 @@
+[keybindings]
+session-switch-to-terminal-8='<Primary>asterisk'
+session-switch-to-terminal-9='<Primary>parenleft'
+terminal-maximize='<Primary><Alt>q'
+win-view-sidebar='<Primary><Alt>s'
+session-name='F2'
+app-shortcuts='<Primary><Alt>k'
+session-switch-to-terminal-0='<Primary>parenright'
+session-switch-to-terminal-1='<Alt>1'
+session-switch-to-terminal-2='<Alt>2'
+session-switch-to-terminal-3='<Alt>3'
+session-switch-to-terminal-4='<Alt>4'
+session-switch-to-terminal-5='<Alt>5'
+session-switch-to-terminal-6='<Alt>6'
+session-switch-to-terminal-7='<Primary>ampersand'
+
+[profiles/2b7c4080-0ddd-46c5-8f23-563fd3ba789d]
+foreground-color='#EFEFEF'
+rewrap-on-resize=false
+visible-name='Default'
+dim-color-set=false
+palette=['#000000', '#CC0000', '#4D9A05', '#C3A000', '#3464A3', '#754F7B', '#05979A', '#D3D6CF', '#545456565252', '#EF2828', '#89E234', '#FBE84F', '#729ECF', '#AC7EA8', '#34E2E2', '#EDEDEB']
+badge-color-set=true
+use-system-font=false
+cursor-colors-set=false
+highlight-colors-set=false
+use-theme-colors=false
+bold-color-set=false
+font='Ubuntu Mono 10'
+terminal-bell='none'
+background-color='#000000000000'
+background-transparency-percent=0
+dim-transparency-percent=0
+
+[/]
+window-style='normal'

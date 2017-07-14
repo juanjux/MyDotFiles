@@ -68,6 +68,7 @@
 "
 " Ale: Asynchronous linting engine, like Synthastic but running constantly
 " SuperTab: complete with tab, also makes YCM and UltiSnips play nice together
+" VimSolidity: that.
 
 
 " ========================================================
@@ -118,6 +119,7 @@ Plugin 'Valloric/YouCompleteMe'
 "Plugin 'nixprime/cpsm'
 Plugin 'idanarye/vim-dutyl'
 Plugin 'kiith-sa/DSnips'
+Plugin 'tomlion/vim-solidity'
 
 call vundle#end()
 
@@ -234,7 +236,7 @@ endfunction
 au BufNewFile,BufRead,BufEnter *.md,*.markdown,*.txt,*.me,*.ME,.article*,.followup,.letter*,mutt*
             \ call SetLineLengthOptions(82)
 au BufNewFile,BufRead,BufEnter .vimrc,_vimrc,*.d,*.cpp,*.cc,*.py,*.js,*.go,*.nim,*.js,*.java
-            \ call SetLineLengthOptions(110)
+            \ call SetLineLengthOptions(90)
 
 autocmd FileType html set formatoptions+=l
 
@@ -522,21 +524,21 @@ nmap <leader>ts <esc>"mciw<c-r>=strftime("%d/%m/%y %H:%M:%S", @m)
 " Uncomment the first like of every block for setting the right background
 " and then the specific colorscheme
 
-set background=light
+"set background=light
 "colors gruvbox
 "colors professional_jjux
 "colors professional
 "colors summerfruit256
 
-"set background=dark
+set background=dark
 "colors obsidian
 "colors northsky
 "colors jelleybeans
 "colors molokai
-"colors iceberg
+colors iceberg
 "let g:solarized_termcolors=256
 "colors solarized
-colors flattened_dark
+"colors flattened_dark
 
 " EasyMotion Colors
 hi link EasyMotionTarget ErrorMsg
@@ -730,7 +732,7 @@ let g:yankring_replace_n_nkey = '<c-k>'
 
 
 " Ale: 
-let g:ale_python_flake8_args = '--ignore=E501,E251,E128,E123,E126,E201,E202,E221,E203'
+let g:ale_python_flake8_args = '--ignore=E122,E123,E126,E128,E201,E202,E203,E221,E251,E501'
 let g:ale_python_pylint_options = '-rcfile ~/.vim/pylint_rc'
 
 " PythonMode:
