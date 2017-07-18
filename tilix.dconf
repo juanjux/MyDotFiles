@@ -14,6 +14,113 @@ session-switch-to-terminal-5='<Alt>5'
 session-switch-to-terminal-6='<Alt>6'
 session-switch-to-terminal-7='<Primary>ampersand'
 
+[/]
+theme-variant='system'
+window-style='normal'
+
+[profiles/bbf7efc6-9ad8-4e5f-afd9-248aa89385b6]
+cursor-shape='block'
+cursor-colors-set=false
+bold-color-set=false
+terminal-bell='none'
+scroll-on-keystroke=true
+cjk-utf8-ambiguous-width='narrow'
+default-size-rows=24
+encoding='UTF-8'
+triggers=@as []
+automatic-switch=@as []
+custom-command=''
+visible-name='4K code'
+use-theme-colors=false
+terminal-title='${id}: ${title}'
+badge-text=''
+exit-action='close'
+use-system-font=false
+backspace-binding='ascii-delete'
+rewrap-on-resize=false
+foreground-color='#EFEFEF'
+dim-color='#000000'
+background-transparency-percent=0
+cursor-blink-mode='system'
+dim-transparency-percent=0
+default-size-columns=80
+background-color='#000000000000'
+login-shell=false
+cursor-foreground-color='#ffffff'
+allow-bold=true
+palette=['#000000', '#CC0000', '#4D9A05', '#C3A000', '#3464A3', '#754F7B', '#05979A', '#D3D6CF', '#545456565252', '#EF2828', '#89E234', '#FBE84F', '#729ECF', '#AC7EA8', '#34E2E2', '#EDEDEB']
+notify-silence-threshold=0
+badge-color='#ffffff'
+highlight-foreground-color='#ffffff'
+font='Hack 10'
+delete-binding='delete-sequence'
+badge-position='northeast'
+custom-hyperlinks=@as []
+scrollback-unlimited=false
+cursor-background-color='#000000'
+highlight-background-color='#000000'
+scroll-on-output=false
+dim-color-set=false
+use-custom-command=false
+badge-color-set=true
+highlight-colors-set=false
+scrollback-lines=8192
+bold-color='#ffffff'
+show-scrollbar=true
+
+[profiles/dbb4c985-ee03-45fa-86b1-a27e0f879ec8]
+cursor-shape='block'
+cursor-colors-set=false
+bold-color-set=false
+terminal-bell='none'
+scroll-on-keystroke=true
+cjk-utf8-ambiguous-width='narrow'
+default-size-rows=24
+encoding='UTF-8'
+triggers=@as []
+automatic-switch=@as []
+custom-command=''
+visible-name='4K terminal'
+use-theme-colors=false
+terminal-title='${id}: ${title}'
+badge-text=''
+exit-action='close'
+use-system-font=false
+backspace-binding='ascii-delete'
+rewrap-on-resize=false
+foreground-color='#EFEFEF'
+dim-color='#000000'
+background-transparency-percent=0
+cursor-blink-mode='system'
+dim-transparency-percent=0
+default-size-columns=80
+background-color='#000000000000'
+login-shell=false
+cursor-foreground-color='#ffffff'
+allow-bold=true
+palette=['#000000', '#CC0000', '#4D9A05', '#C3A000', '#3464A3', '#754F7B', '#05979A', '#D3D6CF', '#545456565252', '#EF2828', '#89E234', '#FBE84F', '#729ECF', '#AC7EA8', '#34E2E2', '#EDEDEB']
+notify-silence-threshold=0
+badge-color='#ffffff'
+highlight-foreground-color='#ffffff'
+font='Ubuntu Medium 10'
+delete-binding='delete-sequence'
+badge-position='northeast'
+custom-hyperlinks=@as []
+scrollback-unlimited=false
+cursor-background-color='#000000'
+highlight-background-color='#000000'
+scroll-on-output=false
+dim-color-set=false
+use-custom-command=false
+badge-color-set=true
+highlight-colors-set=false
+scrollback-lines=8192
+bold-color='#ffffff'
+show-scrollbar=true
+
+[profiles]
+list=['2b7c4080-0ddd-46c5-8f23-563fd3ba789d', 'bbf7efc6-9ad8-4e5f-afd9-248aa89385b6', 'dbb4c985-ee03-45fa-86b1-a27e0f879ec8']
+
 [profiles/2b7c4080-0ddd-46c5-8f23-563fd3ba789d]
 foreground-color='#EFEFEF'
 rewrap-on-resize=false
@@ -31,6 +138,3 @@ terminal-bell='none'
 background-color='#000000000000'
 background-transparency-percent=0
 dim-transparency-percent=0
-
-[/]
-window-style='normal'
