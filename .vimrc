@@ -95,9 +95,9 @@ Plugin 'junegunn/rainbow_parentheses.vim'
 "Plugin 'justinmk/vim-gtfo'
 Plugin 'klen/python-mode'
 Plugin 'majutsushi/tagbar'
+Plugin 'gabrielelana/vim-markdown'
 Plugin 'mhinz/vim-startify'
 Plugin 'scrooloose/nerdcommenter'
-Plugin 'suan/vim-instant-markdown'
 Plugin 'thinca/vim-quickrun'
 Plugin 'tmhedberg/matchit'
 Plugin 'tpope/vim-fugitive'
@@ -528,17 +528,17 @@ nmap <leader>ts <esc>"mciw<c-r>=strftime("%d/%m/%y %H:%M:%S", @m)
 "colors gruvbox
 "colors professional_jjux
 "colors professional
-"colors summerfruit256
+"colors summerfruit
 
 set background=dark
 "colors obsidian
 "colors northsky
 "colors jelleybeans
 "colors molokai
-colors iceberg
+"colors iceberg
 "let g:solarized_termcolors=256
 "colors solarized
-"colors flattened_dark
+colors flattened_dark
 
 " EasyMotion Colors
 hi link EasyMotionTarget ErrorMsg
