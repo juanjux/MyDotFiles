@@ -1,6 +1,7 @@
 [user]
 	name = Juanjo Alvarez
 	email = juanjo@sourced.tech
+	signingkey = 6180A04C30C822FB56133C44A52FD588B3FE5FE8
 [color]
 	ui = auto
 [push]
@@ -27,6 +28,7 @@
   followTags = true
   # Because I get sick of telling git to do it manually
   # https://git-scm.com/docs/git-config#git-config-pushfollowTags
+  gpgSign = true
 
 [status]
   showUntrackedFiles = all
@@ -41,3 +43,9 @@
 
 [difftool "icdiff"]
   cmd = /usr/bin/icdiff --line-numbers $LOCAL $REMOTE
+
+[format]
+  signoff = true
+
+[commit]
+  gpgsign = true

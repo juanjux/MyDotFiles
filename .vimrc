@@ -531,14 +531,14 @@ nmap <leader>ts <esc>"mciw<c-r>=strftime("%d/%m/%y %H:%M:%S", @m)
 "colors summerfruit
 
 set background=dark
-"colors obsidian
+colors obsidian
 "colors northsky
 "colors jelleybeans
 "colors molokai
 "colors iceberg
 "let g:solarized_termcolors=256
 "colors solarized
-colors flattened_dark
+"colors flattened_dark
 
 " EasyMotion Colors
 hi link EasyMotionTarget ErrorMsg
