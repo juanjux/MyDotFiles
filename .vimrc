@@ -69,6 +69,7 @@
 " Ale: Asynchronous linting engine, like Synthastic but running constantly
 " SuperTab: complete with tab, also makes YCM and UltiSnips play nice together
 " VimSolidity: that.
+" Goyo: Distraction-free mode
 
 
 " ========================================================
@@ -120,6 +121,7 @@ Plugin 'Valloric/YouCompleteMe'
 Plugin 'idanarye/vim-dutyl'
 Plugin 'kiith-sa/DSnips'
 Plugin 'tomlion/vim-solidity'
+Plugin 'junegunn/goyo.vim'
 
 call vundle#end()
 
@@ -130,7 +132,7 @@ call vundle#end()
 behave xterm
 syntax on
 filetype plugin indent on
-set novb                       " no bells please
+set vb t_vb=                   " no bells please
 set noerrorbells               " idem
 "set list  lcs=tab:»·,eol:¬      show invisible characters line newline or tabs
 set switchbuf=usetab,newtab    " switch to a buffer opened on a tab switches to that tab
@@ -218,6 +220,9 @@ set softtabstop=4
 set shiftwidth=4
 set autoindent
 
+autocmd FileType c setlocal tabstop=2 softtabstop=2 shiftwidth=2
+autocmd FileType cpp setlocal tabstop=2 softtabstop=2 shiftwidth=2
+
 set nowrap
 set wh=12
 
@@ -234,8 +239,8 @@ function! SetLineLengthOptions(len)
 endfunction
 
 au BufNewFile,BufRead,BufEnter *.md,*.markdown,*.txt,*.me,*.ME,.article*,.followup,.letter*,mutt*
-            \ call SetLineLengthOptions(82)
-au BufNewFile,BufRead,BufEnter .vimrc,_vimrc,*.d,*.cpp,*.cc,*.py,*.js,*.go,*.nim,*.js,*.java
+            \ call SetLineLengthOptions(80)
+au BufNewFile,BufRead,BufEnter .vimrc,_vimrc,*.d,*.cpp,*.cc,*.py,*.js,*.go,*.nim,*.js,*.java,*.scala,*.rs,*.c,*.h,*.cpp,*.hpp
             \ call SetLineLengthOptions(90)
 
 autocmd FileType html set formatoptions+=l
@@ -301,6 +306,29 @@ function! MyFoldText() " {{{
     return line . '   |' . foldedlinecount . ' lines|'
 endfunction " }}}
 set foldtext=MyFoldText()
+
+" CleanBuffers will remove all empty buffers
+function! s:CleanEmptyBuffers()
+    let buffers = filter(range(1, bufnr('$')), 'buflisted(v:val) && empty(bufname(v:val)) && bufwinnr(v:val)<0 && !getbufvar(v:val, "&mod")')
+    if !empty(buffers)
+        exe 'bw ' . join(buffers, ' ')
+    endif
+endfunction
+command! CleanBuffers call s:CleanEmptyBuffers()
+
+" Distraction free write mode, based on: https://statico.github.io/vim3.html
+function! s:WriteMode()
+  call goyo#execute(0, [])
+  setl spell noci nosi noai nolist noshowmode noshowcmd 
+  setl colorcolumn=
+  setl nocursorline
+  setl complete+=s
+  setl fo=aw2tq
+  setl textwidth=80
+  setl background=light
+  colors juanjux-light
+endfunction
+command! WriteMode call s:WriteMode()
 
 " =========================================================
 " === SHORTCUTS ===========================================
@@ -489,7 +517,7 @@ vnoremap <f3> :QuickRun<cr>
 
 " Netrw, Tagbar and Project toggles
 nmap <leader>E :Vex<cr>
-"nmap <leader>tb :TagbarToggle<cr>
+nmap <leader>tb :TagbarToggle<cr>
 nmap <silent> <leader>P <Plug>ToggleProject
 
 " ,gs (Guarda Sesion) save vim session, ,css (Carga Sesion), load it
@@ -526,16 +554,16 @@ nmap <leader>ts <esc>"mciw<c-r>=strftime("%d/%m/%y %H:%M:%S", @m)
 
 "set background=light
 "colors gruvbox
-"colors professional_jjux
 "colors professional
+"colors juanjux-light
 "colors summerfruit
 
 set background=dark
-colors obsidian
+"colors obsidian
 "colors northsky
 "colors jelleybeans
 "colors molokai
-"colors iceberg
+colors iceberg
 "let g:solarized_termcolors=256
 "colors solarized
 "colors flattened_dark
@@ -615,6 +643,11 @@ augroup autoscrollbar
   au VimResized * :call <SID>ToggleBottomScrollbar()
 augroup END
 
+augroup filetypedetect
+    au BufRead,BufNewFile *.py.source setfiletype python
+    au BufRead,BufNewFile *.java.source setfiletype java
+    " associate *.foo with php filetype
+augroup END
 " =========================================================
 " === AUTOCOMPLETE ========================================
 " =========================================================
@@ -810,12 +843,14 @@ command! -bang -nargs=* Ag
   \                         : fzf#vim#with_preview('right:50%:hidden', '?'),
   \                 <bang>0)
 
-nmap <c-p> :History<cr>
-nmap <leader>wt :BTags<cr>
-nmap <leader>wa :Lines<cr>
-nmap <leader>wg :GFiles<cr>
-nmap <leader>wc :Commands<cr>
-nmap <leader>wb :Buffers<cr>
+nmap \b :Buffers<cr>
+nmap \t :BTags<cr>
+nmap \f :GFiles<cr>
+nmap \l :Lines<cr>
+nmap \c :Commands<cr>
+nmap \a :Ag<cr>
+nmap \\ :tabnew<cr>:History<cr>
+nmap \p :History<cr>
 
 " Insert mode completion
 imap <c-x><c-k> <plug>(fzf-complete-word)
