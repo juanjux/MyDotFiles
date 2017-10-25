@@ -10,7 +10,6 @@
 " Yankring: register buffer, also allows to copy and paste between different vim instances
 " using an external file. ",yy" for seeing the ring, control-p after pasting
 " to cycle between previous yanks
-" Project: project manager, (,P to open, \C to create new, \R to refresh) (CURRENTLY REMOVED)
 " Fugitive: Awesome git support
 " Vimrhubarb: Server for Fugitive's Gbrowse to open the current file on Github
 " Pythoncomplete: better Python completion, needs a Vim with Python support
@@ -82,6 +81,7 @@ set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 Plugin 'VundleVim/Vundle.vim'
 Plugin 'ervandew/supertab'
+" XXX: check if this is needed anymore
 Plugin 'Shougo/vimproc.vim'
 Plugin 'Valloric/MatchTagAlways'
 Plugin 'danro/rename.vim'
@@ -92,7 +92,7 @@ Plugin 'flazz/vim-colorschemes'
 Plugin 'gmarik/vundle'
 Plugin 'godlygeek/tabular'
 Plugin 'junegunn/rainbow_parentheses.vim'
-" only really useful on Windows which luckily I'm not force to do anymore:
+" only really useful on Windows which luckily I'm not force to use anymore:
 "Plugin 'justinmk/vim-gtfo' 
 Plugin 'klen/python-mode'
 Plugin 'majutsushi/tagbar'
@@ -516,10 +516,9 @@ inoremap <f3> <ESC>:QuickRun<cr>
 nnoremap <f3> :QuickRun<cr>
 vnoremap <f3> :QuickRun<cr>
 
-" Netrw, Tagbar and Project toggles
+" Netrw, and Tagbar toggles
 nmap <leader>E :Vex<cr>
 nmap <leader>tb :TagbarToggle<cr>
-nmap <silent> <leader>P <Plug>ToggleProject
 
 " ,gs (Guarda Sesion) save vim session, ,css (Carga Sesion), load it
 nmap <leader>gs :mksession! ~\.vim\session\default<cr>
@@ -685,28 +684,8 @@ let g:jedi#rename_command = "<leader>re"
 autocmd FileType python setlocal completeopt-=preview
 
 " Tagbar:
-" right side frame (left one is used for Project)
-"let Tlist_Use_Right_Window = 1
+"<leader>tb to toggle
 
-" minimum tag frame size
-"let Tlist_WinWidth = 40
-
-" get focus when opening
-"let Tlist_GainFocus_On_ToggleOpen = 1
-
-"let g:tagbar_type_d = {
-    "\ 'ctagstype': 'D',
-    "\ 'kinds'    : [
-        "\ 'o:objects',
-        "\ 'f:functions',
-        "\ 'a:arrays',
-        "\ 's:strings'
-    "\ ]
-"\ }
-
-" Project:
-" default flags
-let g:proj_flags="imstvcg"
 " wait a little longer for commands
 set timeout timeoutlen=5000 ttimeoutlen=100
 
