@@ -5,13 +5,14 @@
 " Jedivim: Python's autocompletion, renaming and symbol jumping (better than ROPE)
 " PythonMode: Adds Python motion objects, run code, better syntax highlighting,
 "             breakpoints, better indentation, etc. Syntax checking and code
-"             completion / refactoring is disabled because I prefer Syntastic + JediVim
+"             completion / refactoring is disabled because I prefer ALE + JediVim
 "             for that.
 " Yankring: register buffer, also allows to copy and paste between different vim instances
 " using an external file. ",yy" for seeing the ring, control-p after pasting
 " to cycle between previous yanks
 " Project: project manager, (,P to open, \C to create new, \R to refresh) (CURRENTLY REMOVED)
 " Fugitive: Awesome git support
+" Vimrhubarb: Server for Fugitive's Gbrowse to open the current file on Github
 " Pythoncomplete: better Python completion, needs a Vim with Python support
 " Tohtml: converts the buffer to HTML with syntax coloring (:tohtml)
 " ZipPlugin: to open zip files
@@ -22,7 +23,6 @@
 " Airline: Cool status bar (need laststatus set to 2)
 " Tagbar: tag lists (method, var, classes, etc), ',tb' to toggle
 " Vimwiki: personal wiki (see cheatsheet inside)
-" Syntastic: validates the code on writing (disabled for D, use ',sy' there) and shows the errors
 " Easy Motion: jump quickly to any word in the window, ',e' to activate
 " Matchit: improves on the Vim % command to understand more things
 " Matchtagalways: highlight matching HTML tags
@@ -79,7 +79,6 @@ set nocompatible
 filetype off
 
 set rtp+=~/.vim/bundle/Vundle.vim
-
 call vundle#begin()
 Plugin 'VundleVim/Vundle.vim'
 Plugin 'ervandew/supertab'
@@ -93,7 +92,8 @@ Plugin 'flazz/vim-colorschemes'
 Plugin 'gmarik/vundle'
 Plugin 'godlygeek/tabular'
 Plugin 'junegunn/rainbow_parentheses.vim'
-"Plugin 'justinmk/vim-gtfo'
+" only really useful on Windows which luckily I'm not force to do anymore:
+"Plugin 'justinmk/vim-gtfo' 
 Plugin 'klen/python-mode'
 Plugin 'majutsushi/tagbar'
 Plugin 'gabrielelana/vim-markdown'
@@ -102,12 +102,14 @@ Plugin 'scrooloose/nerdcommenter'
 Plugin 'thinca/vim-quickrun'
 Plugin 'tmhedberg/matchit'
 Plugin 'tpope/vim-fugitive'
+Plugin 'tpope/vim-rhubarb'
 Plugin 'tpope/vim-surround'
+Plugin 'tpope/vim-repeat'
 Plugin 'tpope/vim-vinegar'
 Plugin 'vim-airline/vim-airline'
+" unneded because I'm using a console that supports truecolors (Tilix)
 "Plugin 'vim-scripts/CSApprox'
 Plugin 'vim-scripts/reorder-tabs'
-"Plugin 'vim-syntastic/syntastic'
 Plugin 'w0rp/ale'
 Plugin 'xolox/vim-colorscheme-switcher'
 Plugin 'xolox/vim-misc'
@@ -117,7 +119,6 @@ Plugin 'junegunn/fzf.vim'
 Plugin 'SirVer/ultisnips'
 Plugin 'honza/vim-snippets'
 Plugin 'Valloric/YouCompleteMe'
-"Plugin 'nixprime/cpsm'
 Plugin 'idanarye/vim-dutyl'
 Plugin 'kiith-sa/DSnips'
 Plugin 'tomlion/vim-solidity'
@@ -373,10 +374,10 @@ let mapleader = ","
 " When I use a Spanish keyboard I still want to use these keys
 " without pressing shift
 "map - /
-"nmap ñ :
-"nmap Ñ :
+nmap ñ :
+nmap Ñ :
 "imap º <esc>
-"nmap ç ^
+map ç ^
 "nmap ¡ `
 
 " map Tab/ShiftTab to next/prev tab
@@ -527,11 +528,6 @@ nmap <leader>css :source ~\.vim\session\default<cr>
 " ,sp, ,snp set paste, set no paste modes
 nmap <leader>sp :set paste<cr>
 nmap <leader>np :set nopaste<cr>
-
-" Manual SyntasticCheck for the languages where I've the check-on-write disabled (like D)
-nmap <leader>sy :SyntasticCheck<cr>
-" MyPy
-nmap <leader>m :SyntasticCheck mypy<cr>
 
 " ,1 Put === lines above and below the current line
 nnoremap <leader>1 yyPVr=jyypVr=k
@@ -736,34 +732,6 @@ let g:yankring_replace_n_nkey = '<c-k>'
 " <c-y>j join/separate block => <div></div> => <div/>
 " <c-y>, if you write 'lorem' it will expand to a lorem ipsum
 
-" Syntastic: :Error to show the error listing windows
-" :Error to show the error listing windows
-" Disabled with the plugin:
-"set statusline+=%#warningmsg#
-"set statusline+=%{SyntasticStatuslineFlag()}
-"set statusline+=%*
-"let g:syntastic_aggregate_errors = 1
-"let g:syntastic_python_checkers          = ['flake8']
-"let g:syntastic_go_checkers              = ['go']
-"let g:syntastic_python_flake8_post_args  = '--ignore=E501,E221,E265,E303,E302,E701,E251,E241,'
-"let g:syntastic_python_flake8_post_args .= 'E128,E401,E301,E126,E225,E211,E226,E261,E127,E702,'
-"let g:syntastic_python_flake8_post_args .= 'E123,E124,E129,E201,E231,E262,E202,E203,E125,E228,'
-"let g:syntastic_python_flake8_post_args .= 'E305,E116'
-"let g:syntastic_always_populate_loc_list = 1
-"let g:syntastic_auto_loc_list            = 0
-"let g:syntastic_check_on_open            = 1
-"let g:syntastic_python_flake8_exe = 'python3 -m flake8'
-
-" Previously disabled:
-"let g:syntastic_debug = 0
-"let g:syntastic_d_compiler               = "$HOME/bin/dub-syntastic"
-"let g:syntastic_mode_map                 = { 'mode': 'active' }
-"let g:syntastic_mode_map                 = { 'mode': 'active', 'passive_filetypes': ['d'] }
-"let g:syntastic_check_on_wq              = 0
-
-"let g:syntastic_python_mypy_exec='/home/juanjux/neme/mypy.sh'
-
-
 " Ale: 
 let g:ale_python_flake8_args = '--ignore=E122,E123,E126,E128,E201,E202,E203,E221,E251,E501'
 let g:ale_python_pylint_options = '-rcfile ~/.vim/pylint_rc'
@@ -785,11 +753,11 @@ let g:pymode_max_line_length  = 90
 let g:pymode_indent           = 1
 let g:pymode_folding          = 0
 let g:pymode_run_bind         = '<leader>ru'
-" These things are better done by jedi-vim or Syntastic
+" These things are better done by jedi-vim or ALE
 let g:pymode_rope            = 0
 let g:pymode_rope_completion = 0
 let g:pymode_doc             = 0
-" Better done by Syntastic
+" Better done by ALE
 let g:pymode_lint            = 0
 let g:pymode_python = 'python3'
 
