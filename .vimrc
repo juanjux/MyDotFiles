@@ -1,10 +1,215 @@
 " ========================================================
+" === PLUGINS                      =======================
+" ========================================================
+
+filetype off
+"=============================================================================
+" Vundle plugin manager
+
+" To install it on a new Vim:
+" git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+" git submodule update
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+
+Plugin 'VundleVim/Vundle.vim'
+
+"=============================================================================
+" Auto save when exiting insert mode or changes are done in normal mode. Disabled
+
+" by :AutoSaveToggle
+Plugin '907th/vim-auto-save'
+
+"=============================================================================
+" Show the matching parenthesis/bracket/etc
+
+Plugin 'matchparenpp'
+"=============================================================================
+" Register buffer, also allows to copy and paste between different vim instances
+" using an external file. ",yy" for seeing the ring, control-p after pasting
+" to cycle between previous yanks
+
+Plugin 'YankRing.vim'
+
+"=============================================================================
+
+Plugin 'ervandew/supertab'
+
+"=============================================================================
+" Highlight matching HTML tags
+Plugin 'Valloric/MatchTagAlways'
+
+"=============================================================================
+" :rename command to rename current file
+
+Plugin 'danro/rename.vim'
+
+"=============================================================================
+" Jump quickly to any word in the window, ',e' to activate
+
+Plugin 'easymotion/vim-easymotion'
+
+"=============================================================================
+" Lots of colorschemes
+
+Plugin 'flazz/vim-colorschemes'
+
+"=============================================================================
+" :NextColorScheme, :PrevColorScheme, :RandomColorScheme
+
+Plugin 'xolox/vim-colorscheme-switcher'
+Plugin 'xolox/vim-misc'
+
+"=============================================================================
+" Align things, ':Tabularize /:' would align by the ':' character, useful to prettify code
+
+Plugin 'godlygeek/tabular'
+
+"=============================================================================
+" Colorized parenthesis
+
+Plugin 'junegunn/rainbow_parentheses.vim'
+
+"=============================================================================
+" 'gof' for opening a file manager on the buffer's directory, 'got' for a terminal
+" disabled: only really useful on Windows which luckily I'm not force to use anymore:
+
+"Plugin 'justinmk/vim-gtfo' 
+
+"=============================================================================
+" Tag lists (method, var, classes, etc), IDE-style, ',tb' to toggle
+
+Plugin 'majutsushi/tagbar'
+
+"=============================================================================
+" Show an useful start screen with recent files, dirs, sessions and
+
+Plugin 'mhinz/vim-startify'
+
+"=============================================================================
+" ',c<space>' to toggle comment code
+
+Plugin 'scrooloose/nerdcommenter'
+
+"=============================================================================
+" Execute code of several languages in the buffer, range, selection...
+
+Plugin 'thinca/vim-quickrun'
+
+"=============================================================================
+" Improves on the Vim % command to understand more things
+
+Plugin 'tmhedberg/matchit'
+
+"=============================================================================
+" Awesome git support
+
+Plugin 'tpope/vim-fugitive'
+" Server for Fugitive's Gbrowse to open the current file on Github
+Plugin 'tpope/vim-rhubarb'
+
+"=============================================================================
+" Operations on surrounds like parenthesis or quotes
+"   ys[object][delim] to add delimiter, like ysiw" for " around inner word
+"   S[delim] add delimiter around visual selection
+"   yss
+"   cs[old][new] change delimiters surrounding: cs'" => ' to ", cs"t => " to html tag
+"   ds[delim]: to remove " delimiters
+
+Plugin 'tpope/vim-surround'
+
+"=============================================================================
+" Allows to use "." to repeat more things, like Surround plugin's actions
+
+Plugin 'tpope/vim-repeat'
+
+"=============================================================================
+" Improved the netrw file explorer using a project manager like split:
+" - to go to the directory of the current buffer
+" I to show the help, gh to toggle dot file hiding
+" . (dot)  on a file to write its path at the : command line (for :Ag, !chmod, etc)
+" cg to to :cd to the currently edited buffer directory
+" ~ to go thome
+
+Plugin 'tpope/vim-vinegar'
+
+"=============================================================================
+" Cool status bar (need laststatus set to 2)
+
+Plugin 'vim-airline/vim-airline'
+
+"=============================================================================
+" Use GVim colors schemes in console Vim if the console allows for more than 256 colors
+" disabled: unneded because I'm using a console that supports truecolors (Tilix)
+
+"Plugin 'vim-scripts/CSApprox'
+
+"=============================================================================
+" Reorder tags, even dragging
+
+Plugin 'vim-scripts/reorder-tabs'
+
+"=============================================================================
+" Asynchronous linting engine, like Synthastic but running constantly
+
+Plugin 'w0rp/ale'
+
+"=============================================================================
+" FZF: Fuzzy searcher for almost anything
+
+Plugin 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plugin 'junegunn/fzf.vim'
+Plugin 'Shougo/vimproc.vim'
+
+"=============================================================================
+
+Plugin 'Valloric/YouCompleteMe'
+
+"=============================================================================
+" Automatically load programming language plugins as needed
+
+Plugin 'sheerun/vim-polyglot'
+
+"=============================================================================
+" Polyglot removes support for tooling on Vim-Go, for some reason
+
+Plugin 'fatih/vim-go'
+
+"=============================================================================
+" D support (not included in polyglot)
+
+" For the D language, integrates DCD (autocomplete), dub, Dscanner, dfmt 
+" (the tools must be installed separately).
+" dcd-client, dcd-server, dscanner, dub and dfmt must be in the path
+
+" Commands:
+" :DUDCDstartserver, :DUDCDstopserver, :DUDCDrestartserver, :DUDCDclearcache,
+
+Plugin 'idanarye/vim-dutyl'
+
+"=============================================================================
+" Distraction-free mode
+
+Plugin 'junegunn/goyo.vim'
+
+"=============================================================================
+" Heuristically adjust shiftwidth and expandtab based on the file contents.
+
+Plugin 'tpope/vim-sleuth'
+
+"=============================================================================
+call vundle#end()
+
+
+" ========================================================
 " === BASIC CONFIGURATION  ===============================
 " ========================================================
 
 behave xterm
 syntax on
 filetype plugin indent on
+set nocompatible
+
 set vb t_vb=                   " no bells please
 set noerrorbells               " idem
 "set list  lcs=tab:»·,eol:¬      show invisible characters line newline or tabs
@@ -77,282 +282,6 @@ autocmd FileType c,cpp,java,php,ruby,python,go,nim,d,java autocmd BufWritePre <b
 noremap  <C-S>		:update<CR>
 vnoremap <C-S>		<C-C>:update<CR>
 inoremap <C-S>		<C-O>:update<CR>
-
-
-" ========================================================
-" === PLUGINS CONFIGURATION =======================
-" ========================================================
-set nocompatible
-filetype off
-
-"=============================================================================
-" Vundle plugin manager
-
-" To install it on a new Vim:
-" git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
-" git submodule update
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
-Plugin 'VundleVim/Vundle.vim'
-
-"=============================================================================
-" Auto save when exiting insert mode or changes are done in normal mode. Disabled
-
-" by :AutoSaveToggle
-Plugin '907th/vim-auto-save'
-let g:auto_save = 1 
-let g:auto_save_silent = 1 
-
-"=============================================================================
-" Show the matching parenthesis/bracket/etc
-
-Plugin 'matchparenpp'
-
-"=============================================================================
-" Register buffer, also allows to copy and paste between different vim instances
-" using an external file. ",yy" for seeing the ring, control-p after pasting
-" to cycle between previous yanks
-
-Plugin 'YankRing.vim'
-
-" use c-j and c-k to paste prev/next from the ring:
-let g:yankring_history_dir="~/.vim"
-let g:yankring_replace_n_pkey = '<c-j>'
-let g:yankring_replace_n_nkey = '<c-k>'
-"=============================================================================
-
-"=============================================================================
-" Complete with tab, also makes YCM and UltiSnips play nice together
-
-Plugin 'ervandew/supertab'
-let g:SuperTabDefaultCompletionType = '<C-n>'
-
-"=============================================================================
-" Highlight matching HTML tags
-Plugin 'Valloric/MatchTagAlways'
-
-"=============================================================================
-" :rename command to rename current file
-
-Plugin 'danro/rename.vim'
-
-"=============================================================================
-" Jump quickly to any word in the window, ',e' to activate
-
-Plugin 'easymotion/vim-easymotion'
-" ,e jump to word
-nmap <leader>e <Plug>(easymotion-bd-w)
-" ,f easy motion search character
-nmap <leader>f <Plug>(easymotion-bd-f)
-" ,j easy motion line
-nmap <leader>j <Plug>(easymotion-bd-jk)
-
-"=============================================================================
-" Lots of colorschemes
-
-Plugin 'flazz/vim-colorschemes'
-
-"=============================================================================
-" :NextColorScheme, :PrevColorScheme, :RandomColorScheme
-
-Plugin 'xolox/vim-colorscheme-switcher'
-Plugin 'xolox/vim-misc'
-
-"=============================================================================
-" Align things, ':Tabularize /:' would align by the ':' character, useful to prettify code
-
-Plugin 'godlygeek/tabular'
-
-"=============================================================================
-" Colorized parenthesis
-
-Plugin 'junegunn/rainbow_parentheses.vim'
-let g:rainbow#max_level = 16
-let g:rainbow#pairs = [['(', ')'], ['[', ']']]
-
-"=============================================================================
-" 'gof' for opening a file manager on the buffer's directory, 'got' for a terminal
-" disabled: only really useful on Windows which luckily I'm not force to use anymore:
-
-"Plugin 'justinmk/vim-gtfo' 
-
-"=============================================================================
-" Tag lists (method, var, classes, etc), IDE-style, ',tb' to toggle
-
-Plugin 'majutsushi/tagbar'
-
-"=============================================================================
-" Show an useful start screen with recent files, dirs, sessions and
-
-Plugin 'mhinz/vim-startify'
-
-"=============================================================================
-" ',c<space>' to toggle comment code
-
-Plugin 'scrooloose/nerdcommenter'
-
-"=============================================================================
-" Execute code of several languages in the buffer, range, selection...
-
-Plugin 'thinca/vim-quickrun'
-
-"=============================================================================
-" Improves on the Vim % command to understand more things
-
-Plugin 'tmhedberg/matchit'
-
-"=============================================================================
-" Awesome git support
-
-Plugin 'tpope/vim-fugitive'
-" Server for Fugitive's Gbrowse to open the current file on Github
-Plugin 'tpope/vim-rhubarb'
-
-"=============================================================================
-" Operations on surrounds like parenthesis or quotes
-"   ys[object][delim] to add delimiter, like ysiw" for " around inner word
-"   S[delim] add delimiter around visual selection
-"   yss
-"   cs[old][new] change delimiters surrounding: cs'" => ' to ", cs"t => " to html tag
-"   ds[delim]: to remove " delimiters
-
-Plugin 'tpope/vim-surround'
-
-"=============================================================================
-" Allows to use "." to repeat more things, like Surround plugin's actions
-
-Plugin 'tpope/vim-repeat'
-
-"=============================================================================
-" Improved the netrw file explorer using a project manager like split:
-" - to go to the directory of the current buffer
-" I to show the help, gh to toggle dot file hiding
-" . (dot)  on a file to write its path at the : command line (for :Ag, !chmod, etc)
-" cg to to :cd to the currently edited buffer directory
-" ~ to go thome
-
-Plugin 'tpope/vim-vinegar'
-
-"=============================================================================
-" Cool status bar (need laststatus set to 2)
-
-Plugin 'vim-airline/vim-airline'
-set laststatus=2
-
-"=============================================================================
-" Use GVim colors schemes in console Vim if the console allows for more than 256 colors
-" disabled: unneded because I'm using a console that supports truecolors (Tilix)
-
-"Plugin 'vim-scripts/CSApprox'
-
-"=============================================================================
-" Reorder tags, even dragging
-
-Plugin 'vim-scripts/reorder-tabs'
-
-"=============================================================================
-" Asynchronous linting engine, like Synthastic but running constantly
-
-Plugin 'w0rp/ale'
-let g:ale_python_flake8_args = '--ignore=E122,E123,E126,E128,E201,E202,E203,E221,E251,E501'
-let g:ale_python_pylint_options = '-rcfile ~/.vim/pylint_rc'
-
-"=============================================================================
-" FZF: Fuzzy searcher for almost anything
-
-Plugin 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-Plugin 'junegunn/fzf.vim'
-" File preview using Highlight:
-let g:fzf_files_options =
-  \ '--preview "(highlight -O ansi {} || cat {}) 2> /dev/null | head -'.&lines.'"'
-
-" Same for :Ag (use :Ag! for the preview or press ?)
-command! -bang -nargs=* Ag
-  \ call fzf#vim#ag(<q-args>,
-  \                 <bang>0 ? fzf#vim#with_preview('up:60%')
-  \                         : fzf#vim#with_preview('right:50%:hidden', '?'),
-  \                 <bang>0)
-" Shortcuts
-nmap \b :Buffers<cr>
-nmap \t :BTags<cr>
-nmap \f :GFiles<cr>
-nmap \l :Lines<cr>
-nmap \c :Commands<cr>
-nmap \a :Ag<cr>
-nmap \\ :tabnew<cr>:History<cr>
-nmap \p :History<cr>
-
-imap <c-x><c-k> <plug>(fzf-complete-word)
-imap <c-x><c-f> <plug>(fzf-complete-path)
-imap <c-x><c-j> <plug>(fzf-complete-file-ag)
-imap <c-x><c-l> <plug>(fzf-complete-line)
-
-" Advanced customization using autoload functions
-inoremap <expr> <c-x><c-k> fzf#vim#complete#word({'left': '15%'})
-
-" real time completion, needs Python and Vimproc, doesn't work on Windows
-
-Plugin 'Shougo/vimproc.vim'
-Plugin 'Valloric/YouCompleteMe'
-let g:ycm_key_list_select_completion = ['<C-n>', '<Down>']
-let g:ycm_key_list_previous_completion = ['<C-p>', '<Up>']
-
-"=============================================================================
-" Automatically load programming language plugins as needed
-
-Plugin 'sheerun/vim-polyglot'
-
-" NimVim recommends these settings:
-fun! JumpToDef()
-  if exists("*GotoDefinition_" . &filetype)
-    call GotoDefinition_{&filetype}()
-  else
-    exe "norm! \<C-]>"
-  endif
-endf
-nn <M-g> :call JumpToDef()<cr>
-ino <M-g> <esc>:call JumpToDef()<cr>i
-
-" Vim-Go settings:
-let g:go_highlight_functions = 1
-let g:go_highlight_methods = 1
-let g:go_highlight_fields = 1
-let g:go_highlight_types = 1
-let g:go_highlight_operators = 1
-let g:go_highlight_build_constraints = 1
-let g:go_fmt_command = "goimports"
-let g:go_fmt_autosave = 0
-
-" Python mode: don't complete function parameters, it's annoying
-autocmd FileType python setlocal completeopt-=preview
-
-"=============================================================================
-" D support (not included in polyglot)
-
-" For the D language, integrates DCD (autocomplete), dub, Dscanner, dfmt 
-" (the tools must be installed separately).
-" dcd-client, dcd-server, dscanner, dub and dfmt must be in the path
-
-" Commands:
-" :DUDCDstartserver, :DUDCDstopserver, :DUDCDrestartserver, :DUDCDclearcache,
-
-Plugin 'idanarye/vim-dutyl'
-let g:dutyl_neverAddClosingParen=0
-autocmd filetype d nnoremap gd :DUjump<cr>
-
-"=============================================================================
-" Distraction-free mode
-
-Plugin 'junegunn/goyo.vim'
-
-"=============================================================================
-" Heuristically adjust shiftwidth and expandtab based on the file contents.
-
-Plugin 'tpope/vim-sleuth'
-
-"=============================================================================
-
-call vundle#end()
 
 " =========================================================
 " === TABS, INDENTATION AND FORMATTING ====================
@@ -803,5 +732,116 @@ set completeopt=longest,menuone
 " not infernal-pink color for the complete menu
 highlight Pmenu guibg=brown gui=bold
 
-" XXX debug why this needs to be called here
+
+" ========================================================
+" === PLUGGIN SETTINGS     ===============================
+" ========================================================
+
+" EasyMotion ==========
+
+" ,e jump to word
+nmap <leader>e <Plug>(easymotion-bd-w)
+" ,f easy motion search character
+nmap <leader>f <Plug>(easymotion-bd-f)
+" ,j easy motion line
+nmap <leader>j <Plug>(easymotion-bd-jk)
+
+" Rainbow Parentehsis ==========
+
+let g:rainbow#max_level = 16
+let g:rainbow#pairs = [['(', ')'], ['[', ']']]
 call g:rainbow_parentheses#activate()
+
+" AutoSave =========
+
+let g:auto_save = 1 
+let g:auto_save_silent = 1 
+
+" YankRing ==========
+
+" use c-j and c-k to paste prev/next from the ring:
+let g:yankring_history_dir="~/.vim"
+let g:yankring_replace_n_pkey = '<c-j>'
+let g:yankring_replace_n_nkey = '<c-k>'
+
+" Supertab ===========
+
+" Complete with tab, also makes YCM and UltiSnips play nice together
+let g:SuperTabDefaultCompletionType = '<C-n>'
+
+" Airline ==========
+
+set laststatus=2
+
+" ALE =========
+
+let g:ale_python_flake8_args = '--ignore=E122,E123,E126,E128,E201,E202,E203,E221,E251,E501'
+let g:ale_python_pylint_options = '-rcfile ~/.vim/pylint_rc'
+
+" FZF and Vimproc =========
+
+" File preview using Highlight:
+let g:fzf_files_options =
+  \ '--preview "(highlight -O ansi {} || cat {}) 2> /dev/null | head -'.&lines.'"'
+
+" Same for :Ag (use :Ag! for the preview or press ?)
+command! -bang -nargs=* Ag
+  \ call fzf#vim#ag(<q-args>,
+  \                 <bang>0 ? fzf#vim#with_preview('up:60%')
+  \                         : fzf#vim#with_preview('right:50%:hidden', '?'),
+  \                 <bang>0)
+" Shortcuts
+nmap \b :Buffers<cr>
+nmap \t :BTags<cr>
+nmap \f :GFiles<cr>
+nmap \l :Lines<cr>
+nmap \c :Commands<cr>
+nmap \a :Ag<cr>
+nmap \\ :tabnew<cr>:History<cr>
+nmap \p :History<cr>
+
+imap <c-x><c-k> <plug>(fzf-complete-word)
+imap <c-x><c-f> <plug>(fzf-complete-path)
+imap <c-x><c-j> <plug>(fzf-complete-file-ag)
+imap <c-x><c-l> <plug>(fzf-complete-line)
+
+" Advanced customization using autoload functions
+inoremap <expr> <c-x><c-k> fzf#vim#complete#word({'left': '15%'})
+
+" real time completion, needs Python and Vimproc, doesn't work on Windows
+
+" YouCompleteMe =========
+
+let g:ycm_key_list_select_completion = ['<C-n>', '<Down>']
+let g:ycm_key_list_previous_completion = ['<C-p>', '<Up>']
+
+" Polyglot and languages ========
+
+" NimVim recommends these settings:
+fun! JumpToDef()
+  if exists("*GotoDefinition_" . &filetype)
+    call GotoDefinition_{&filetype}()
+  else
+    exe "norm! \<C-]>"
+  endif
+endf
+nn <M-g> :call JumpToDef()<cr>
+ino <M-g> <esc>:call JumpToDef()<cr>i
+
+" Vim-Go settings:
+let g:go_highlight_functions = 1
+let g:go_highlight_methods = 1
+let g:go_highlight_fields = 1
+let g:go_highlight_types = 1
+let g:go_highlight_operators = 1
+let g:go_highlight_build_constraints = 1
+let g:go_fmt_command = "goimports"
+let g:go_fmt_autosave = 0
+
+" Python mode: don't complete function parameters, it's annoying
+autocmd FileType python setlocal completeopt-=preview
+
+" Dutyl
+
+let g:dutyl_neverAddClosingParen=0
+autocmd filetype d nnoremap gd :DUjump<cr>
