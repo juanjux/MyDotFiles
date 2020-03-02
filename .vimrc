@@ -16,14 +16,20 @@ Plugin 'VundleVim/Vundle.vim'
 
 "=============================================================================
 " Auto save when exiting insert mode or changes are done in normal mode. Disabled
-
 " by :AutoSaveToggle
+"
 Plugin '907th/vim-auto-save'
+
+
+"=============================================================================
+" Grammer check: GrammarousCheck. Requires Java 8+
+
+Plugin 'rhysd/vim-grammarous'
 
 "=============================================================================
 " Show the matching parenthesis/bracket/etc
-
-Plugin 'matchparenpp'
+" Disabled: bugs
+"Plugin 'matchparenpp'
 "=============================================================================
 " Register buffer, also allows to copy and paste between different vim instances
 " using an external file. ",yy" for seeing the ring, control-p after pasting
@@ -33,11 +39,11 @@ Plugin 'YankRing.vim'
 
 "=============================================================================
 
-Plugin 'ervandew/supertab'
+"Plugin 'ervandew/supertab'
 
 "=============================================================================
 " Highlight matching HTML tags
-Plugin 'Valloric/MatchTagAlways'
+"Plugin 'Valloric/MatchTagAlways'
 
 "=============================================================================
 " :rename command to rename current file
@@ -152,7 +158,17 @@ Plugin 'vim-scripts/reorder-tabs'
 "=============================================================================
 " Asynchronous linting engine, like Synthastic but running constantly
 
-Plugin 'w0rp/ale'
+"Plugin 'w0rp/ale'
+" Disabled: I prefer COC now for errors
+
+"=============================================================================
+" COC autocomplete using intellisense. Use :CocCommand to run specific commands.
+" :CocConfig to edit the config file.
+
+Plugin 'neoclide/coc.nvim'
+hi! CocErrorVirtualText guifg=#d1666a
+"hi! CocInfoSign guibg=#353b45
+"hi! CocWarningSign guifg=#d1cd66
 
 "=============================================================================
 " FZF: Fuzzy searcher for almost anything
@@ -163,12 +179,13 @@ Plugin 'Shougo/vimproc.vim'
 
 "=============================================================================
 
-Plugin 'Valloric/YouCompleteMe'
+"Plugin 'Valloric/YouCompleteMe'
 
 "=============================================================================
 " Automatically load programming language plugins as needed
 
-Plugin 'sheerun/vim-polyglot'
+" Disabled: causes problems with other language plugins (especially vim-go)
+"Plugin 'sheerun/vim-polyglot'
 
 "=============================================================================
 " Polyglot removes support for tooling on Vim-Go, for some reason
@@ -198,12 +215,25 @@ Plugin 'junegunn/goyo.vim'
 Plugin 'tpope/vim-sleuth'
 
 "=============================================================================
+" UltiSnips
+" :UltiSnipsEdit to edit the config for the current filetype
+Plugin 'sirver/ultisnips'
+
+
+let g:UltiSnipsExpandTrigger = '<tab>'
+let g:UltiSnipsJumpForwardTrigger = '<tab>'
+let g:UltiSnipsJumpBackwardTrigger = '<s-tab>'
+let g:UltiSnipsEditSplit="vertical"
+let g:UltiSnipsSnippetsDir="/home/juanjux/.vim/snippets"
+
+"=============================================================================
 call vundle#end()
 
 
 " ========================================================
 " === BASIC CONFIGURATION  ===============================
 " ========================================================
+
 
 behave xterm
 syntax on
@@ -289,7 +319,7 @@ inoremap <C-S>		<C-O>:update<CR>
 
 " default line length, can be changed depending on the filemode
 let my_linelen = 82
-set colorcolumn=90  " color text written past the column
+set colorcolumn=80  " color text written past the column
 
 " 4 space tabs, anything else is wrong
 set expandtab
@@ -447,6 +477,7 @@ command! WriteMode call s:WriteMode()
 " gn "select next search match", e.g. cgn deletes and insert on the next search match
 
 " === BASIC ===
+imap jk <Esc>
 let mapleader = ","
 " When I use a Spanish keyboard I still want to use these keys
 " without pressing shift
@@ -606,6 +637,9 @@ nnoremap <leader>1 yyPVr=jyypVr=k
 nmap <leader>cp :let @+ = expand("%:p:h")<cr>:echo @+<cr>
 
 " Replace the timestamp under cursor for a date. Must be a "word" so separate
+
+
+" so separate
 " using spaces or other word delimiters before calling it
 nmap <leader>ts <esc>"mciw<c-r>=strftime("%d/%m/%y %H:%M:%S", @m)
 
@@ -620,7 +654,7 @@ nmap <leader>ts <esc>"mciw<c-r>=strftime("%d/%m/%y %H:%M:%S", @m)
 
 "set background=light
 "colors gruvbox
-"colors professional
+"colors professional_jjux
 "colors juanjux-light
 "colors summerfruit
 
@@ -629,7 +663,8 @@ set background=dark
 "colors northsky
 "colors jelleybeans
 "colors molokai
-colors iceberg
+"colors monokain
+colors chroma
 "let g:solarized_termcolors=256
 "colors solarized
 "colors flattened_dark
@@ -767,7 +802,7 @@ let g:yankring_replace_n_nkey = '<c-k>'
 " Supertab ===========
 
 " Complete with tab, also makes YCM and UltiSnips play nice together
-let g:SuperTabDefaultCompletionType = '<C-n>'
+"let g:SuperTabDefaultCompletionType = '<C-n>'
 
 " Airline ==========
 
@@ -775,7 +810,7 @@ set laststatus=2
 
 " ALE =========
 
-let g:ale_python_flake8_args = '--ignore=E122,E123,E126,E128,E201,E202,E203,E221,E251,E501'
+let g:ale_python_flake8_options = '--ignore=E122,E123,E126,E128,E201,E202,E203,E221,E251,E501'
 let g:ale_python_pylint_options = '-rcfile ~/.vim/pylint_rc'
 
 " FZF and Vimproc =========
@@ -841,7 +876,31 @@ let g:go_fmt_autosave = 0
 " Python mode: don't complete function parameters, it's annoying
 autocmd FileType python setlocal completeopt-=preview
 
-" Dutyl
+augroup uast_fp
+  au!
+  autocmd BufNewFile,BufRead *.uast,*.native   set syntax=yaml
+augroup END
 
+" Dutyl
 let g:dutyl_neverAddClosingParen=0
 autocmd filetype d nnoremap gd :DUjump<cr>
+
+" Coc.nvim ======
+set cmdheight=2         " Better display on messages on coc.nvim
+set updatetime=300      " Better experience for diagnostic messages for coc.nvim
+set shortmess+=c        " don't give |ins-completion-menu| messages.
+set signcolumn=yes      " always show sigcolumns
+  " Use tab for trigger completion with characters ahead and navigate.
+  " Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+  " Use <cr> to confirm completion, `<C-g>u` means break undo chain at current position.
+  " Coc only does snippet and additional edit on confirm.
+inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
