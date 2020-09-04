@@ -20,30 +20,12 @@ Plugin 'VundleVim/Vundle.vim'
 "
 Plugin '907th/vim-auto-save'
 
-
+let g:auto_save = 1 
+let g:auto_save_silent = 1 
 "=============================================================================
 " Grammer check: GrammarousCheck. Requires Java 8+
 
 Plugin 'rhysd/vim-grammarous'
-
-"=============================================================================
-" Show the matching parenthesis/bracket/etc
-" Disabled: bugs
-"Plugin 'matchparenpp'
-"=============================================================================
-" Register buffer, also allows to copy and paste between different vim instances
-" using an external file. ",yy" for seeing the ring, control-p after pasting
-" to cycle between previous yanks
-
-Plugin 'YankRing.vim'
-
-"=============================================================================
-
-"Plugin 'ervandew/supertab'
-
-"=============================================================================
-" Highlight matching HTML tags
-"Plugin 'Valloric/MatchTagAlways'
 
 "=============================================================================
 " :rename command to rename current file
@@ -75,6 +57,9 @@ Plugin 'godlygeek/tabular'
 " Colorized parenthesis
 
 Plugin 'junegunn/rainbow_parentheses.vim'
+
+let g:rainbow#max_level = 16
+let g:rainbow#pairs = [['(', ')'], ['[', ']']]
 
 "=============================================================================
 " 'gof' for opening a file manager on the buffer's directory, 'got' for a terminal
@@ -144,6 +129,7 @@ Plugin 'tpope/vim-vinegar'
 
 Plugin 'vim-airline/vim-airline'
 
+set laststatus=2
 "=============================================================================
 " Use GVim colors schemes in console Vim if the console allows for more than 256 colors
 " disabled: unneded because I'm using a console that supports truecolors (Tilix)
@@ -161,15 +147,33 @@ Plugin 'vim-scripts/reorder-tabs'
 "Plugin 'w0rp/ale'
 " Disabled: I prefer COC now for errors
 
+"let g:ale_python_flake8_options = '--ignore=E122,E123,E126,E128,E201,E202,E203,E221,E251,E501,E503'
+"let g:ale_python_pylint_options = '-rcfile ~/.vim/pylint_rc'
 "=============================================================================
 " COC autocomplete using intellisense. Use :CocCommand to run specific commands.
 " :CocConfig to edit the config file.
 
 Plugin 'neoclide/coc.nvim'
 hi! CocErrorVirtualText guifg=#d1666a
-"hi! CocInfoSign guibg=#353b45
-"hi! CocWarningSign guifg=#d1cd66
 
+set cmdheight=2         " Better display on messages on coc.nvim
+set updatetime=100      " Better experience for diagnostic messages for coc.nvim
+set shortmess+=c        " don't give |ins-completion-menu| messages.
+set signcolumn=yes      " always show sigcolumns
+  " Use tab for trigger completion with characters ahead and navigate.
+  " Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+  " Use <cr> to confirm completion, `<C-g>u` means break undo chain at current position.
+  " Coc only does snippet and additional edit on confirm.
+inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 "=============================================================================
 " FZF: Fuzzy searcher for almost anything
 
@@ -177,21 +181,45 @@ Plugin 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plugin 'junegunn/fzf.vim'
 Plugin 'Shougo/vimproc.vim'
 
+let g:fzf_files_options =
+  \ '--preview "(highlight -O ansi {} || cat {}) 2> /dev/null | head -'.&lines.'"'
+
+" Same for :Ag (use :Ag! for the preview or press ?)
+command! -bang -nargs=* Ag
+  \ call fzf#vim#ag(<q-args>,
+  \                 <bang>0 ? fzf#vim#with_preview('up:60%')
+  \                         : fzf#vim#with_preview('right:50%:hidden', '?'),
+  \                 <bang>0)
+" Shortcuts
+nmap \b :Buffers<cr>
+nmap \t :BTags<cr>
+nmap \f :GFiles<cr>
+nmap \l :Lines<cr>
+nmap \c :Commands<cr>
+nmap \a :Ag<cr>
+nmap \\ :tabnew<cr>:History<cr>
+nmap \p :History<cr>
+
+imap <c-x><c-k> <plug>(fzf-complete-word)
+imap <c-x><c-f> <plug>(fzf-complete-path)
+imap <c-x><c-j> <plug>(fzf-complete-file-ag)
+imap <c-x><c-l> <plug>(fzf-complete-line)
+
+" Advanced customization using autoload functions
+inoremap <expr> <c-x><c-k> fzf#vim#complete#word({'left': '15%'})
+
 "=============================================================================
-
-"Plugin 'Valloric/YouCompleteMe'
-
-"=============================================================================
-" Automatically load programming language plugins as needed
-
-" Disabled: causes problems with other language plugins (especially vim-go)
-"Plugin 'sheerun/vim-polyglot'
-
-"=============================================================================
-" Polyglot removes support for tooling on Vim-Go, for some reason
-
+" Vim Go
 Plugin 'fatih/vim-go'
 
+let g:go_highlight_functions = 1
+let g:go_highlight_methods = 1
+let g:go_highlight_fields = 1
+let g:go_highlight_types = 1
+let g:go_highlight_operators = 1
+let g:go_highlight_build_constraints = 1
+let g:go_fmt_command = "goimports"
+let g:go_fmt_autosave = 0
 "=============================================================================
 " D support (not included in polyglot)
 
@@ -204,6 +232,8 @@ Plugin 'fatih/vim-go'
 
 Plugin 'idanarye/vim-dutyl'
 
+let g:dutyl_neverAddClosingParen=0
+autocmd filetype d nnoremap gd :DUjump<cr>
 "=============================================================================
 " Distraction-free mode
 
@@ -217,16 +247,43 @@ Plugin 'tpope/vim-sleuth'
 "=============================================================================
 " UltiSnips
 " :UltiSnipsEdit to edit the config for the current filetype
-Plugin 'sirver/ultisnips'
+"Plugin 'sirver/ultisnips'
 
 
-let g:UltiSnipsExpandTrigger = '<tab>'
-let g:UltiSnipsJumpForwardTrigger = '<tab>'
-let g:UltiSnipsJumpBackwardTrigger = '<s-tab>'
-let g:UltiSnipsEditSplit="vertical"
-let g:UltiSnipsSnippetsDir="/home/juanjux/.vim/snippets"
+"let g:UltiSnipsExpandTrigger = '<tab>'
+"let g:UltiSnipsJumpForwardTrigger = '<tab>'
+"let g:UltiSnipsJumpBackwardTrigger = '<s-tab>'
+"let g:UltiSnipsEditSplit="vertical"
+"let g:UltiSnipsSnippetsDir="/home/juanjux/.vim/snippets"
 
 "=============================================================================
+" PEP8 Indent
+Plugin 'Vimjas/vim-python-pep8-indent'
+
+" would conflict otherwise
+let g:pymode_indent = 0
+
+"=============================================================================
+" bbye: Delete buffers without changing the layout (:Bdelete or <leader>q mapping)
+Plugin 'moll/vim-bbye'
+
+nnoremap <Leader>q :Bdelete<CR>
+"=============================================================================
+" peekaboo: show the contents of registers before using them
+Plugin 'junegunn/vim-peekaboo'
+
+let g:peekaboo_window="vert bo 60new"
+let g:peekaboo_compact=1
+"=============================================================================
+" clever-f hightlight character searches with f and t
+Plugin 'rhysd/clever-f.vim'
+
+map ; <Plug>(clever-f-repeat-forward)
+map , <Plug>(clever-f-repeat-back)
+
+" ========================================================
+" END OF THE PLUGINS SECTION
+" ========================================================
 call vundle#end()
 
 
@@ -234,13 +291,13 @@ call vundle#end()
 " === BASIC CONFIGURATION  ===============================
 " ========================================================
 
-
 behave xterm
 syntax on
 filetype plugin indent on
 set nocompatible
 
 set vb t_vb=                   " no bells please
+set novisualbell
 set noerrorbells               " idem
 "set list  lcs=tab:»·,eol:¬      show invisible characters line newline or tabs
 set switchbuf=usetab,newtab    " switch to a buffer opened on a tab switches to that tab
@@ -286,7 +343,7 @@ let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
 let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
 "set t_Co=256            " more colors
 set term=xterm-256color
-set t_ut=               " this is needed so the background is correctly shown under tmux
+let &t_ut=''            " this is needed so the background is correctly shown under tmux
 
 " when opening a buffer, jump to the last known position
 autocmd BufReadPost *
@@ -652,19 +709,20 @@ nmap <leader>ts <esc>"mciw<c-r>=strftime("%d/%m/%y %H:%M:%S", @m)
 " Uncomment the first like of every block for setting the right background
 " and then the specific colorscheme
 
-"set background=light
+set background=light
+colors calm_light
 "colors gruvbox
 "colors professional_jjux
 "colors juanjux-light
 "colors summerfruit
 
-set background=dark
+"set background=dark
 "colors obsidian
 "colors northsky
 "colors jelleybeans
 "colors molokai
 "colors monokain
-colors chroma
+"colors chroma
 "let g:solarized_termcolors=256
 "colors solarized
 "colors flattened_dark
@@ -674,6 +732,11 @@ hi link EasyMotionTarget ErrorMsg
 hi link EasyMotionShade  Comment
 hi link EasyMotionTarget2First ErrorMsg
 hi link EasyMotionTarget2Second Define
+
+" ,e jump to word
+nmap <leader>e <Plug>(easymotion-overwin-w)
+" ,f easy motion search character
+nmap <leader>f <Plug>(easymotion-overwin-f)
 
 " GVIM options:
 
@@ -767,140 +830,11 @@ set completeopt=longest,menuone
 " not infernal-pink color for the complete menu
 highlight Pmenu guibg=brown gui=bold
 
-
 " ========================================================
-" === PLUGGIN SETTINGS     ===============================
+" === PLUGGIN POST-ACTIVATION STUFF   ====================
 " ========================================================
+" Only stuff that cant be activated on the initial plugin section
 
-" EasyMotion ==========
-
-" ,e jump to word
-nmap <leader>e <Plug>(easymotion-bd-w)
-" ,f easy motion search character
-nmap <leader>f <Plug>(easymotion-bd-f)
-" ,j easy motion line
-nmap <leader>j <Plug>(easymotion-bd-jk)
-
-" Rainbow Parentehsis ==========
-
-let g:rainbow#max_level = 16
-let g:rainbow#pairs = [['(', ')'], ['[', ']']]
+" Rainbow parenthesis
 call g:rainbow_parentheses#activate()
 
-" AutoSave =========
-
-let g:auto_save = 1 
-let g:auto_save_silent = 1 
-
-" YankRing ==========
-
-" use c-j and c-k to paste prev/next from the ring:
-let g:yankring_history_dir="~/.vim"
-let g:yankring_replace_n_pkey = '<c-j>'
-let g:yankring_replace_n_nkey = '<c-k>'
-
-" Supertab ===========
-
-" Complete with tab, also makes YCM and UltiSnips play nice together
-"let g:SuperTabDefaultCompletionType = '<C-n>'
-
-" Airline ==========
-
-set laststatus=2
-
-" ALE =========
-
-let g:ale_python_flake8_options = '--ignore=E122,E123,E126,E128,E201,E202,E203,E221,E251,E501'
-let g:ale_python_pylint_options = '-rcfile ~/.vim/pylint_rc'
-
-" FZF and Vimproc =========
-
-" File preview using Highlight:
-let g:fzf_files_options =
-  \ '--preview "(highlight -O ansi {} || cat {}) 2> /dev/null | head -'.&lines.'"'
-
-" Same for :Ag (use :Ag! for the preview or press ?)
-command! -bang -nargs=* Ag
-  \ call fzf#vim#ag(<q-args>,
-  \                 <bang>0 ? fzf#vim#with_preview('up:60%')
-  \                         : fzf#vim#with_preview('right:50%:hidden', '?'),
-  \                 <bang>0)
-" Shortcuts
-nmap \b :Buffers<cr>
-nmap \t :BTags<cr>
-nmap \f :GFiles<cr>
-nmap \l :Lines<cr>
-nmap \c :Commands<cr>
-nmap \a :Ag<cr>
-nmap \\ :tabnew<cr>:History<cr>
-nmap \p :History<cr>
-
-imap <c-x><c-k> <plug>(fzf-complete-word)
-imap <c-x><c-f> <plug>(fzf-complete-path)
-imap <c-x><c-j> <plug>(fzf-complete-file-ag)
-imap <c-x><c-l> <plug>(fzf-complete-line)
-
-" Advanced customization using autoload functions
-inoremap <expr> <c-x><c-k> fzf#vim#complete#word({'left': '15%'})
-
-" real time completion, needs Python and Vimproc, doesn't work on Windows
-
-" YouCompleteMe =========
-
-let g:ycm_key_list_select_completion = ['<C-n>', '<Down>']
-let g:ycm_key_list_previous_completion = ['<C-p>', '<Up>']
-
-" Polyglot and languages ========
-
-" NimVim recommends these settings:
-fun! JumpToDef()
-  if exists("*GotoDefinition_" . &filetype)
-    call GotoDefinition_{&filetype}()
-  else
-    exe "norm! \<C-]>"
-  endif
-endf
-nn <M-g> :call JumpToDef()<cr>
-ino <M-g> <esc>:call JumpToDef()<cr>i
-
-" Vim-Go settings:
-let g:go_highlight_functions = 1
-let g:go_highlight_methods = 1
-let g:go_highlight_fields = 1
-let g:go_highlight_types = 1
-let g:go_highlight_operators = 1
-let g:go_highlight_build_constraints = 1
-let g:go_fmt_command = "goimports"
-let g:go_fmt_autosave = 0
-
-" Python mode: don't complete function parameters, it's annoying
-autocmd FileType python setlocal completeopt-=preview
-
-augroup uast_fp
-  au!
-  autocmd BufNewFile,BufRead *.uast,*.native   set syntax=yaml
-augroup END
-
-" Dutyl
-let g:dutyl_neverAddClosingParen=0
-autocmd filetype d nnoremap gd :DUjump<cr>
-
-" Coc.nvim ======
-set cmdheight=2         " Better display on messages on coc.nvim
-set updatetime=300      " Better experience for diagnostic messages for coc.nvim
-set shortmess+=c        " don't give |ins-completion-menu| messages.
-set signcolumn=yes      " always show sigcolumns
-  " Use tab for trigger completion with characters ahead and navigate.
-  " Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
-function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
-inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-  " Use <cr> to confirm completion, `<C-g>u` means break undo chain at current position.
-  " Coc only does snippet and additional edit on confirm.
-inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"

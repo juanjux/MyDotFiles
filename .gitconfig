@@ -1,14 +1,13 @@
 [user]
+	email = gorthol@pm.me
 	name = Juanjo Alvarez
-	email = juanjo@sourced.tech
-	signingkey = 6180A04C30C822FB56133C44A52FD588B3FE5FE8
 [color]
 	ui = auto
 [push]
 	default = simple
 	followTags = true
 [credential]
-	helper = cache
+	helper = store
 
 [alias]
     prune = fetch -prune
@@ -28,7 +27,6 @@
   followTags = true
   # Because I get sick of telling git to do it manually
   # https://git-scm.com/docs/git-config#git-config-pushfollowTags
-  gpgSign = true
 
 [status]
   showUntrackedFiles = all
@@ -36,16 +34,24 @@
   # https://git-scm.com/docs/git-config#git-config-statusshowUntrackedFiles
 
 [diff]
-  tool = icdiff
+  ;tool = icdiff
+  tool = kitty
+  guitool = kitty.gui
 
 [difftool]
   prompt = false
+  trustExitCode = true
 
 [difftool "icdiff"]
   cmd = /usr/bin/icdiff --line-numbers $LOCAL $REMOTE
 
-[format]
-  signoff = true
+[difftool "kitty"]
+    cmd = kitty +kitten diff $LOCAL $REMOTE
+
+[difftool "kitty.gui"]
+    cmd = kitty +kitten diff $LOCAL $REMOTE
 
 [commit]
-  gpgsign = true
+	gpgsign = true
+[core]
+	excludesfile = /home/juanjux/MyDotFiles/.gitignore
