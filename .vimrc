@@ -709,18 +709,18 @@ nmap <leader>ts <esc>"mciw<c-r>=strftime("%d/%m/%y %H:%M:%S", @m)
 " Uncomment the first like of every block for setting the right background
 " and then the specific colorscheme
 
-set background=light
-colors calm_light
+"set background=light
+"colors calm_light
 "colors gruvbox
 "colors professional_jjux
 "colors juanjux-light
 "colors summerfruit
 
-"set background=dark
+set background=dark
 "colors obsidian
 "colors northsky
 "colors jelleybeans
-"colors molokai
+colors molokai
 "colors monokain
 "colors chroma
 "let g:solarized_termcolors=256
