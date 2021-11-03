@@ -152,28 +152,29 @@ Plugin 'vim-scripts/reorder-tabs'
 "=============================================================================
 " COC autocomplete using intellisense. Use :CocCommand to run specific commands.
 " :CocConfig to edit the config file.
+" Disabled: problematic and slow
 
-Plugin 'neoclide/coc.nvim'
-hi! CocErrorVirtualText guifg=#d1666a
+"Plugin 'neoclide/coc.nvim'
+"hi! CocErrorVirtualText guifg=#d1666a
 
-set cmdheight=2         " Better display on messages on coc.nvim
-set updatetime=100      " Better experience for diagnostic messages for coc.nvim
-set shortmess+=c        " don't give |ins-completion-menu| messages.
-set signcolumn=yes      " always show sigcolumns
-  " Use tab for trigger completion with characters ahead and navigate.
-  " Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
-function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
-inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-  " Use <cr> to confirm completion, `<C-g>u` means break undo chain at current position.
-  " Coc only does snippet and additional edit on confirm.
-inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+"set cmdheight=2         " Better display on messages on coc.nvim
+"set updatetime=100      " Better experience for diagnostic messages for coc.nvim
+"set shortmess+=c        " don't give |ins-completion-menu| messages.
+"set signcolumn=yes      " always show sigcolumns
+  "" Use tab for trigger completion with characters ahead and navigate.
+  "" Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
+"function! s:check_back_space() abort
+  "let col = col('.') - 1
+  "return !col || getline('.')[col - 1]  =~# '\s'
+"endfunction
+"inoremap <silent><expr> <TAB>
+      "\ pumvisible() ? "\<C-n>" :
+      "\ <SID>check_back_space() ? "\<TAB>" :
+      "\ coc#refresh()
+"inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+  "" Use <cr> to confirm completion, `<C-g>u` means break undo chain at current position.
+  "" Coc only does snippet and additional edit on confirm.
+"inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 "=============================================================================
 " FZF: Fuzzy searcher for almost anything
 
@@ -342,8 +343,9 @@ set termguicolors       " true color
 let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
 let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
 "set t_Co=256            " more colors
-set term=xterm-256color
+"set term=xterm-256color
 let &t_ut=''            " this is needed so the background is correctly shown under tmux
+let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 
 " when opening a buffer, jump to the last known position
 autocmd BufReadPost *
@@ -818,14 +820,15 @@ augroup END
 " =========================================================
 
 " By language
-au BufNewFile,BufRead,BufEnter *.d  setf d
-autocmd filetype python set omnifunc=pythoncomplete#Complete
-autocmd filetype javascript set omnifunc=javascriptcomplete#CompleteJS
-autocmd filetype html set omnifunc=htmlcomplete#CompleteTags
-autocmd filetype css set omnifunc=csscomplete#CompleteCSS
+"au BufNewFile,BufRead,BufEnter *.d  setf d
+"autocmd filetype python set omnifunc=pythoncomplete#Complete
+"autocmd filetype javascript set omnifunc=javascriptcomplete#CompleteJS
+"autocmd filetype html set omnifunc=htmlcomplete#CompleteTags
+"autocmd filetype css set omnifunc=csscomplete#CompleteCSS
 
 " show omni menu even when there is only a single entry and don't autocomplete with the first one
-set completeopt=longest,menuone
+set completeopt=longest,menuone,menu,noselect
+set completeopt-=preview
 
 " not infernal-pink color for the complete menu
 highlight Pmenu guibg=brown gui=bold

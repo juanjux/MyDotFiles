@@ -1,5 +1,6 @@
 " Surround plugin emulation for IdeaVim
 set surround
+set easymotion
 
 " TODO: easymotion
 
@@ -95,10 +96,13 @@ vnoremap <f3> :QuickRun<cr>
 
 " This needs the IntelliJ plugin "AceJump", it provides the same functionality
 " that easymotion for Vim
-nmap <leader>e :action AceAction<cr>
+"nmap <leader>e :action AceAction<cr>
+nmap <leader>e <Plug>(easymotion-bd-w)
+nmap <leader>f <Plug>(easymotion-bd-f)
 
 " Comment 
 nmap <leader>c :action CommentByLineComment<cr>
 
 " Remove highlighted search
 nmap <leader><space> :nohl<cr>
+set ideajoin
