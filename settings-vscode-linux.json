@@ -1,0 +1,57 @@
+{
+    "window.zoomLevel": 1,
+    "d.servedPath": "/home/juanjux/.local/share/code-d/bin/serve-d",
+    "d.dcdClientPath": "/home/juanjux/.local/share/code-d/bin/dcd-client",
+    "d.dcdServerPath": "/home/juanjux/.local/share/code-d/bin/dcd-server",
+    "editor.minimap.enabled": false,
+    "dscanner.ignoredKeys": [
+        "dscanner.style.undocumented_declaration"
+    ],
+    "git.enableSmartCommit": true,
+    "d.dubPath": "/home/juanjux/.local/share/code-d/bin/dub",
+    "editor.fontFamily": "JetBrains Mono",
+    "workbench.statusBar.visible": true,
+    "editor.fontWeight": "500",
+    "[Log]": {
+        "editor.fontSize": 12
+    },
+    "editor.autoClosingQuotes": "never",
+    "editor.autoClosingBrackets": "never",
+    "breadcrumbs.enabled": false,
+    "vim.handleKeys": {
+        "<C-d>": true,
+        "<C-u>": true,
+    },
+    "C_Cpp.default.cppStandard": "c++17",
+    "C_Cpp.default.cStandard": "c11",
+    "C_Cpp.experimentalFeatures": "Enabled",
+    "cmake.configureOnOpen": true,
+    "cmake.buildArgs": [
+        "DPYBIND11_PYTHON_VERSION=3.9"
+    ],
+    "cmake.buildDirectory": "${workspaceFolder}",
+    "cmake.buildEnvironment": {
+        "CMAKE_PREFIX_PATH": "/home/juanjux/.local/lib/python3.9/site-packages",
+        "CC": "/usr/bin/clang++"
+    },
+    "cmake.environment": {
+        "CMAKE_PREFIX_PATH": "/home/juanjux/.local/lib/python3.9/site-packages",
+        "CC": "/usr/bin/clang++"
+    },
+    "cmake.configureEnvironment": {
+        "CMAKE_PREFIX_PATH": "/home/juanjux/.local/lib/python3.9/site-packages",
+        "CC": "/usr/bin/clang++"
+    },
+    "cmake.testEnvironment": {
+        "CMAKE_PREFIX_PATH": "/home/juanjux/.local/lib/python3.9/site-packages",
+        "CC": "/usr/bin/clang++"
+    },
+    "cmake.generator": "Unix Makefiles",
+    "editor.renderWhitespace": "none",
+    "editor.renderControlCharacters": false,
+    "terminal.integrated.fontSize": 13,
+    "terminal.integrated.defaultProfile.linux": "fish",
+    "C_Cpp.default.compilerArgs": [
+        "-I`python-config --headers`"
+    ],
+}
